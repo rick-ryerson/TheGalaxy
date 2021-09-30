@@ -5,8 +5,7 @@ using System.Text;
 
 namespace PeopleAndOrganizations.Domain.Model
 {
-    public class PersonName : HistoricRelation<Person, PersonNameValue>
+    public class OrganizationNameValue : BasicLookup
     {
-        public int Ordinal { get; set; }
     }
 }

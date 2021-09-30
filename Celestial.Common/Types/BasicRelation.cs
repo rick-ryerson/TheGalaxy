@@ -12,7 +12,12 @@ namespace Celestial.Common.Types
 
     public class HistoricRelation<TOwner, TItem> : BasicRelation<TOwner, TItem>
     {
-        public int Ordinal { get; set; }
+        public DateTime FromDate { get; set; }
+        public DateTime? ThruDate { get; set; }
+    }
+
+    public class HistoricRelation
+    {
         public DateTime FromDate { get; set; }
         public DateTime? ThruDate { get; set; }
     }
