@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  peopleandorganizations.consoleapp:
+    image: ${DOCKER_REGISTRY-}peopleandorganizationsconsoleapp
+    build:
+      context: .
+      dockerfile: Source/PeopleAndOrganizations.ConsoleApp/Dockerfile
+  db:
+    image: "mcr.microsoft.com/mssql/server"
+    hostname: sql-server
+    container_name: sql-server
+    ports:
+        - "14331:1433"
+    environment:
+        SA_PASSWORD: "xdr5cft6!@!"
+        ACCEPT_EULA: "Y"

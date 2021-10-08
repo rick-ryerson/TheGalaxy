@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "PeopleAndOrganizations.ConsoleApp": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

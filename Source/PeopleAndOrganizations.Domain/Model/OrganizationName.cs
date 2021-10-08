@@ -7,6 +7,7 @@ namespace PeopleAndOrganizations.Domain.Model
 {
     public class OrganizationName : HistoricRelation<Organization, OrganizationNameValue>
     {
+        public int Id { get; set; }
         public int Ordinal { get; set; }
     }
 }
