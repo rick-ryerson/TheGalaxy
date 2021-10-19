@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PeopleAndOrganizations.Domain.Model
 {
-    public class NameType : BasicLookup
+    public class PersonNameType : BasicLookup
     {
 
     }

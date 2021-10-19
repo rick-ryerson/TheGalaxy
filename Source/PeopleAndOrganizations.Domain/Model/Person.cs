@@ -6,6 +6,8 @@ namespace PeopleAndOrganizations.Domain.Model
 {
     public class Person
     {
+        public Guid Id { get; set; }
+        public Guid PartyId { get; set; }
         public DateTime? BirthDate { get; set; }
 
         public virtual Party Party { get; set; }

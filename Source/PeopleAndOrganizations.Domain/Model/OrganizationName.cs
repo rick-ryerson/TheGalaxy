@@ -5,9 +5,16 @@ using System.Text;
 
 namespace PeopleAndOrganizations.Domain.Model
 {
-    public class OrganizationName : HistoricRelation<Organization, OrganizationNameValue>
+    public class OrganizationName
     {
-        public int Id { get; set; }
+        public Guid OrganizationId { get; set; }
+        public int OrganizationNameValueId { get; set; }
         public int Ordinal { get; set; }
+        public DateTime FromDate { get; set; }
+        public DateTime? ThruDate { get; set; }
+
+        public virtual Organization Organization { get; set; }
+        public virtual OrganizationNameValue OrganizationNameValue { get; set; }
+
     }
 }

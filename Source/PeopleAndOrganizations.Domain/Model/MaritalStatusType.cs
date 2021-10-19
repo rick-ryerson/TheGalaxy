@@ -5,7 +5,7 @@ using System.Text;
 
 namespace PeopleAndOrganizations.Domain.Model
 {
-    public class MaritalStatus : BasicLookup
+    public class MaritalStatusType : BasicLookup
     {
 
     }

@@ -1,0 +1,14 @@
+Since entity framework tools requires an "interface" type project with microsoft.entityframeworkcore.design and microsoft.entityframeworkcore.tools in order to make migrations and database updates. Each module needs to have a console app in order to run EF commands against.
+
+In order to ensure that the sql server container is running, run the console app 
+
+To reset migrations to a single, initial, migration delete the database from ssms and delete all migrations plus DataContextModelSnapshot.
+Then rerun add-migration / update-database
+
+Modules - Apps
+PeopleAndOrganizations - PeopleAndOrganizations.ConsoleApp
+
+EntityFramework commands 
+
+Add-Migration -Name <MigrationName> -Context PeopleAndOrganizations.Data.Implementations.EntityFramework.DataContext -Project PeopleAndOrganizations.Data -StartupProject PeopleAndOrganizations.ConsoleApp
+Update-Database -Context PeopleAndOrganizations.Data.Implementations.EntityFramework.DataContext -Project PeopleAndOrganizations.Data -StartupProject PeopleAndOrganizations.ConsoleApp 

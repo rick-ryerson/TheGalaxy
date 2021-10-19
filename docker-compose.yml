@@ -6,12 +6,16 @@ services:
     build:
       context: .
       dockerfile: Source/PeopleAndOrganizations.ConsoleApp/Dockerfile
-  db:
+  peopledb:
     image: "mcr.microsoft.com/mssql/server"
-    hostname: sql-server
-    container_name: sql-server
+    hostname: people-sql-server
+    container_name: people-sql-server
     ports:
         - "14331:1433"
     environment:
-        SA_PASSWORD: "xdr5cft6!@!"
+        SA_PASSWORD: "qweasd!@!"
         ACCEPT_EULA: "Y"
+    volumes:
+       - ./data/data:/var/opt/mssql/data
+       - ./data/log:/var/opt/mssql/log
+       - ./data/secrets:/var/opt/mssql/secrets

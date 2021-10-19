@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PeopleAndOrganizations.Data.Implementations.EntityFramework;
 
 namespace PeopleAndOrganizations.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211019030301_Initial2")]
+    partial class Initial2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,7 +40,7 @@ namespace PeopleAndOrganizations.Data.Migrations
                     b.ToTable("Genders");
                 });
 
-            modelBuilder.Entity("PeopleAndOrganizations.Domain.Model.MaritalStatusType", b =>
+            modelBuilder.Entity("PeopleAndOrganizations.Domain.Model.MaritalStatus", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -54,7 +56,7 @@ namespace PeopleAndOrganizations.Data.Migrations
                     b.HasIndex("Value")
                         .IsUnique();
 
-                    b.ToTable("MaritalStatusTypes");
+                    b.ToTable("MaritalStatuses");
                 });
 
             modelBuilder.Entity("PeopleAndOrganizations.Domain.Model.Organization", b =>
@@ -168,13 +170,9 @@ namespace PeopleAndOrganizations.Data.Migrations
                     b.Property<DateTime?>("ThruDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("PersonId", "GenderId", "FromDate");
+                    b.HasKey("PersonId", "GenderId", "FromDate", "ThruDate");
 
                     b.HasIndex("GenderId");
-
-                    b.HasIndex("PersonId", "GenderId", "FromDate", "ThruDate")
-                        .IsUnique()
-                        .HasFilter("[ThruDate] IS NOT NULL");
 
                     b.ToTable("PersonGenders");
                 });
@@ -193,13 +191,9 @@ namespace PeopleAndOrganizations.Data.Migrations
                     b.Property<DateTime?>("ThruDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("PersonId", "MaritalStatusId", "FromDate");
+                    b.HasKey("PersonId", "MaritalStatusId", "FromDate", "ThruDate");
 
                     b.HasIndex("MaritalStatusId");
-
-                    b.HasIndex("PersonId", "MaritalStatusId", "FromDate", "ThruDate")
-                        .IsUnique()
-                        .HasFilter("[ThruDate] IS NOT NULL");
 
                     b.ToTable("PersonMaritalStatuses");
                 });
@@ -212,9 +206,6 @@ namespace PeopleAndOrganizations.Data.Migrations
                     b.Property<int>("PersonNameValueId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PersonNameTypeId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Ordinal")
                         .HasColumnType("int");
 
@@ -224,13 +215,11 @@ namespace PeopleAndOrganizations.Data.Migrations
                     b.Property<DateTime?>("ThruDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("PersonId", "PersonNameValueId", "PersonNameTypeId", "Ordinal", "FromDate");
-
-                    b.HasIndex("PersonNameTypeId");
+                    b.HasKey("PersonId", "PersonNameValueId", "Ordinal", "FromDate");
 
                     b.HasIndex("PersonNameValueId");
 
-                    b.HasIndex("PersonId", "PersonNameValueId", "PersonNameTypeId", "Ordinal", "FromDate", "ThruDate")
+                    b.HasIndex("PersonId", "PersonNameValueId", "Ordinal", "FromDate", "ThruDate")
                         .IsUnique()
                         .HasFilter("[ThruDate] IS NOT NULL");
 
@@ -333,7 +322,7 @@ namespace PeopleAndOrganizations.Data.Migrations
 
             modelBuilder.Entity("PeopleAndOrganizations.Domain.Model.PersonMaritalStatus", b =>
                 {
-                    b.HasOne("PeopleAndOrganizations.Domain.Model.MaritalStatusType", "MaritalStatus")
+                    b.HasOne("PeopleAndOrganizations.Domain.Model.MaritalStatus", "MaritalStatus")
                         .WithMany()
                         .HasForeignKey("MaritalStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -358,12 +347,6 @@ namespace PeopleAndOrganizations.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PeopleAndOrganizations.Domain.Model.PersonNameType", "PersonNameType")
-                        .WithMany()
-                        .HasForeignKey("PersonNameTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("PeopleAndOrganizations.Domain.Model.PersonNameValue", "PersonNameValue")
                         .WithMany()
                         .HasForeignKey("PersonNameValueId")
@@ -371,8 +354,6 @@ namespace PeopleAndOrganizations.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Person");
-
-                    b.Navigation("PersonNameType");
 
                     b.Navigation("PersonNameValue");
                 });

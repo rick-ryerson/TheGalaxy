@@ -5,8 +5,14 @@ using System.Text;
 
 namespace PeopleAndOrganizations.Domain.Model
 {
-    public class PersonMaritalStatus : HistoricRelation<Person, MaritalStatus>
+    public class PersonMaritalStatus
     {
+        public Guid PersonId { get; set; }
+        public int MaritalStatusId { get; set; }
+        public DateTime FromDate { get; set; }
+        public DateTime? ThruDate { get; set; }
 
+        public virtual Person Person { get; set; }
+        public virtual MaritalStatusType MaritalStatus { get; set; }
     }
 }

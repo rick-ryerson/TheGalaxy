@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PeopleAndOrganizations.Data.Implementations.EntityFramework;
 
 namespace PeopleAndOrganizations.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20211019031733_Initial4")]
+    partial class Initial4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -168,13 +170,9 @@ namespace PeopleAndOrganizations.Data.Migrations
                     b.Property<DateTime?>("ThruDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("PersonId", "GenderId", "FromDate");
+                    b.HasKey("PersonId", "GenderId", "FromDate", "ThruDate");
 
                     b.HasIndex("GenderId");
-
-                    b.HasIndex("PersonId", "GenderId", "FromDate", "ThruDate")
-                        .IsUnique()
-                        .HasFilter("[ThruDate] IS NOT NULL");
 
                     b.ToTable("PersonGenders");
                 });
@@ -193,13 +191,9 @@ namespace PeopleAndOrganizations.Data.Migrations
                     b.Property<DateTime?>("ThruDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("PersonId", "MaritalStatusId", "FromDate");
+                    b.HasKey("PersonId", "MaritalStatusId", "FromDate", "ThruDate");
 
                     b.HasIndex("MaritalStatusId");
-
-                    b.HasIndex("PersonId", "MaritalStatusId", "FromDate", "ThruDate")
-                        .IsUnique()
-                        .HasFilter("[ThruDate] IS NOT NULL");
 
                     b.ToTable("PersonMaritalStatuses");
                 });
@@ -212,25 +206,25 @@ namespace PeopleAndOrganizations.Data.Migrations
                     b.Property<int>("PersonNameValueId")
                         .HasColumnType("int");
 
-                    b.Property<int>("PersonNameTypeId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Ordinal")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("FromDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("PersonNameTypeId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("ThruDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("PersonId", "PersonNameValueId", "PersonNameTypeId", "Ordinal", "FromDate");
+                    b.HasKey("PersonId", "PersonNameValueId", "Ordinal", "FromDate");
 
                     b.HasIndex("PersonNameTypeId");
 
                     b.HasIndex("PersonNameValueId");
 
-                    b.HasIndex("PersonId", "PersonNameValueId", "PersonNameTypeId", "Ordinal", "FromDate", "ThruDate")
+                    b.HasIndex("PersonId", "PersonNameValueId", "Ordinal", "FromDate", "ThruDate")
                         .IsUnique()
                         .HasFilter("[ThruDate] IS NOT NULL");
 

@@ -20,30 +20,32 @@ namespace PeopleAndOrganizations.Data.Implementations.EntityFramework
         }
 
         public DbSet<Gender> Genders { get; set; }
-        public DbSet<MaritalStatus> MaritalStatuses { get; set; }
-        public DbSet<NameType> NameTypes { get; set; }
+        public DbSet<MaritalStatusType> MaritalStatusTypes { get; set; }
+        public DbSet<PersonNameType> PersonNameTypes { get; set; }
         public DbSet<Organization> Organizations { get; set; }
-        //public DbSet<OrganizationName> OrganizationNames { get; set; }
-        //public DbSet<OrganizationNameValue> OrganizationNameValues { get; set; }
-        //public DbSet<Party> Parties { get; set; }
-        //public DbSet<Person> Persons { get; set; }
-        //public DbSet<PersonGender> PersonGenders { get; set; }
-        //public DbSet<PersonMaritalStatus> PersonMaritalStatuses { get; set; }
-        //public DbSet<PersonName> PersonNames { get; set; }
-        //public DbSet<PersonNameValue> PersonNameValues { get; set; }
+        public DbSet<OrganizationName> OrganizationNames { get; set; }
+        public DbSet<OrganizationNameValue> OrganizationNameValues { get; set; }
+        public DbSet<Party> Parties { get; set; }
+        public DbSet<Person> Persons { get; set; }
+        public DbSet<PersonGender> PersonGenders { get; set; }
+        public DbSet<PersonMaritalStatus> PersonMaritalStatuses { get; set; }
+        public DbSet<PersonName> PersonNames { get; set; }
+        public DbSet<PersonNameValue> PersonNameValues { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             BuildGenders(modelBuilder);
-            BuildMartialStatuses(modelBuilder);
-            BuildNameTypes(modelBuilder);
+            BuildMaritalStatusTypes(modelBuilder);
+            BuildPersonNameTypes(modelBuilder);
             BuildOrganizations(modelBuilder);
-            //BuildOrganizationNameValues(modelBuilder);
-            //BuildParties(modelBuilder);
-            //BuildPersons(modelBuilder);
-            //BuilddPersonGenders(modelBuilder);
-            //BuildPersonMaritalStatues(modelBuilder);
-            //BuildPersonNames(modelBuilder);
+            BuildOrganizationNameValues(modelBuilder);
+            BuildOrganizationNames(modelBuilder);
+
+            BuildParties(modelBuilder);
+            BuildPersons(modelBuilder);
+            BuilddPersonGenders(modelBuilder);
+            BuildPersonMaritalStatuses(modelBuilder);
+            BuildPersonNames(modelBuilder);
             //BuildPersonNameValues(modelBuilder);
         }
 
@@ -54,32 +56,106 @@ namespace PeopleAndOrganizations.Data.Implementations.EntityFramework
 
         private void BuildPersonNames(ModelBuilder modelBuilder)
         {
-            throw new NotImplementedException();
+            modelBuilder.Entity<PersonName>()
+                .HasKey(p => new { p.PersonId, p.PersonNameValueId, p.PersonNameTypeId, p.Ordinal, p.FromDate });
+            modelBuilder.Entity<PersonName>()
+                .HasIndex(p => new { p.PersonId, p.PersonNameValueId, p.PersonNameTypeId, p.Ordinal, p.FromDate, p.ThruDate })
+                .IsUnique(true);
+
+
+            modelBuilder.Entity<PersonName>()
+                .Property(p => p.Ordinal)
+                .IsRequired(true);
+            modelBuilder.Entity<PersonName>()
+                .Property(p => p.PersonId)
+                .IsRequired(true);
+            modelBuilder.Entity<PersonName>()
+                .Property(p => p.PersonNameValueId)
+                .IsRequired(true);
+            modelBuilder.Entity<PersonName>()
+                .Property(p => p.PersonNameTypeId)
+                .IsRequired(true);
+            modelBuilder.Entity<PersonName>()
+                .Property(p => p.FromDate)
+                .IsRequired(true);
+            modelBuilder.Entity<PersonName>()
+                .Property(p => p.ThruDate)
+                .IsRequired(false);
         }
 
-        private void BuildPersonMaritalStatues(ModelBuilder modelBuilder)
+        private void BuildPersonMaritalStatuses(ModelBuilder modelBuilder)
         {
-            throw new NotImplementedException();
+            modelBuilder.Entity<PersonMaritalStatus>()
+                .HasKey(p => new { p.PersonId, p.MaritalStatusId, p.FromDate });
+
+            modelBuilder.Entity<PersonMaritalStatus>()
+                .HasIndex(p => new { p.PersonId, p.MaritalStatusId, p.FromDate, p.ThruDate })
+                .IsUnique(true);
         }
 
         private void BuilddPersonGenders(ModelBuilder modelBuilder)
         {
-            throw new NotImplementedException();
+            modelBuilder.Entity<PersonGender>()
+                .HasKey(p => new { p.PersonId, p.GenderId, p.FromDate });
+
+            modelBuilder.Entity<PersonGender>()
+                .HasIndex(p => new { p.PersonId, p.GenderId, p.FromDate, p.ThruDate })
+                .IsUnique(true);
         }
 
         private void BuildPersons(ModelBuilder modelBuilder)
         {
-            throw new NotImplementedException();
+            modelBuilder.Entity<Person>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<Person>()
+                .HasIndex(p => p.PartyId)
+                .IsUnique();
         }
 
         private void BuildParties(ModelBuilder modelBuilder)
         {
-            throw new NotImplementedException();
+            // 
         }
+        private void BuildOrganizationNames(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<OrganizationName>()
+                .HasKey(p => new { p.Ordinal, p.OrganizationId, p.OrganizationNameValueId, p.FromDate });
 
+            modelBuilder.Entity<OrganizationName>()
+                .HasIndex(p => new { p.Ordinal, p.OrganizationId, p.OrganizationNameValueId, p.FromDate, p.ThruDate })
+                .IsUnique();
+
+            modelBuilder.Entity<OrganizationName>()
+                .Property(p => p.Ordinal)
+                .IsRequired();
+            modelBuilder.Entity<OrganizationName>()
+                .Property(p => p.OrganizationId)
+                .IsRequired();
+            modelBuilder.Entity<OrganizationName>()
+                .Property(p => p.OrganizationNameValueId)
+                .IsRequired();
+            modelBuilder.Entity<OrganizationName>()
+                .Property(p => p.FromDate)
+                .IsRequired();
+            modelBuilder.Entity<OrganizationName>()
+                .Property(p => p.ThruDate)
+                .IsRequired(false);
+        }
         private void BuildOrganizationNameValues(ModelBuilder modelBuilder)
         {
-            throw new NotImplementedException();
+            modelBuilder.Entity<OrganizationNameValue>()
+                .Property(p => p.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<OrganizationNameValue>()
+                .HasIndex(p => p.Value)
+                .IsUnique();
+
+            modelBuilder.Entity<OrganizationNameValue>()
+                .Property(p => p.Id)
+                .IsRequired(true);
         }
 
         private void BuildOrganizations(ModelBuilder modelBuilder)
@@ -87,34 +163,37 @@ namespace PeopleAndOrganizations.Data.Implementations.EntityFramework
             modelBuilder.Entity<Organization>()
                 .HasKey(o => o.Id);
 
+            modelBuilder.Entity<Organization>()
+                .HasIndex(p => p.PartyId)
+                .IsUnique(true);
         }
 
-        private void BuildNameTypes(ModelBuilder modelBuilder)
+        private void BuildPersonNameTypes(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<NameType>()
+            modelBuilder.Entity<PersonNameType>()
                 .Property(p => p.Id)
                 .ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<NameType>()
+            modelBuilder.Entity<PersonNameType>()
                 .HasIndex(g => g.Value)
                 .IsUnique();
 
-            modelBuilder.Entity<NameType>()
+            modelBuilder.Entity<PersonNameType>()
                 .Property(p => p.Value)
                 .IsRequired(true);
         }
 
-        private void BuildMartialStatuses(ModelBuilder modelBuilder)
+        private void BuildMaritalStatusTypes(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<MaritalStatus>()
+            modelBuilder.Entity<MaritalStatusType>()
                 .Property(p => p.Id)
                 .ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<MaritalStatus>()
+            modelBuilder.Entity<MaritalStatusType>()
                 .HasIndex(g => g.Value)
-                .IsUnique();
+                .IsUnique(true);
 
-            modelBuilder.Entity<MaritalStatus>()
+            modelBuilder.Entity<MaritalStatusType>()
                 .Property(p => p.Value)
                 .IsRequired(true);
         }
