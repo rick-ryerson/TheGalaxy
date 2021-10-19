@@ -8,4 +8,8 @@
     <ProjectReference Include="..\..\Celestial.Common\Celestial.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Exceptions\" />
+  </ItemGroup>
+
 </Project>
