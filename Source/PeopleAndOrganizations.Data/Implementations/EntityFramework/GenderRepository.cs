@@ -8,18 +8,18 @@ using System.Text;
 
 namespace PeopleAndOrganizations.Data.Implementations.EntityFramework
 {
-    public class GenderRepository : IGenderRepository
+    internal class GenderRepository : IGenderRepository
     {
-        private readonly DataContext dataContext;
+        private readonly UnitOfWork<DataContext> unitOfWork;
 
-        public GenderRepository(DataContext dataContext)
+        public GenderRepository(UnitOfWork<DataContext> unitOfWork)
         {
-            this.dataContext = dataContext ?? throw new ArgumentNullException(nameof(dataContext));
+            this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
         public Gender Add(Gender gender)
         {
-            dataContext.Genders.Add(gender);
+            unitOfWork.Context.Genders.Add(gender);
 
             return gender;
         }
@@ -28,12 +28,12 @@ namespace PeopleAndOrganizations.Data.Implementations.EntityFramework
         {
             var gender = Get(id);
 
-            dataContext.Genders.Remove(gender);
+            unitOfWork.Context.Genders.Remove(gender);
         }
 
         public IEnumerable<Gender> Get(int pageIndex, int pageSize)
         {
-            return dataContext
+            return unitOfWork.Context
                 .Genders
                 .Skip(pageSize * pageIndex)
                 .Take(pageSize);
@@ -41,14 +41,14 @@ namespace PeopleAndOrganizations.Data.Implementations.EntityFramework
 
         public Gender Get(int id)
         {
-            return dataContext
+            return unitOfWork.Context
                 .Genders
                 .Find(id);
         }
 
         public Gender Get(string value)
         {
-            return dataContext
+            return unitOfWork.Context
                 .Genders
                 .Where(g => g.Value == value)
                 .FirstOrDefault();
@@ -56,7 +56,11 @@ namespace PeopleAndOrganizations.Data.Implementations.EntityFramework
 
         public void Update(Gender gender)
         {
-            dataContext
+            unitOfWork.Context
+                .Genders
+                .Attach(gender);
+
+            unitOfWork.Context
                 .Entry(gender)
                 .State = EntityState.Modified;
         }
