@@ -21,6 +21,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JediOrder.Web", "Source\Jed
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GalacticSenate.Library", "Source\GalacticSenate.Library\GalacticSenate.Library.csproj", "{9EDA9726-9458-4E58-A203-CDFAE35129BD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GalacticSenate.WebApi", "Source\GalacticSenate.WebApi\GalacticSenate.WebApi.csproj", "{A7876F6E-EAC4-4E60-BAF1-29475E1335AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,10 @@ Global
 		{9EDA9726-9458-4E58-A203-CDFAE35129BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9EDA9726-9458-4E58-A203-CDFAE35129BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9EDA9726-9458-4E58-A203-CDFAE35129BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7876F6E-EAC4-4E60-BAF1-29475E1335AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7876F6E-EAC4-4E60-BAF1-29475E1335AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7876F6E-EAC4-4E60-BAF1-29475E1335AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7876F6E-EAC4-4E60-BAF1-29475E1335AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -65,6 +71,7 @@ Global
 		{C6712DDC-0677-49E7-8469-CBFBC25A092A} = {7B05D1C2-80B1-433C-9DB0-11C8A362962E}
 		{5E89D49B-74FB-4A86-8434-DB5A73009AD4} = {ED2C6C0D-18BD-4530-9019-8591D6883C9F}
 		{9EDA9726-9458-4E58-A203-CDFAE35129BD} = {7B05D1C2-80B1-433C-9DB0-11C8A362962E}
+		{A7876F6E-EAC4-4E60-BAF1-29475E1335AA} = {7B05D1C2-80B1-433C-9DB0-11C8A362962E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {43DD61BF-B439-4FFE-865F-832B3463C64F}

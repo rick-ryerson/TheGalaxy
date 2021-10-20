@@ -27,3 +27,19 @@ services:
     build:
       context: .
       dockerfile: Source/JediOrder.Web/Dockerfile
+  galacticsenate.webapi:
+    image: ${DOCKER_REGISTRY-}galacticsenatewebapi
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+    volumes:
+      - ~/.aspnet/https:/root/.aspnet/https:ro
+      - ~/.microsoft/usersecrets:/root/.microsoft/usersecrets:ro
+    ports:
+       - "50767:443"
+       - "50768:80"
+    build:
+      context: .
+      dockerfile: Source/GalacticSenate.WebApi/Dockerfile
+
