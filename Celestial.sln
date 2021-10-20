@@ -3,25 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31410.357
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PeopleAndOrganizations.Domain", "Source\PeopleAndOrganizations.Domain\PeopleAndOrganizations.Domain.csproj", "{4EE62A59-4385-49D3-8D2B-331C206969AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GalacticSenate.Domain", "Source\GalacticSenate.Domain\GalacticSenate.Domain.csproj", "{4EE62A59-4385-49D3-8D2B-331C206969AF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PeopleAndOrganizations", "PeopleAndOrganizations", "{7B05D1C2-80B1-433C-9DB0-11C8A362962E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Celestial.Common", "Celestial.Common\Celestial.Common.csproj", "{55A7F9DB-0FBD-4E6F-823A-B77C6359D00B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PeopleAndOrganizations.Data", "Source\PeopleAndOrganizations.Data\PeopleAndOrganizations.Data.csproj", "{4BB42C8B-E20D-4837-A1C0-063004F56F97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GalacticSenate.Data", "Source\GalacticSenate.Data\GalacticSenate.Data.csproj", "{4BB42C8B-E20D-4837-A1C0-063004F56F97}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PeopleAndOrganizations.ConsoleApp", "Source\PeopleAndOrganizations.ConsoleApp\PeopleAndOrganizations.ConsoleApp.csproj", "{C6712DDC-0677-49E7-8469-CBFBC25A092A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GalacticSenate.ConsoleApp", "Source\GalacticSenate.ConsoleApp\GalacticSenate.ConsoleApp.csproj", "{C6712DDC-0677-49E7-8469-CBFBC25A092A}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{7ABA526A-0D00-48D0-BFFE-FCF9775E75D5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PeopleAndOrganizations.Library", "..\PeopleAndOrganizations.Library\PeopleAndOrganizations.Library.csproj", "{DCC3B72B-B49B-40B9-8C0A-22E765435F3E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PeopleAndOrganizations.WebApi", "Source\PeopleAndOrganizations.WebApi\PeopleAndOrganizations.WebApi.csproj", "{A5BFC77A-C2D3-4FB5-8770-411CA2B69E3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GalacticSenate.WebApi", "Source\GalacticSenate.WebApi\GalacticSenate.WebApi.csproj", "{A5BFC77A-C2D3-4FB5-8770-411CA2B69E3A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Authentication", "Authentication", "{ED2C6C0D-18BD-4530-9019-8591D6883C9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JediOrder.Web", "Source\JediOrder.Web\JediOrder.Web.csproj", "{5E89D49B-74FB-4A86-8434-DB5A73009AD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JediOrder.Web", "Source\JediOrder.Web\JediOrder.Web.csproj", "{5E89D49B-74FB-4A86-8434-DB5A73009AD4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GalacticSenate.Library", "Source\GalacticSenate.Library\GalacticSenate.Library.csproj", "{9EDA9726-9458-4E58-A203-CDFAE35129BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,10 +49,6 @@ Global
 		{7ABA526A-0D00-48D0-BFFE-FCF9775E75D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7ABA526A-0D00-48D0-BFFE-FCF9775E75D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7ABA526A-0D00-48D0-BFFE-FCF9775E75D5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DCC3B72B-B49B-40B9-8C0A-22E765435F3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DCC3B72B-B49B-40B9-8C0A-22E765435F3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DCC3B72B-B49B-40B9-8C0A-22E765435F3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DCC3B72B-B49B-40B9-8C0A-22E765435F3E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A5BFC77A-C2D3-4FB5-8770-411CA2B69E3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A5BFC77A-C2D3-4FB5-8770-411CA2B69E3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5BFC77A-C2D3-4FB5-8770-411CA2B69E3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -61,6 +57,10 @@ Global
 		{5E89D49B-74FB-4A86-8434-DB5A73009AD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E89D49B-74FB-4A86-8434-DB5A73009AD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E89D49B-74FB-4A86-8434-DB5A73009AD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EDA9726-9458-4E58-A203-CDFAE35129BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EDA9726-9458-4E58-A203-CDFAE35129BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EDA9726-9458-4E58-A203-CDFAE35129BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EDA9726-9458-4E58-A203-CDFAE35129BD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,9 +69,9 @@ Global
 		{4EE62A59-4385-49D3-8D2B-331C206969AF} = {7B05D1C2-80B1-433C-9DB0-11C8A362962E}
 		{4BB42C8B-E20D-4837-A1C0-063004F56F97} = {7B05D1C2-80B1-433C-9DB0-11C8A362962E}
 		{C6712DDC-0677-49E7-8469-CBFBC25A092A} = {7B05D1C2-80B1-433C-9DB0-11C8A362962E}
-		{DCC3B72B-B49B-40B9-8C0A-22E765435F3E} = {7B05D1C2-80B1-433C-9DB0-11C8A362962E}
 		{A5BFC77A-C2D3-4FB5-8770-411CA2B69E3A} = {7B05D1C2-80B1-433C-9DB0-11C8A362962E}
 		{5E89D49B-74FB-4A86-8434-DB5A73009AD4} = {ED2C6C0D-18BD-4530-9019-8591D6883C9F}
+		{9EDA9726-9458-4E58-A203-CDFAE35129BD} = {7B05D1C2-80B1-433C-9DB0-11C8A362962E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {43DD61BF-B439-4FFE-865F-832B3463C64F}

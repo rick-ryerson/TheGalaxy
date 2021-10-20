@@ -1,15 +1,15 @@
 version: '3.4'
 
 services:
-  peopleandorganizations.consoleapp:
-    image: ${DOCKER_REGISTRY-}peopleandorganizationsconsoleapp
+  galacticsenate.consoleapp:
+    image: ${DOCKER_REGISTRY-}galacticsenateconsoleapp
     build:
       context: .
-      dockerfile: Source/PeopleAndOrganizations.ConsoleApp/Dockerfile
-  peopledb:
+      dockerfile: Source/GalacticSenate.ConsoleApp/Dockerfile
+  galacticsenate.db:
     image: "mcr.microsoft.com/mssql/server"
-    hostname: people-sql-server
-    container_name: people-sql-server
+    hostname: galacticsenate-sql-server
+    container_name: galacticsenate-sql-server
     ports:
         - "14331:1433"
     environment:
@@ -19,16 +19,14 @@ services:
        - ./data/data:/var/opt/mssql/data
        - ./data/log:/var/opt/mssql/log
        - ./data/secrets:/var/opt/mssql/secrets
+  galacticsenate.webapi:
+    image: ${DOCKER_REGISTRY-}galacticsenatewebapi
+    build:
+      context: .
+      dockerfile: Source/GalacticSenate.WebApi/Dockerfile
   jediorder.web:
     image: ${DOCKER_REGISTRY-}jediorderweb
     build:
       context: .
       dockerfile: Source/JediOrder.Web/Dockerfile
-
-
-  peopleandorganizations.webapi:
-    image: ${DOCKER_REGISTRY-}peopleandorganizationswebapi
-    build:
-      context: .
-      dockerfile: Source/PeopleAndOrganizations.WebApi/Dockerfile
 
