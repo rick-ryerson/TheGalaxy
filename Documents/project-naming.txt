@@ -1,0 +1,6 @@
+The code word naming scheme is based in the Star Wars Universe. 
+
+Celestial is the original people of the Star Wars universe.
+JediOrder are the police of the universe and represents authentication and authorization
+GalacticSenate represents all the people and organizations
+

@@ -19,14 +19,22 @@ services:
        - ./data/data:/var/opt/mssql/data
        - ./data/log:/var/opt/mssql/log
        - ./data/secrets:/var/opt/mssql/secrets
-  galacticsenate.webapi:
-    image: ${DOCKER_REGISTRY-}galacticsenatewebapi
-    build:
-      context: .
-      dockerfile: Source/GalacticSenate.WebApi/Dockerfile
   jediorder.web:
     image: ${DOCKER_REGISTRY-}jediorderweb
+    ports:
+       - "64014:443"
+       - "64015:80"
     build:
       context: .
       dockerfile: Source/JediOrder.Web/Dockerfile
+
+
+  galacticsenate.webapi:
+    image: ${DOCKER_REGISTRY-}galacticsenatewebapi
+    ports:
+       - "65249:443"
+       - "65250:80"
+    build:
+      context: .
+      dockerfile: Source/GalacticSenate.WebApi/Dockerfile
 
