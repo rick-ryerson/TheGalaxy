@@ -25,3 +25,10 @@ services:
       context: .
       dockerfile: Source/JediOrder.Web/Dockerfile
 
+
+  peopleandorganizations.webapi:
+    image: ${DOCKER_REGISTRY-}peopleandorganizationswebapi
+    build:
+      context: .
+      dockerfile: Source/PeopleAndOrganizations.WebApi/Dockerfile
+
