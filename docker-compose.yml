@@ -19,3 +19,9 @@ services:
        - ./data/data:/var/opt/mssql/data
        - ./data/log:/var/opt/mssql/log
        - ./data/secrets:/var/opt/mssql/secrets
+  jediorder.web:
+    image: ${DOCKER_REGISTRY-}jediorderweb
+    build:
+      context: .
+      dockerfile: Source/JediOrder.Web/Dockerfile
+
