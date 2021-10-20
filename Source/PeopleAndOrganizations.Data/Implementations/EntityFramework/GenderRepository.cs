@@ -46,14 +46,19 @@ namespace PeopleAndOrganizations.Data.Implementations.EntityFramework
                 .Find(id);
         }
 
-        public Gender Get(string value)
+        public Gender GetExact(string value)
         {
             return unitOfWork.Context
                 .Genders
                 .Where(g => g.Value == value)
                 .FirstOrDefault();
         }
-
+        public IEnumerable<Gender> GetContains(string value)
+        {
+            return unitOfWork.Context
+                .Genders
+                .Where(g => g.Value.Contains(value));
+        }
         public void Update(Gender gender)
         {
             unitOfWork.Context
