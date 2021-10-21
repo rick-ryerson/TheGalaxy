@@ -8,8 +8,8 @@ services:
       dockerfile: Source/GalacticSenate.ConsoleApp/Dockerfile
   galacticsenate.db:
     image: "mcr.microsoft.com/mssql/server"
-    hostname: galacticsenate-sql-server
-    container_name: galacticsenate-sql-server
+    hostname: galacticsenatedb
+    container_name: galacticsenatedb
     ports:
         - "14331:1433"
     environment:

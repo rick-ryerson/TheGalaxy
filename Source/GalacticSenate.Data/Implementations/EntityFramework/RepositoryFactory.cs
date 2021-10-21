@@ -7,7 +7,7 @@ namespace GalacticSenate.Data.Implementations.EntityFramework
 {
     public static class RepositoryFactory
     {
-        public static IGenderRepository GenderRepository(UnitOfWork<DataContext> unitOfWork)
+        public static IGenderRepository GenderRepository(IUnitOfWork<DataContext> unitOfWork)
         {
             return new GenderRepository(unitOfWork);
         }

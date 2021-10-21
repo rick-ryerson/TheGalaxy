@@ -8,7 +8,17 @@ using Model = GalacticSenate.Domain.Model;
 
 namespace GalacticSenate.Library.Gender
 {
-    public class GenderService
+    public interface IGenderService
+    {
+        ModelResponse<Model.Gender> Add(AddGenderRequest addGenderRequest);
+        BasicResponse Delete(DeleteGenderRequest request);
+        ModelResponse<Model.Gender> Read(ReadGenderMultiRequest request);
+        ModelResponse<Model.Gender> Read(ReadGenderRequest request);
+        ModelResponse<Model.Gender> Read(ReadGenderValueRequest request);
+        ModelResponse<Model.Gender> Update(UpdateGenderRequest updateGenderRequest);
+    }
+
+    public class GenderService : IGenderService
     {
         private readonly IGenderRepository genderRepository;
 
@@ -115,6 +125,23 @@ namespace GalacticSenate.Library.Gender
                     response.Results.Add(genderRepository.GetExact(request.Value));
                 else
                     response.Results.AddRange(genderRepository.GetContains(request.Value));
+
+                response.Status = StatusEnum.Successful;
+            }
+            catch (Exception ex)
+            {
+                response.Messages.Add(ex.Message);
+                response.Status = StatusEnum.Failed;
+            }
+            return response.Finalize();
+        }
+        public ModelResponse<Model.Gender> Read(ReadGenderRequest request)
+        {
+            var response = new ModelResponse<Model.Gender>(DateTime.Now);
+
+            try
+            {
+                response.Results.Add(genderRepository.Get(request.Id));
 
                 response.Status = StatusEnum.Successful;
             }

@@ -16,7 +16,8 @@ namespace GalacticSenate.Library
         {
         }
 
-        public List<TModel> Results { get; set; }
+        public List<TModel> Results { get; set; } = new List<TModel>();
+
         public new ModelResponse<TModel> Finalize()
         {
             return (ModelResponse<TModel>)base.Finalize();

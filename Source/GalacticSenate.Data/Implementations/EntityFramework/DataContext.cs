@@ -9,14 +9,18 @@ namespace GalacticSenate.Data.Implementations.EntityFramework
 {
     public class DataContext : DbContext
     {
-        //public DataContext([NotNullAttribute] DbContextOptions options) : base(options)
-        //{
+        public DataContext([NotNullAttribute] DbContextOptions options) : base(options)
+        {
 
-        //}
+        }
+
+        protected DataContext()
+        {
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=localhost,14331;Database=Celestial;User Id=sa;Password=xdr5cft6!@!;");
+            // optionsBuilder.UseSqlServer("Server=localhost,14331;Database=Celestial;User Id=sa;Password=xdr5cft6!@!;");
         }
 
         public DbSet<Gender> Genders { get; set; }

@@ -10,9 +10,9 @@ namespace GalacticSenate.Data.Implementations.EntityFramework
 {
     internal class GenderRepository : IGenderRepository
     {
-        private readonly UnitOfWork<DataContext> unitOfWork;
+        private readonly IUnitOfWork<DataContext> unitOfWork;
 
-        public GenderRepository(UnitOfWork<DataContext> unitOfWork)
+        public GenderRepository(IUnitOfWork<DataContext> unitOfWork)
         {
             this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
@@ -35,6 +35,7 @@ namespace GalacticSenate.Data.Implementations.EntityFramework
         {
             return unitOfWork.Context
                 .Genders
+                .OrderBy(g => g.Id)
                 .Skip(pageSize * pageIndex)
                 .Take(pageSize);
         }
