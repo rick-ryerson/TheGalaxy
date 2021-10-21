@@ -20,7 +20,12 @@ namespace GalacticSenate.Data.Implementations.EntityFramework
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            // optionsBuilder.UseSqlServer("Server=localhost,14331;Database=Celestial;User Id=sa;Password=xdr5cft6!@!;");
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer("Server=localhost,14331;Database=Celestial;User Id=sa;Password=qweasd!@!;");
+            }
+            base.OnConfiguring(optionsBuilder);
+            // optionsBuilder.UseSqlServer("Server=localhost,14331;Database=Celestial;User Id=sa;Password=qweasd!@!;");
         }
 
         public DbSet<Gender> Genders { get; set; }
