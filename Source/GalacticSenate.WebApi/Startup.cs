@@ -29,13 +29,18 @@ namespace GalacticSenate.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
+
+            optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DataContext"));
+            services.AddSingleton(_ => new DataContextFactory(optionsBuilder.Options));
+
             services.AddDbContext<DataContext>(options =>
             {
-                options.UseSqlServer("Server=galacticsenatedb,1433;Database=Celestial;User Id=sa;Password=qweasd!@!;");
+                //"Server=galacticsenatedb,1433;Database=Celestial;User Id=sa;Password=qweasd!@!;
+                options.UseSqlServer(Configuration.GetConnectionString("DataContext"));
             });
             // services.AddScoped<DataContext>();
-
-            services.AddScoped<IUnitOfWork<DataContext>, UnitOfWork<DataContext>>();
+            //services.AddScoped<IUnitOfWork<DataContext>, UnitOfWork<DataContext>>();
 
             services.AddScoped(provider =>
             {
