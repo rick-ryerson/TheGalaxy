@@ -28,7 +28,7 @@ namespace GalacticSenate.WebApi.Controllers.v1
         {
             try
             {
-                return Ok(genderService.Read(new ReadGenderMultiRequest { PageIndex = pageIndex, PageSize = pageSize }));
+                return Ok(genderService.ReadAsync(new ReadGenderMultiRequest { PageIndex = pageIndex, PageSize = pageSize }));
             }
             catch (Exception ex)
             {
@@ -42,7 +42,7 @@ namespace GalacticSenate.WebApi.Controllers.v1
         {
             try
             {
-                return Ok(genderService.Read(new ReadGenderRequest { Id = id }));
+                return Ok(genderService.ReadAsync(new ReadGenderRequest { Id = id }));
             }
             catch (Exception ex)
             {
@@ -56,7 +56,7 @@ namespace GalacticSenate.WebApi.Controllers.v1
         {
             try
             {
-                return Ok(genderService.Add(new AddGenderRequest { Value = value }));
+                return Ok(await genderService.AddAsync(new AddGenderRequest { Value = value }));
             }
             catch (Exception ex)
             {
@@ -70,7 +70,7 @@ namespace GalacticSenate.WebApi.Controllers.v1
         {
             try
             {
-                return Ok(genderService.Update(new UpdateGenderRequest { Id = id, NewValue = value }));
+                return Ok(genderService.UpdateAsync(new UpdateGenderRequest { Id = id, NewValue = value }));
             }
             catch (Exception ex)
             {

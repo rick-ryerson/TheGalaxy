@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace GalacticSenate.Data.Implementations.EntityFramework
 {
@@ -24,9 +25,9 @@ namespace GalacticSenate.Data.Implementations.EntityFramework
             return gender;
         }
 
-        public void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            var gender = Get(id);
+            var gender = await GetAsync(id);
 
             unitOfWork.Context.Genders.Remove(gender);
         }
@@ -40,19 +41,19 @@ namespace GalacticSenate.Data.Implementations.EntityFramework
                 .Take(pageSize);
         }
 
-        public Gender Get(int id)
+        public async Task<Gender> GetAsync(int id)
         {
-            return unitOfWork.Context
+            return await unitOfWork.Context
                 .Genders
-                .Find(id);
+                .FindAsync(id);
         }
 
-        public Gender GetExact(string value)
+        public async Task<Gender> GetExactAsync(string value)
         {
-            return unitOfWork.Context
+            return await unitOfWork.Context
                 .Genders
                 .Where(g => g.Value == value)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
         public IEnumerable<Gender> GetContains(string value)
         {

@@ -2,17 +2,18 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace GalacticSenate.Data.Interfaces
 {
     public interface IGenderRepository
     {
         IEnumerable<Gender> Get(int pageIndex, int pageSize);
-        Gender Get(int id);
-        Gender GetExact(string value);
+        Task<Gender> GetAsync(int id);
+        Task<Gender> GetExactAsync(string value);
         IEnumerable<Gender> GetContains(string value);
         Gender Add(Gender gender);
         void Update(Gender gender);
-        void Delete(int id);
+        Task DeleteAsync(int id);
     }
 }

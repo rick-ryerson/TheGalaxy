@@ -5,18 +5,19 @@ using GalacticSenate.Library.Gender.Requests;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Model = GalacticSenate.Domain.Model;
 
 namespace GalacticSenate.Library.Gender
 {
     public interface IGenderService
     {
-        ModelResponse<Model.Gender> Add(AddGenderRequest request);
+        Task<ModelResponse<Model.Gender>> AddAsync(AddGenderRequest request);
         BasicResponse Delete(DeleteGenderRequest request);
-        ModelResponse<Model.Gender> Read(ReadGenderMultiRequest request);
-        ModelResponse<Model.Gender> Read(ReadGenderRequest request);
-        ModelResponse<Model.Gender> Read(ReadGenderValueRequest request);
-        ModelResponse<Model.Gender> Update(UpdateGenderRequest request);
+        Task<ModelResponse<Model.Gender>> ReadAsync(ReadGenderMultiRequest request);
+        Task<ModelResponse<Model.Gender>> ReadAsync(ReadGenderRequest request);
+        Task<ModelResponse<Model.Gender>> ReadAsync(ReadGenderValueRequest request);
+        Task<ModelResponse<Model.Gender>> UpdateAsync(UpdateGenderRequest request);
     }
 
     public class GenderService : IGenderService
@@ -30,11 +31,11 @@ namespace GalacticSenate.Library.Gender
             this.genderRepository = genderRepository ?? throw new ArgumentNullException(nameof(genderRepository));
         }
 
-        public ModelResponse<Model.Gender> Add(AddGenderRequest request)
+        public async Task<ModelResponse<Model.Gender>> AddAsync(AddGenderRequest request)
         {
             var response = new ModelResponse<Model.Gender>(DateTime.Now);
 
-            var existing = genderRepository.GetExact(request.Value);
+            var existing = await genderRepository.GetExactAsync(request.Value);
 
             try
             {
@@ -67,7 +68,7 @@ namespace GalacticSenate.Library.Gender
 
             return response.Finalize();
         }
-        public ModelResponse<Model.Gender> Update(UpdateGenderRequest request)
+        public async Task<ModelResponse<Model.Gender>> UpdateAsync(UpdateGenderRequest request)
         {
             if (request is null)
                 throw new ArgumentNullException(nameof(request));
@@ -80,7 +81,7 @@ namespace GalacticSenate.Library.Gender
 
             try
             {
-                existing = genderRepository.Get(request.Id);
+                existing = await genderRepository.GetAsync(request.Id);
             }
             catch (Exception ex)
             {
@@ -118,7 +119,7 @@ namespace GalacticSenate.Library.Gender
             return response.Finalize();
         }
 
-        public ModelResponse<Model.Gender> Read(ReadGenderMultiRequest request)
+        public async Task<ModelResponse<Model.Gender>> ReadAsync(ReadGenderMultiRequest request)
         {
             var response = new ModelResponse<Model.Gender>(DateTime.Now);
 
@@ -135,14 +136,14 @@ namespace GalacticSenate.Library.Gender
             }
             return response.Finalize();
         }
-        public ModelResponse<Model.Gender> Read(ReadGenderValueRequest request)
+        public async Task<ModelResponse<Model.Gender>> ReadAsync(ReadGenderValueRequest request)
         {
             var response = new ModelResponse<Model.Gender>(DateTime.Now);
 
             try
             {
                 if (request.Exact)
-                    response.Results.Add(genderRepository.GetExact(request.Value));
+                    response.Results.Add(await genderRepository.GetExactAsync(request.Value));
                 else
                     response.Results.AddRange(genderRepository.GetContains(request.Value));
 
@@ -155,13 +156,13 @@ namespace GalacticSenate.Library.Gender
             }
             return response.Finalize();
         }
-        public ModelResponse<Model.Gender> Read(ReadGenderRequest request)
+        public async Task<ModelResponse<Model.Gender>> ReadAsync(ReadGenderRequest request)
         {
             var response = new ModelResponse<Model.Gender>(DateTime.Now);
 
             try
             {
-                response.Results.Add(genderRepository.Get(request.Id));
+                response.Results.Add(await genderRepository.GetAsync(request.Id));
 
                 response.Status = StatusEnum.Successful;
             }
@@ -179,7 +180,7 @@ namespace GalacticSenate.Library.Gender
 
             try
             {
-                genderRepository.Delete(request.Id);
+                genderRepository.DeleteAsync(request.Id);
                 unitOfWork.Save();
 
                 response.Status = StatusEnum.Successful;
