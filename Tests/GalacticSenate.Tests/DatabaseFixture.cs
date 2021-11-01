@@ -13,21 +13,20 @@ namespace GalacticSenate.Tests
         private bool disposedValue;
         protected readonly DbContextOptions<DataContext> options;
         protected readonly DataContextFactory contextFactory;
+        protected readonly DataContext dataContext;
+
         public DatabaseFixture(string databaseName)
         {
             options = new DbContextOptionsBuilder<DataContext>().UseInMemoryDatabase(databaseName).Options;
             contextFactory = new DataContextFactory(options);
 
-            var genders = new List<Gender>()
-            {
-                new Gender { Id = 1, Value = "Male" },
-                new Gender { Id = 2, Value = "Female" }
-            };
+            dataContext = contextFactory.GetNewDataContext();
 
-            using (var context = contextFactory.GetNewDataContext())
-            {
-                context.Set<Gender>().AddRange(genders);
-            }
+            dataContext.Genders.Add(new Gender { Value = "Male" });
+            dataContext.Genders.Add(new Gender { Value = "Female" });
+            dataContext.Genders.Add(new Gender { Value = "Non-binary" });
+
+            dataContext.SaveChanges();
         }
 
         protected virtual void Dispose(bool disposing)

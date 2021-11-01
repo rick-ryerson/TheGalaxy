@@ -5,7 +5,12 @@ using System.Text;
 
 namespace GalacticSenate.Data.Implementations.EntityFramework
 {
-    public class DataContextFactory
+    public interface IDataContextFactory
+    {
+        DataContext GetNewDataContext();
+    }
+
+    public class DataContextFactory : IDataContextFactory
     {
         private readonly DbContextOptions<DataContext> options;
 

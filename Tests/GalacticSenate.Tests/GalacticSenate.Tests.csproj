@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Source\GalacticSenate.Data\GalacticSenate.Data.csproj" />
     <ProjectReference Include="..\..\Source\GalacticSenate.Domain\GalacticSenate.Domain.csproj" />
+    <ProjectReference Include="..\..\Source\GalacticSenate.Library\GalacticSenate.Library.csproj" />
   </ItemGroup>
 
 </Project>

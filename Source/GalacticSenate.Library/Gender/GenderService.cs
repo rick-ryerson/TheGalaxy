@@ -1,4 +1,5 @@
-﻿using GalacticSenate.Data.Interfaces;
+﻿using GalacticSenate.Data.Implementations.EntityFramework;
+using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Domain.Exceptions;
 using GalacticSenate.Library.Gender.Requests;
 using System;
@@ -10,58 +11,68 @@ namespace GalacticSenate.Library.Gender
 {
     public interface IGenderService
     {
-        ModelResponse<Model.Gender> Add(AddGenderRequest addGenderRequest);
+        ModelResponse<Model.Gender> Add(AddGenderRequest request);
         BasicResponse Delete(DeleteGenderRequest request);
         ModelResponse<Model.Gender> Read(ReadGenderMultiRequest request);
         ModelResponse<Model.Gender> Read(ReadGenderRequest request);
         ModelResponse<Model.Gender> Read(ReadGenderValueRequest request);
-        ModelResponse<Model.Gender> Update(UpdateGenderRequest updateGenderRequest);
+        ModelResponse<Model.Gender> Update(UpdateGenderRequest request);
     }
 
     public class GenderService : IGenderService
     {
+        private readonly IUnitOfWork<DataContext> unitOfWork;
         private readonly IGenderRepository genderRepository;
 
-        public GenderService(IGenderRepository genderRepository)
+        public GenderService(IUnitOfWork<DataContext> unitOfWork, IGenderRepository genderRepository)
         {
+            this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
             this.genderRepository = genderRepository ?? throw new ArgumentNullException(nameof(genderRepository));
         }
 
-        public ModelResponse<Model.Gender> Add(AddGenderRequest addGenderRequest)
+        public ModelResponse<Model.Gender> Add(AddGenderRequest request)
         {
-            if (addGenderRequest is null)
-                throw new ArgumentNullException(nameof(addGenderRequest));
-            if (string.IsNullOrEmpty(addGenderRequest.Value))
-                throw new ArgumentNullException(nameof(addGenderRequest.Value));
-
             var response = new ModelResponse<Model.Gender>(DateTime.Now);
 
-            var existing = genderRepository.GetExact(addGenderRequest.Value);
+            var existing = genderRepository.GetExact(request.Value);
 
-            if (existing is null)
+            try
             {
-                existing = genderRepository.Add(new Model.Gender { Value = addGenderRequest.Value });
+                if (request is null)
+                    throw new ArgumentNullException(nameof(request));
+                if (string.IsNullOrEmpty(request.Value))
+                    throw new ArgumentNullException(nameof(request.Value));
 
-                response.Messages.Add($"Gender with value {addGenderRequest.Value} added.");
+                if (existing is null)
+                {
+                    existing = genderRepository.Add(new Model.Gender { Value = request.Value });
+                    unitOfWork.Save();
+
+                    response.Messages.Add($"Gender with value {request.Value} added.");
+                }
+                else
+                {
+                    response.Messages.Add($"Gender with value {request.Value} already exists.");
+                }
+
+                response.Results.Add(existing);
+
+                response.Status = StatusEnum.Successful;
             }
-            else
+            catch (Exception ex)
             {
-                response.Messages.Add($"Gender with value {addGenderRequest.Value} already exists.");
+                response.Status = StatusEnum.Failed;
+                response.Messages.Add(ex.Message);
             }
 
-            response.Results.Add(existing);
-            response.Status = StatusEnum.Successful;
-
-            response.Duration = DateTime.Now - response.Start;
-
-            return response;
+            return response.Finalize();
         }
-        public ModelResponse<Model.Gender> Update(UpdateGenderRequest updateGenderRequest)
+        public ModelResponse<Model.Gender> Update(UpdateGenderRequest request)
         {
-            if (updateGenderRequest is null)
-                throw new ArgumentNullException(nameof(updateGenderRequest));
-            if (string.IsNullOrEmpty(updateGenderRequest.NewValue))
-                throw new ArgumentNullException(nameof(updateGenderRequest.NewValue));
+            if (request is null)
+                throw new ArgumentNullException(nameof(request));
+            if (string.IsNullOrEmpty(request.NewValue))
+                throw new ArgumentNullException(nameof(request.NewValue));
 
             var response = new ModelResponse<Model.Gender>(DateTime.Now);
 
@@ -69,7 +80,7 @@ namespace GalacticSenate.Library.Gender
 
             try
             {
-                existing = genderRepository.Get(updateGenderRequest.Id);
+                existing = genderRepository.Get(request.Id);
             }
             catch (Exception ex)
             {
@@ -79,20 +90,29 @@ namespace GalacticSenate.Library.Gender
 
             if (existing is null)
             {
-                response.Messages.Add($"Gender with id {updateGenderRequest.Id} does not exist.");
+                response.Messages.Add($"Gender with id {request.Id} does not exist.");
                 response.Status = StatusEnum.Failed;
             }
             else
             {
-                var oldValue = existing.Value;
-                existing.Value = updateGenderRequest.NewValue;
+                try
+                {
+                    var oldValue = existing.Value;
+                    existing.Value = request.NewValue;
 
-                genderRepository.Update(existing);
+                    genderRepository.Update(existing);
+                    unitOfWork.Save();
 
-                response.Messages.Add($"Gender with id {existing.Id} updated from {oldValue} to {existing.Value}.");
-                response.Results.Add(existing);
+                    response.Messages.Add($"Gender with id {existing.Id} updated from {oldValue} to {existing.Value}.");
+                    response.Results.Add(existing);
 
-                response.Status = StatusEnum.Successful;
+                    response.Status = StatusEnum.Successful;
+                }
+                catch (Exception ex)
+                {
+                    response.Messages.Add(ex.Message);
+                    response.Status = StatusEnum.Failed;
+                }
             }
 
             return response.Finalize();
@@ -160,6 +180,7 @@ namespace GalacticSenate.Library.Gender
             try
             {
                 genderRepository.Delete(request.Id);
+                unitOfWork.Save();
 
                 response.Status = StatusEnum.Successful;
             }
