@@ -16,7 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Celestial\Source\GalacticSenate.Data\GalacticSenate.Data.csproj" />
+    <ProjectReference Include="..\..\Source\GalacticSenate.Data\GalacticSenate.Data.csproj" />
+    <ProjectReference Include="..\..\Source\GalacticSenate.Domain\GalacticSenate.Domain.csproj" />
   </ItemGroup>
 
 </Project>
