@@ -46,7 +46,7 @@ namespace GalacticSenate.Library.Gender
 
                 if (existing is null)
                 {
-                    existing = genderRepository.AddAsync(new Model.Gender { Value = request.Value });
+                    existing = await genderRepository.AddAsync(new Model.Gender { Value = request.Value });
                     unitOfWork.Save();
 
                     response.Messages.Add($"Gender with value {request.Value} added.");
@@ -102,7 +102,7 @@ namespace GalacticSenate.Library.Gender
 
                     if (oldValue == request.NewValue)
                     {
-                        response.Messages.Add($"Gender with id {existing.Id} has a value of {oldValue} already.");
+                        response.Messages.Add($"Gender with id {existing.Id} already has a value of {oldValue}.");
                     }
                     else
                     {
