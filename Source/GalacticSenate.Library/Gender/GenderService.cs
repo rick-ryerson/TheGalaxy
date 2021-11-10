@@ -143,7 +143,8 @@ namespace GalacticSenate.Library.Gender
                 response.Messages.Add(ex.Message);
                 response.Status = StatusEnum.Failed;
             }
-            return response.Finalize();
+
+            return await Task.Run(() => { return response.Finalize(); });
         }
         public async Task<ModelResponse<Model.Gender, ReadGenderValueRequest>> ReadAsync(ReadGenderValueRequest request)
         {
