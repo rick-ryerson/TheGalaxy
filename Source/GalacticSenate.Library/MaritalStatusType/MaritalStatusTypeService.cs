@@ -23,19 +23,19 @@ namespace GalacticSenate.Library.MaritalStatusType
     public class MaritalStatusTypeService : IMaritalStatusTypeService
     {
         private readonly IUnitOfWork<DataContext> unitOfWork;
-        private readonly IMaritalStatusTypeRepository genderRepository;
+        private readonly IMaritalStatusTypeRepository maritalStatusTypeRepository;
 
         public MaritalStatusTypeService(IUnitOfWork<DataContext> unitOfWork)
         {
             this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-            this.genderRepository = unitOfWork.GetMaritalStatusTypeRepository() ?? throw new ApplicationException("Couldn't create gender repository");
+            this.maritalStatusTypeRepository = unitOfWork.GetMaritalStatusTypeRepository() ?? throw new ApplicationException("Couldn't create maritalStatusType repository");
         }
 
         public async Task<ModelResponse<Model.MaritalStatusType, AddMaritalStatusTypeRequest>> AddAsync(AddMaritalStatusTypeRequest request)
         {
             var response = new ModelResponse<Model.MaritalStatusType, AddMaritalStatusTypeRequest>(DateTime.Now, request);
 
-            var existing = await genderRepository.GetExactAsync(request.Value);
+            var existing = await maritalStatusTypeRepository.GetExactAsync(request.Value);
 
             try
             {
@@ -46,7 +46,7 @@ namespace GalacticSenate.Library.MaritalStatusType
 
                 if (existing is null)
                 {
-                    existing = await genderRepository.AddAsync(new Model.MaritalStatusType { Value = request.Value });
+                    existing = await maritalStatusTypeRepository.AddAsync(new Model.MaritalStatusType { Value = request.Value });
                     unitOfWork.Save();
 
                     response.Messages.Add($"MaritalStatusType with value {request.Value} added.");
@@ -81,7 +81,7 @@ namespace GalacticSenate.Library.MaritalStatusType
 
             try
             {
-                existing = await genderRepository.GetAsync(request.Id);
+                existing = await maritalStatusTypeRepository.GetAsync(request.Id);
             }
             catch (Exception ex)
             {
@@ -108,7 +108,7 @@ namespace GalacticSenate.Library.MaritalStatusType
                     {
                         existing.Value = request.NewValue;
 
-                        genderRepository.Update(existing);
+                        maritalStatusTypeRepository.Update(existing);
                         unitOfWork.Save();
 
                         response.Messages.Add($"MaritalStatusType with id {existing.Id} updated from {oldValue} to {existing.Value}.");
@@ -134,7 +134,7 @@ namespace GalacticSenate.Library.MaritalStatusType
 
             try
             {
-                response.Results.AddRange(genderRepository.Get(request.PageIndex, request.PageSize));
+                response.Results.AddRange(maritalStatusTypeRepository.Get(request.PageIndex, request.PageSize));
 
                 response.Status = StatusEnum.Successful;
             }
@@ -153,9 +153,9 @@ namespace GalacticSenate.Library.MaritalStatusType
             try
             {
                 if (request.Exact)
-                    response.Results.Add(await genderRepository.GetExactAsync(request.Value));
+                    response.Results.Add(await maritalStatusTypeRepository.GetExactAsync(request.Value));
                 else
-                    response.Results.AddRange(genderRepository.GetContains(request.Value));
+                    response.Results.AddRange(maritalStatusTypeRepository.GetContains(request.Value));
 
                 response.Status = StatusEnum.Successful;
             }
@@ -172,7 +172,10 @@ namespace GalacticSenate.Library.MaritalStatusType
 
             try
             {
-                response.Results.Add(await genderRepository.GetAsync(request.Id));
+                var maritalStatus = await maritalStatusTypeRepository.GetAsync(request.Id);
+
+                if (maritalStatus != null)
+                    response.Results.Add(maritalStatus);
 
                 response.Status = StatusEnum.Successful;
             }
@@ -190,7 +193,7 @@ namespace GalacticSenate.Library.MaritalStatusType
 
             try
             {
-                await genderRepository.DeleteAsync(request.Id);
+                await maritalStatusTypeRepository.DeleteAsync(request.Id);
                 unitOfWork.Save();
 
                 response.Status = StatusEnum.Successful;

@@ -172,7 +172,10 @@ namespace GalacticSenate.Library.Gender
 
             try
             {
-                response.Results.Add(await genderRepository.GetAsync(request.Id));
+                var gender = await genderRepository.GetAsync(request.Id);
+
+                if (gender != null)
+                    response.Results.Add(await genderRepository.GetAsync(request.Id));
 
                 response.Status = StatusEnum.Successful;
             }
