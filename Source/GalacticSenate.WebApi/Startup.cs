@@ -33,12 +33,10 @@ namespace GalacticSenate.WebApi
         {
             var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
 
-            optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DataContext"));
-            services.AddSingleton(_ => new DataContextFactory(optionsBuilder.Options));
-
             services.AddDbContext<DataContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DataContext"));
+                services.AddSingleton(_ => new DataContextFactory(optionsBuilder.Options));
             });
 
             services.AddScoped<IUnitOfWork<DataContext>, UnitOfWork>();
