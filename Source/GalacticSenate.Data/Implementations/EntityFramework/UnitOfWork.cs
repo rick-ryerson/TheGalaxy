@@ -67,6 +67,10 @@ namespace GalacticSenate.Data.Implementations.EntityFramework
         {
             return new GenderRepository(this);
         }
+        public IMaritalStatusTypeRepository GetMaritalStatusTypeRepository()
+        {
+            return new MaritalStatusTypeRepository(this);
+        }
 
         protected virtual void Dispose(bool disposing)
         {

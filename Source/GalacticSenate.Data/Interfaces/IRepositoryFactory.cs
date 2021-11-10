@@ -7,5 +7,6 @@ namespace GalacticSenate.Data.Interfaces
     public interface IRepositoryFactory
     {
         IGenderRepository GetGenderRepository();
+        IMaritalStatusTypeRepository GetMaritalStatusTypeRepository();
     }
 }
