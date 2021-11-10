@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GalacticSenate.Domain.Exceptions;
 
 namespace GalacticSenate.Data.Implementations.EntityFramework
 {
@@ -18,9 +19,9 @@ namespace GalacticSenate.Data.Implementations.EntityFramework
             this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
         }
 
-        public Gender Add(Gender gender)
+        public async Task<Gender> AddAsync(Gender gender)
         {
-            unitOfWork.Context.Genders.Add(gender);
+            await unitOfWork.Context.Genders.AddAsync(gender);
 
             return gender;
         }
@@ -28,6 +29,9 @@ namespace GalacticSenate.Data.Implementations.EntityFramework
         public async Task DeleteAsync(int id)
         {
             var gender = await GetAsync(id);
+
+            if (gender == null)
+                throw new DeleteException($"Gender with id {id} does not exist.");
 
             unitOfWork.Context.Genders.Remove(gender);
         }

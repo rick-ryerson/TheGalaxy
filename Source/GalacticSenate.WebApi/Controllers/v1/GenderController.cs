@@ -28,7 +28,7 @@ namespace GalacticSenate.WebApi.Controllers.v1
         {
             try
             {
-                return Ok(genderService.ReadAsync(new ReadGenderMultiRequest { PageIndex = pageIndex, PageSize = pageSize }));
+                return Ok(await genderService.ReadAsync(new ReadGenderMultiRequest { PageIndex = pageIndex, PageSize = pageSize }));
             }
             catch (Exception ex)
             {
@@ -42,7 +42,7 @@ namespace GalacticSenate.WebApi.Controllers.v1
         {
             try
             {
-                return Ok(genderService.ReadAsync(new ReadGenderRequest { Id = id }));
+                return Ok(await genderService.ReadAsync(new ReadGenderRequest { Id = id }));
             }
             catch (Exception ex)
             {
@@ -70,7 +70,7 @@ namespace GalacticSenate.WebApi.Controllers.v1
         {
             try
             {
-                return Ok(genderService.UpdateAsync(new UpdateGenderRequest { Id = id, NewValue = value }));
+                return Ok(await genderService.UpdateAsync(new UpdateGenderRequest { Id = id, NewValue = value }));
             }
             catch (Exception ex)
             {
@@ -80,11 +80,11 @@ namespace GalacticSenate.WebApi.Controllers.v1
 
         // DELETE api/<GenderController>/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
             try
             {
-                return Ok(genderService.Delete(new DeleteGenderRequest { Id = id }));
+                return Ok(await genderService.DeleteAsync(new DeleteGenderRequest { Id = id }));
             }
             catch (Exception ex)
             {

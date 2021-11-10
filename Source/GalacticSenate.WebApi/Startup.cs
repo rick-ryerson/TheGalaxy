@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace GalacticSenate.WebApi
@@ -36,14 +37,22 @@ namespace GalacticSenate.WebApi
 
             services.AddDbContext<DataContext>(options =>
             {
-                //"Server=galacticsenatedb,1433;Database=Celestial;User Id=sa;Password=qweasd!@!;
                 options.UseSqlServer(Configuration.GetConnectionString("DataContext"));
             });
-            // services.AddScoped<DataContext>();
-            //services.AddScoped<IUnitOfWork<DataContext>, UnitOfWork<DataContext>>();
+
+            services.AddScoped<IUnitOfWork<DataContext>, UnitOfWork>();
 
             services.AddScoped<IGenderService, GenderService>();
-            services.AddControllers();
+
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions
+                        .Converters
+                        .Add(new JsonStringEnumConverter());
+                });
+
+            ;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

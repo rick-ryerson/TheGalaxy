@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,49 +12,48 @@ namespace GalacticSenate.Library
         Successful,
         Failed
     }
-    public class ModelResponse<TModel> : BasicResponse
+    public class ModelResponse<TModel, TRequest> : BasicResponse<TRequest>
     {
-        public ModelResponse(DateTime startTime) : base(startTime)
+        public ModelResponse(DateTime startTime, TRequest request) : base(startTime, request)
         {
+
         }
 
         public List<TModel> Results { get; set; } = new List<TModel>();
 
-        public new ModelResponse<TModel> Finalize()
+        public new ModelResponse<TModel, TRequest> Finalize()
         {
-            return (ModelResponse<TModel>)base.Finalize();
+            return (ModelResponse<TModel, TRequest>)base.Finalize();
         }
-        new ModelResponse<TModel> Finalize(DateTime finish)
+        new ModelResponse<TModel, TRequest> Finalize(DateTime finish)
         {
-            return (ModelResponse<TModel>)base.Finalize(finish);
+            return (ModelResponse<TModel, TRequest>)base.Finalize(finish);
         }
     }
 
-    public class BasicResponse
+    public class BasicResponse<TRequest>
     {
-        public BasicResponse(DateTime startTime)
+        public BasicResponse(DateTime startTime, TRequest request)
         {
             Start = startTime;
             Duration = TimeSpan.Zero;
             Messages = new List<string>();
+            Request = request;
         }
-
-        public int PageIndex { get; set; }
-        public int PageSize { get; set; }
+        public TRequest Request { get; }
         public DateTime Start { get; set; }
         public TimeSpan Duration { get; set; }
         public List<string> Messages { get; set; }
-
         public StatusEnum Status { get; set; }
 
-        public BasicResponse Finalize(DateTime finish)
+        public BasicResponse<TRequest> Finalize(DateTime finish)
         {
             this.Duration = finish - Start;
 
             return this;
         }
 
-        public BasicResponse Finalize()
+        public BasicResponse<TRequest> Finalize()
         {
             return Finalize(DateTime.Now);
         }

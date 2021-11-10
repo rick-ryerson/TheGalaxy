@@ -13,6 +13,8 @@ namespace GalacticSenate.WebApi
     {
         public static void Main(string[] args)
         {
+            Console.WriteLine("Hello World from WebApi!");
+
             CreateHostBuilder(args).Build().Run();
         }
 

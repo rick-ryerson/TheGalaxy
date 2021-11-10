@@ -12,7 +12,7 @@ namespace GalacticSenate.Data.Interfaces
         Task<Gender> GetAsync(int id);
         Task<Gender> GetExactAsync(string value);
         IEnumerable<Gender> GetContains(string value);
-        Gender Add(Gender gender);
+        Task<Gender> AddAsync(Gender gender);
         void Update(Gender gender);
         Task DeleteAsync(int id);
     }
