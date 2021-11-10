@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace GalacticSenate.Library.Gender.Requests
+namespace GalacticSenate.Library.MaritalStatusType.Requests
 {
     public class ReadMaritalStatusTypeMultiRequest
     {
