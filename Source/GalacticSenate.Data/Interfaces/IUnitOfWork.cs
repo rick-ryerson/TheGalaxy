@@ -6,7 +6,7 @@ using System.Text;
 
 namespace GalacticSenate.Data.Interfaces
 {
-    public interface IUnitOfWork<out TContext> where TContext : DbContext
+    public interface IUnitOfWork<out TContext> : IRepositoryFactory where TContext : DbContext
     {
         TContext Context { get; }
 

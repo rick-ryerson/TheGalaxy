@@ -14,13 +14,13 @@ namespace GalacticSenate.Tests
     public class GenderServiceUnitTests : DatabaseFixture
     {
         private readonly IGenderService genderService;
-        private readonly UnitOfWork<DataContext> unitOfWork;
+        private readonly UnitOfWork unitOfWork;
 
         public GenderServiceUnitTests() : base("DataContext")
         {
-            unitOfWork = new UnitOfWork<DataContext>(dataContext);
-            var genderRepository = RepositoryFactory.GenderRepository(unitOfWork);
-            genderService = new GenderService(unitOfWork, genderRepository);
+            unitOfWork = new UnitOfWork(dataContext);
+            var genderRepository = unitOfWork.GetGenderRepository();
+            genderService = new GenderService(unitOfWork);
         }
         [TestMethod]
         public async Task Add_Test()

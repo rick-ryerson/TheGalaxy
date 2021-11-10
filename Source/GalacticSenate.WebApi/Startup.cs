@@ -42,10 +42,6 @@ namespace GalacticSenate.WebApi
             // services.AddScoped<DataContext>();
             //services.AddScoped<IUnitOfWork<DataContext>, UnitOfWork<DataContext>>();
 
-            services.AddScoped(provider =>
-            {
-                return RepositoryFactory.GenderRepository(provider.GetRequiredService<IUnitOfWork<DataContext>>());
-            });
             services.AddScoped<IGenderService, GenderService>();
             services.AddControllers();
         }

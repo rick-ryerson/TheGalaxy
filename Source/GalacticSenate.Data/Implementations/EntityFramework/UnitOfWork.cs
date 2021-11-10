@@ -9,18 +9,18 @@ using System.Text;
 
 namespace GalacticSenate.Data.Implementations.EntityFramework
 {
-    public class UnitOfWork<TContext> : IUnitOfWork<TContext>, IDisposable where TContext : DbContext
+    public class UnitOfWork : IUnitOfWork<DataContext>, IDisposable 
     {
         private bool disposedValue;
         private IDbContextTransaction transaction;
-        private readonly TContext context;
+        private readonly DataContext context;
 
-        public UnitOfWork(TContext context)
+        public UnitOfWork(DataContext context)
         {
             this.context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public TContext Context
+        public DataContext Context
         {
             get
             {
@@ -61,6 +61,11 @@ namespace GalacticSenate.Data.Implementations.EntityFramework
             {
                 throw new SaveException(new List<string> { "An error occurred while attempting to save.", dbue.Message }, dbue.Entries.Select(e => e.Entity.ToString()).ToList(), dbue);
             }
+        }
+
+        public IGenderRepository GetGenderRepository()
+        {
+            return new GenderRepository(this);
         }
 
         protected virtual void Dispose(bool disposing)
