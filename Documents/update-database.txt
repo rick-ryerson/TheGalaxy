@@ -10,5 +10,6 @@ PeopleAndOrganizations - PeopleAndOrganizations.ConsoleApp
 
 EntityFramework commands 
 
-Add-Migration -Name <MigrationName> -Context PeopleAndOrganizations.Data.Implementations.EntityFramework.DataContext -Project PeopleAndOrganizations.Data -StartupProject PeopleAndOrganizations.ConsoleApp
-Update-Database -Context PeopleAndOrganizations.Data.Implementations.EntityFramework.DataContext -Project PeopleAndOrganizations.Data -StartupProject PeopleAndOrganizations.ConsoleApp 
+Add-Migration -Name <MigrationName> -Context GalacticSenate.Data.Implementations.EntityFramework.DataContext -Project GalacticSenate.Data -StartupProject GalacticSenate.ConsoleApp
+Update-Database -Context GalacticSenate.Data.Implementations.EntityFramework.DataContext -Project GalacticSenate.Data -StartupProject GalacticSenate.ConsoleApp 
+

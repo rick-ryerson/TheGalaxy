@@ -9,7 +9,6 @@ namespace GalacticSenate.Domain.Model
     {
         public Guid OrganizationId { get; set; }
         public int OrganizationNameValueId { get; set; }
-        public int Ordinal { get; set; }
         public DateTime FromDate { get; set; }
         public DateTime? ThruDate { get; set; }
 
