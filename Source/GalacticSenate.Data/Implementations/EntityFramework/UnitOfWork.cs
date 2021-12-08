@@ -60,6 +60,9 @@ namespace GalacticSenate.Data.Implementations.EntityFramework {
       public IOrganizationNameValueRepository GetOrganizationNameValueRepository() {
          return new OrganizationNameValueRepository(this);
       }
+      public IPersonNameValueRepository GetPersonNameValueRepository() {
+         return new PersonNameValueRepository(this);
+      }
       protected virtual void Dispose(bool disposing) {
          if (!disposedValue) {
             if (disposing) {
