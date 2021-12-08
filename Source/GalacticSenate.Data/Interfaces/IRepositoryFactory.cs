@@ -8,5 +8,6 @@ namespace GalacticSenate.Data.Interfaces {
       IMaritalStatusTypeRepository GetMaritalStatusTypeRepository();
       IPersonNameTypeRepository GetPersonNameTypeRepository();
       IOrganizationNameValueRepository GetOrganizationNameValueRepository();
+      IPersonNameValueRepository GetPersonNameValueRepository();
    }
 }
