@@ -16,7 +16,7 @@ namespace GalacticSenate.Data.Implementations.EntityFramework {
 
       protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
          if (!optionsBuilder.IsConfigured) {
-            optionsBuilder.UseSqlServer("Server=localhost,14331;Database=Celestial;User Id=sa;Password=qweasd!@!;");
+            optionsBuilder.UseSqlServer("Server=localhost,14331;Database=GalacticSenate;User Id=sa;Password=qweasd!@!;");
          }
          // optionsBuilder.UseSqlServer("Server=localhost,14331;Database=Celestial;User Id=sa;Password=qweasd!@!;");
          base.OnConfiguring(optionsBuilder);

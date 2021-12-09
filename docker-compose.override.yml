@@ -1,7 +1,8 @@
 version: '3.4'
 services:
   galacticsenate.consoleapp:
-
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
   jediorder.web:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
