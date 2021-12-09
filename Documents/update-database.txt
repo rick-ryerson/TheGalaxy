@@ -13,3 +13,40 @@ EntityFramework commands
 Add-Migration -Name <MigrationName> -Context GalacticSenate.Data.Implementations.EntityFramework.DataContext -Project GalacticSenate.Data -StartupProject GalacticSenate.ConsoleApp
 Update-Database -Context GalacticSenate.Data.Implementations.EntityFramework.DataContext -Project GalacticSenate.Data -StartupProject GalacticSenate.ConsoleApp 
 
+
+
+12/8/2021 - There is a bug in entity framework that prevents creating and applying migrations when there is a constructor with parameters in DataContext, even if there's a parameterless constructor. 
+    The real fix is to implement IDesignTimeDbContextFactory. Until then, in order to create and apply migrations you must modify code. 
+
+1. DataContextFactory - comment out the constructor with parameters and uncomment the no-param constructor call.
+
+      public DataContext GetNewDataContext() {
+         // return new DataContext(options);
+         return new DataContext();
+      }
+
+2. Comment/Uncomment constructors
+
+      //public DataContext([NotNullAttribute] DbContextOptions options) : base(options) {
+
+      //}
+
+      public DataContext() {
+
+      }
+
+3. Comment/Uncomment OnConfiguring code to look like this.
+
+      protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+         //if (!optionsBuilder.IsConfigured) {
+         //   optionsBuilder.UseSqlServer("Server=localhost,14331;Database=Celestial;User Id=sa;Password=qweasd!@!;");
+         //}
+         optionsBuilder.UseSqlServer("Server=localhost,14331;Database=Celestial;User Id=sa;Password=qweasd!@!;");
+         base.OnConfiguring(optionsBuilder);
+      }
+
+After that, you can Add-Migration and Update-Database as long as a db instance is running. Remember to reverse the above changes after updating the db and before running the app. Do not check in these code changes.
+
+
+
+
