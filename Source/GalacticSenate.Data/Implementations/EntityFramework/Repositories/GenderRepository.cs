@@ -1,23 +1,24 @@
-﻿using GalacticSenate.Data.Interfaces;
-using GalacticSenate.Domain.Exceptions;
+﻿using Microsoft.EntityFrameworkCore;
+using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Domain.Model;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GalacticSenate.Domain.Exceptions;
+using GalacticSenate.Data.Interfaces.Repositories;
 
-namespace GalacticSenate.Data.Implementations.EntityFramework {
-   public class PersonNameTypeRepository : IPersonNameTypeRepository {
+namespace GalacticSenate.Data.Implementations.EntityFramework.Repositories {
+   internal class GenderRepository : IGenderRepository {
       private readonly IUnitOfWork<DataContext> unitOfWork;
 
-      public PersonNameTypeRepository(IUnitOfWork<DataContext> unitOfWork) {
+      public GenderRepository(IUnitOfWork<DataContext> unitOfWork) {
          this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
       }
 
-      public async Task<PersonNameType> AddAsync(PersonNameType gender) {
-         await unitOfWork.Context.PersonNameTypes.AddAsync(gender);
+      public async Task<Gender> AddAsync(Gender gender) {
+         await unitOfWork.Context.Genders.AddAsync(gender);
 
          return gender;
       }
@@ -26,45 +27,44 @@ namespace GalacticSenate.Data.Implementations.EntityFramework {
          var gender = await GetAsync(id);
 
          if (gender == null)
-            throw new DeleteException($"PersonNameType with id {id} does not exist.");
+            throw new DeleteException($"Gender with id {id} does not exist.");
 
-         unitOfWork.Context.PersonNameTypes.Remove(gender);
+         unitOfWork.Context.Genders.Remove(gender);
       }
 
-      public IEnumerable<PersonNameType> Get(int pageIndex, int pageSize) {
+      public IEnumerable<Gender> Get(int pageIndex, int pageSize) {
          return unitOfWork.Context
-             .PersonNameTypes
+             .Genders
              .OrderBy(g => g.Id)
              .Skip(pageSize * pageIndex)
              .Take(pageSize);
       }
 
-      public async Task<PersonNameType> GetAsync(int id) {
+      public async Task<Gender> GetAsync(int id) {
          return await unitOfWork.Context
-             .PersonNameTypes
+             .Genders
              .FindAsync(id);
       }
 
-      public async Task<PersonNameType> GetExactAsync(string value) {
+      public async Task<Gender> GetExactAsync(string value) {
          return await unitOfWork.Context
-             .PersonNameTypes
+             .Genders
              .Where(g => g.Value == value)
              .FirstOrDefaultAsync();
       }
-      public IEnumerable<PersonNameType> GetContains(string value) {
+      public IEnumerable<Gender> GetContains(string value) {
          return unitOfWork.Context
-             .PersonNameTypes
+             .Genders
              .Where(g => g.Value.Contains(value));
       }
-      public void Update(PersonNameType gender) {
+      public void Update(Gender gender) {
          unitOfWork.Context
-             .PersonNameTypes
+             .Genders
              .Attach(gender);
 
          unitOfWork.Context
              .Entry(gender)
              .State = EntityState.Modified;
       }
-
    }
 }

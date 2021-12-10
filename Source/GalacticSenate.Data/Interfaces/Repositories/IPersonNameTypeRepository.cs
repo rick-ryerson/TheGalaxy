@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GalacticSenate.Data.Interfaces {
+namespace GalacticSenate.Data.Interfaces.Repositories {
    public interface IPersonNameTypeRepository {
       IEnumerable<PersonNameType> Get(int pageIndex, int pageSize);
       Task<PersonNameType> GetAsync(int id);

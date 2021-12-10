@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GalacticSenate.Data.Interfaces.Repositories;
+using GalacticSenate.Data.Implementations.EntityFramework.Repositories;
 
 namespace GalacticSenate.Data.Implementations.EntityFramework {
    public class UnitOfWork : IUnitOfWork<DataContext>, IDisposable {
@@ -62,6 +64,9 @@ namespace GalacticSenate.Data.Implementations.EntityFramework {
       }
       public IPersonNameValueRepository GetPersonNameValueRepository() {
          return new PersonNameValueRepository(this);
+      }
+      public IPartyRepository GetPartyRepository() {
+         return new PartyRepository(this);
       }
       protected virtual void Dispose(bool disposing) {
          if (!disposedValue) {
