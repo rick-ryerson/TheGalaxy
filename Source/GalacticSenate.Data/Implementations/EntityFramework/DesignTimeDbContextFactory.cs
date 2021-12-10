@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace GalacticSenate.ConsoleApp {
+namespace GalacticSenate.Data.Implementations.EntityFramework {
    /// <summary>
    /// This class is set up to allow migrations building and updating
    /// </summary>
