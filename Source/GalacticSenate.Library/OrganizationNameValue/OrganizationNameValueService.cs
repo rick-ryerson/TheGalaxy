@@ -1,5 +1,6 @@
 ﻿using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
+using GalacticSenate.Data.Interfaces.Repositories;
 using GalacticSenate.Domain.Exceptions;
 using GalacticSenate.Library.OrganizationNameValue.Requests;
 using System;
