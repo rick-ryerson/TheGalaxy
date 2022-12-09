@@ -10,5 +10,7 @@ namespace GalacticSenate.Data.Interfaces.Repositories {
       IOrganizationNameValueRepository GetOrganizationNameValueRepository();
       IPersonNameValueRepository GetPersonNameValueRepository();
       IPartyRepository GetPartyRepository();
+      IOrganizationNameRepository GetOrganizationNameRepository();
+      IOrganizationRepository GetOrganizationRepository();
    }
 }

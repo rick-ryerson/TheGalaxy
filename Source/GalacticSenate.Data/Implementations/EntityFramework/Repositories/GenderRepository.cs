@@ -29,7 +29,10 @@ namespace GalacticSenate.Data.Implementations.EntityFramework.Repositories {
          if (gender == null)
             throw new DeleteException($"Gender with id {id} does not exist.");
 
-         unitOfWork.Context.Genders.Remove(gender);
+         unitOfWork
+            .Context
+            .Genders
+            .Remove(gender);
       }
 
       public IEnumerable<Gender> Get(int pageIndex, int pageSize) {

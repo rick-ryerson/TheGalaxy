@@ -68,6 +68,13 @@ namespace GalacticSenate.Data.Implementations.EntityFramework {
       public IPartyRepository GetPartyRepository() {
          return new PartyRepository(this);
       }
+      public IOrganizationNameRepository GetOrganizationNameRepository() {
+         return new OrganizationNameRepository(this);
+      }
+      public IOrganizationRepository GetOrganizationRepository() {
+         return new OrganizationRepository(this);
+      }
+
       protected virtual void Dispose(bool disposing) {
          if (!disposedValue) {
             if (disposing) {

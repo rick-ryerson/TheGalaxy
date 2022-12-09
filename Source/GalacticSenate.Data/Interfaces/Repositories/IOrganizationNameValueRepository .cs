@@ -10,8 +10,8 @@ namespace GalacticSenate.Data.Interfaces.Repositories {
       Task<OrganizationNameValue> GetAsync(int id);
       Task<OrganizationNameValue> GetExactAsync(string value);
       IEnumerable<OrganizationNameValue> GetContains(string value);
-      Task<OrganizationNameValue> AddAsync(OrganizationNameValue gender);
-      void Update(OrganizationNameValue gender);
+      Task<OrganizationNameValue> AddAsync(OrganizationNameValue organizationNameValue);
+      void Update(OrganizationNameValue organizationNameValue);
       Task DeleteAsync(int id);
    }
 }

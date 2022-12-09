@@ -31,13 +31,13 @@ namespace GalacticSenate.Library.Gender {
       public async Task<ModelResponse<Model.Gender, AddGenderRequest>> AddAsync(AddGenderRequest request) {
          var response = new ModelResponse<Model.Gender, AddGenderRequest>(DateTime.Now, request);
 
-         var existing = await genderRepository.GetExactAsync(request.Value);
+         if (request is null)
+            throw new ArgumentNullException(nameof(request));
+         if (string.IsNullOrEmpty(request.Value))
+            throw new ArgumentNullException(nameof(request.Value));
 
          try {
-            if (request is null)
-               throw new ArgumentNullException(nameof(request));
-            if (string.IsNullOrEmpty(request.Value))
-               throw new ArgumentNullException(nameof(request.Value));
+            var existing = await genderRepository.GetExactAsync(request.Value);
 
             if (existing is null) {
                existing = await genderRepository.AddAsync(new Model.Gender { Value = request.Value });
