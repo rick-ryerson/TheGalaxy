@@ -1,4 +1,7 @@
-Since entity framework tools requires an "interface" type project with microsoft.entityframeworkcore.design and microsoft.entityframeworkcore.tools in order to make migrations and database updates. Each module needs to have a console app in order to run EF commands against.
+Since entity framework tools requires an "interface" type project 
+with microsoft.entityframeworkcore.design and microsoft.entityframeworkcore.tools 
+in order to make migrations and database updates. Each module needs to have a console app 
+in order to run EF commands against.
 
 In order to ensure that the sql server container is running, run the console app 
 
@@ -8,7 +11,7 @@ Then rerun add-migration / update-database
 Modules - Apps
 GalacticSenate - this is the people and organizations services. anything to do with a company, a person, a contact method or a 
 	relationship is setup in this module.
-
+HolowanMechanicals - this is the products services. anything to do with products, goods and services.
 EntityFramework commands 
 
 Add-Migration -Name <MigrationName> -Context GalacticSenate.Data.Implementations.EntityFramework.DataContext -Project GalacticSenate.Data -StartupProject GalacticSenate.ConsoleApp

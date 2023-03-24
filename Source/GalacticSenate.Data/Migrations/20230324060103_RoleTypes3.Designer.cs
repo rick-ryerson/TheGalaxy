@@ -4,14 +4,16 @@ using GalacticSenate.Data.Implementations.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GalacticSenate.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230324060103_RoleTypes3")]
+    partial class RoleTypes3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -124,12 +126,12 @@ namespace GalacticSenate.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("PartyRoleId")
+                    b.Property<int?>("RoleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PartyRoleId");
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Parties");
                 });
@@ -357,17 +359,17 @@ namespace GalacticSenate.Data.Migrations
 
             modelBuilder.Entity("GalacticSenate.Domain.Model.Party", b =>
                 {
-                    b.HasOne("GalacticSenate.Domain.Model.PartyRole", "PartyRole")
+                    b.HasOne("GalacticSenate.Domain.Model.PartyRole", "Role")
                         .WithMany("Parties")
-                        .HasForeignKey("PartyRoleId");
+                        .HasForeignKey("RoleId");
 
-                    b.Navigation("PartyRole");
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("GalacticSenate.Domain.Model.PartyRole", b =>
                 {
                     b.HasOne("GalacticSenate.Domain.Model.PartyRoleType", "PartyRoleType")
-                        .WithMany("PartyRoles")
+                        .WithMany("PArtyRoles")
                         .HasForeignKey("PartyRoleTypeId");
 
                     b.Navigation("PartyRoleType");
@@ -479,7 +481,7 @@ namespace GalacticSenate.Data.Migrations
 
             modelBuilder.Entity("GalacticSenate.Domain.Model.PartyRoleType", b =>
                 {
-                    b.Navigation("PartyRoles");
+                    b.Navigation("PArtyRoles");
                 });
 #pragma warning restore 612, 618
         }

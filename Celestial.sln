@@ -25,6 +25,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GalacticSenate.Tests", "Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Celestial.Common", "Source\Celestial.Common\Celestial.Common.csproj", "{BF2C2912-DD73-4135-99D4-C083C280CAE3}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Products", "Products", "{92ED0BEB-20FE-42B8-A989-1B7AE3121AEB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HolowanMechanicals.Domain", "Source\HolowanMechanicals.Domain\HolowanMechanicals.Domain.csproj", "{B7E2C7FF-A2AC-4837-BF93-ADBE4AB5A866}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +71,10 @@ Global
 		{BF2C2912-DD73-4135-99D4-C083C280CAE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF2C2912-DD73-4135-99D4-C083C280CAE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF2C2912-DD73-4135-99D4-C083C280CAE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7E2C7FF-A2AC-4837-BF93-ADBE4AB5A866}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7E2C7FF-A2AC-4837-BF93-ADBE4AB5A866}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7E2C7FF-A2AC-4837-BF93-ADBE4AB5A866}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7E2C7FF-A2AC-4837-BF93-ADBE4AB5A866}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,6 +87,7 @@ Global
 		{9EDA9726-9458-4E58-A203-CDFAE35129BD} = {7B05D1C2-80B1-433C-9DB0-11C8A362962E}
 		{A7876F6E-EAC4-4E60-BAF1-29475E1335AA} = {7B05D1C2-80B1-433C-9DB0-11C8A362962E}
 		{69C6023A-DBF2-43F4-9401-B08A21053D5D} = {7B05D1C2-80B1-433C-9DB0-11C8A362962E}
+		{B7E2C7FF-A2AC-4837-BF93-ADBE4AB5A866} = {92ED0BEB-20FE-42B8-A989-1B7AE3121AEB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {43DD61BF-B439-4FFE-865F-832B3463C64F}

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using Newtonsoft.Json.Bson;
 
 namespace GalacticSenate.Data.Implementations.EntityFramework {
    public class DataContext : DbContext {
@@ -27,6 +28,10 @@ namespace GalacticSenate.Data.Implementations.EntityFramework {
       public DbSet<PersonName> PersonNames { get; set; }
       public DbSet<PersonNameValue> PersonNameValues { get; set; }
 
+      public DbSet<RoleType> RoleTypes { get; set; }
+      public DbSet<PartyRoleType> PartyRoleTypes { get; set; }
+      public DbSet<PartyRole> PartyRoles { get; set; }
+
       protected override void OnModelCreating(ModelBuilder modelBuilder) {
          BuildGenders(modelBuilder);
          BuildMaritalStatusTypes(modelBuilder);
@@ -41,6 +46,33 @@ namespace GalacticSenate.Data.Implementations.EntityFramework {
          BuildPersonMaritalStatuses(modelBuilder);
          BuildPersonNames(modelBuilder);
          BuildPersonNameValues(modelBuilder);
+
+         BuildRoleTypes(modelBuilder);
+         BuildPartyRoleTypes(modelBuilder);
+      }
+
+      private void BuildPartyRoleTypes(ModelBuilder modelBuilder) {
+         modelBuilder.Entity<PartyRoleType>().ToTable("PartyRoleTypes");
+      }
+
+      private void BuildRoleTypes(ModelBuilder modelBuilder) {
+         modelBuilder.Entity<RoleType>().ToTable("RoleTypes");
+
+         modelBuilder.Entity<RoleType>()
+            .HasKey(p => p.Id);
+         modelBuilder.Entity<RoleType>()
+            .Property(p => p.Id)
+            .IsRequired();
+
+         modelBuilder.Entity<RoleType>()
+            .Property(p => p.Description)
+            .IsRequired(true)
+            .HasMaxLength(50);
+
+         modelBuilder.Entity<RoleType>()
+            .HasIndex(p => p.Description)
+            .IsUnique(true);
+
       }
 
       private void BuildPersonNameValues(ModelBuilder modelBuilder) {
@@ -48,7 +80,7 @@ namespace GalacticSenate.Data.Implementations.EntityFramework {
             .HasKey(p => p.Id);
          modelBuilder.Entity<PersonNameValue>()
             .HasIndex(p => p.Value)
-            .IsUnique(true);;
+            .IsUnique(true); ;
       }
 
       private void BuildPersonNames(ModelBuilder modelBuilder) {
@@ -195,5 +227,6 @@ namespace GalacticSenate.Data.Implementations.EntityFramework {
              .Property(p => p.Value)
              .IsRequired(true);
       }
+
    }
 }

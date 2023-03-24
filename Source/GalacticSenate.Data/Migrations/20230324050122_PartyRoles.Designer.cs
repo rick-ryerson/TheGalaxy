@@ -4,14 +4,16 @@ using GalacticSenate.Data.Implementations.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GalacticSenate.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230324050122_PartyRoles")]
+    partial class PartyRoles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -124,12 +126,12 @@ namespace GalacticSenate.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("PartyRoleId")
+                    b.Property<int?>("RoleId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PartyRoleId");
+                    b.HasIndex("RoleId");
 
                     b.ToTable("Parties");
                 });
@@ -310,19 +312,30 @@ namespace GalacticSenate.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Description")
                         .IsUnique();
 
                     b.ToTable("RoleTypes");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("RoleType");
                 });
 
             modelBuilder.Entity("GalacticSenate.Domain.Model.PartyRoleType", b =>
                 {
                     b.HasBaseType("GalacticSenate.Domain.Model.RoleType");
 
-                    b.ToTable("PartyRoleTypes");
+                    b.Property<int?>("PartyRoleTypeId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("PartyRoleTypeId");
+
+                    b.HasDiscriminator().HasValue("PartyRoleType");
                 });
 
             modelBuilder.Entity("GalacticSenate.Domain.Model.Organization", b =>
@@ -357,17 +370,17 @@ namespace GalacticSenate.Data.Migrations
 
             modelBuilder.Entity("GalacticSenate.Domain.Model.Party", b =>
                 {
-                    b.HasOne("GalacticSenate.Domain.Model.PartyRole", "PartyRole")
+                    b.HasOne("GalacticSenate.Domain.Model.PartyRole", "Role")
                         .WithMany("Parties")
-                        .HasForeignKey("PartyRoleId");
+                        .HasForeignKey("RoleId");
 
-                    b.Navigation("PartyRole");
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("GalacticSenate.Domain.Model.PartyRole", b =>
                 {
                     b.HasOne("GalacticSenate.Domain.Model.PartyRoleType", "PartyRoleType")
-                        .WithMany("PartyRoles")
+                        .WithMany()
                         .HasForeignKey("PartyRoleTypeId");
 
                     b.Navigation("PartyRoleType");
@@ -451,11 +464,9 @@ namespace GalacticSenate.Data.Migrations
 
             modelBuilder.Entity("GalacticSenate.Domain.Model.PartyRoleType", b =>
                 {
-                    b.HasOne("GalacticSenate.Domain.Model.RoleType", null)
-                        .WithOne()
-                        .HasForeignKey("GalacticSenate.Domain.Model.PartyRoleType", "Id")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
+                    b.HasOne("GalacticSenate.Domain.Model.PartyRoleType", null)
+                        .WithMany("Roles")
+                        .HasForeignKey("PartyRoleTypeId");
                 });
 
             modelBuilder.Entity("GalacticSenate.Domain.Model.Organization", b =>
@@ -479,7 +490,7 @@ namespace GalacticSenate.Data.Migrations
 
             modelBuilder.Entity("GalacticSenate.Domain.Model.PartyRoleType", b =>
                 {
-                    b.Navigation("PartyRoles");
+                    b.Navigation("Roles");
                 });
 #pragma warning restore 612, 618
         }
