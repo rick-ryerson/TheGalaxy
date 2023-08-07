@@ -10,7 +10,7 @@ namespace GalacticSenate.Data.Interfaces.Repositories {
       Task<MaritalStatusType> GetAsync(int id);
       Task<MaritalStatusType> GetExactAsync(string value);
       IEnumerable<MaritalStatusType> GetContains(string value);
-      Task<MaritalStatusType> AddAsync(MaritalStatusType gender);
+      Task<MaritalStatusType> AddAsync(MaritalStatusType maritalStatusType);
       void Update(MaritalStatusType gender);
       Task DeleteAsync(int id);
    }

@@ -17,19 +17,19 @@ namespace GalacticSenate.Data.Implementations.EntityFramework.Repositories {
          this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
       }
 
-      public async Task<MaritalStatusType> AddAsync(MaritalStatusType gender) {
-         await unitOfWork.Context.MaritalStatusTypes.AddAsync(gender);
+      public async Task<MaritalStatusType> AddAsync(MaritalStatusType maritalStatusType) {
+         await unitOfWork.Context.MaritalStatusTypes.AddAsync(maritalStatusType);
 
-         return gender;
+         return maritalStatusType;
       }
 
       public async Task DeleteAsync(int id) {
-         var gender = await GetAsync(id);
+         var maritalStatusType = await GetAsync(id);
 
-         if (gender == null)
+         if (maritalStatusType == null)
             throw new DeleteException($"MaritalStatusType with id {id} does not exist.");
 
-         unitOfWork.Context.MaritalStatusTypes.Remove(gender);
+         unitOfWork.Context.MaritalStatusTypes.Remove(maritalStatusType);
       }
 
       public IEnumerable<MaritalStatusType> Get(int pageIndex, int pageSize) {
@@ -57,13 +57,13 @@ namespace GalacticSenate.Data.Implementations.EntityFramework.Repositories {
              .MaritalStatusTypes
              .Where(g => g.Value.Contains(value));
       }
-      public void Update(MaritalStatusType gender) {
+      public void Update(MaritalStatusType maritalStatusType) {
          unitOfWork.Context
              .MaritalStatusTypes
-             .Attach(gender);
+             .Attach(maritalStatusType);
 
          unitOfWork.Context
-             .Entry(gender)
+             .Entry(maritalStatusType)
              .State = EntityState.Modified;
       }
    }
