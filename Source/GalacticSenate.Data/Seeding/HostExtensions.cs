@@ -13,6 +13,7 @@ namespace GalacticSenate.Data.Seeding {
             GenderSeeder.Seed(context);
             MaritalStatusTypeSeeder.Seed(context);
             PersonNameTypeSeeder.Seed(context);
+            OrganizationNameValueSeeder.Seed(context);
 
             context.SaveChanges();
          }

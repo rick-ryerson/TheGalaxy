@@ -17,7 +17,12 @@ namespace GalacticSenate.Data.Seeding {
             new MaritalStatusType() { Value = "Divorced" }
          };
 
-         var diff = add.Where(a => !existing.Any(e => a.Value == e.Value));
+         var dif = add.Where(a => !existing.Any(e => a.Value == e.Value));
+
+         if (!dif.Any())
+            return;
+
+         dataContext.AddRange(dif);
       }
    }
 }

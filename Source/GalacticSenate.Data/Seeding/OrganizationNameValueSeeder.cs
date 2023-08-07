@@ -6,18 +6,17 @@ using System.Linq;
 using System.Text;
 
 namespace GalacticSenate.Data.Seeding {
-   public class PersonNameTypeSeeder {
+   public class OrganizationNameValueSeeder {
       public static void Seed(DataContext dataContext) {
-         var existing = dataContext.PersonNameTypes.ToList();
+         var existing = dataContext.OrganizationNameValues.ToList();
 
-         var add = new List<PersonNameType>()
+         var add = new List<OrganizationNameValue>()
          {
-            new PersonNameType() { Value = "Given" },
-            new PersonNameType() { Value = "Family" },
-            new PersonNameType() { Value = "Middle" }
+            new OrganizationNameValue() { Value = "McDonald's Corporation" },
+            new OrganizationNameValue() { Value = "Cleveland Clinic" }
          };
 
-         var dif = add.Where(a => !existing.Any(e => a.Value == e.Value));
+         var dif = add.Where(a => !existing.Any(e => e.Value == a.Value));
 
          if (!dif.Any())
             return;
