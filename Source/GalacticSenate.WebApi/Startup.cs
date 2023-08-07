@@ -2,6 +2,8 @@ using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Library.Gender;
 using GalacticSenate.Library.MaritalStatusType;
+using GalacticSenate.Library.OrganizationName;
+using GalacticSenate.Library.OrganizationNameValue;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -39,6 +41,7 @@ namespace GalacticSenate.WebApi {
 
          services.AddScoped<IGenderService, GenderService>();
          services.AddScoped<IMaritalStatusTypeService, MaritalStatusTypeService>();
+         services.AddScoped<IOrganizationNameValueService, OrganizationNameValueService>();
 
          services.AddControllers()
              .AddJsonOptions(options =>
