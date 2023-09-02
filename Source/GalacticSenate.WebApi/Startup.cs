@@ -1,5 +1,7 @@
+using EventBus.RabbitMQ;
 using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
+using GalacticSenate.Library.Extensions;
 using GalacticSenate.Library.Gender;
 using GalacticSenate.Library.MaritalStatusType;
 using GalacticSenate.Library.OrganizationName;
@@ -37,11 +39,10 @@ namespace GalacticSenate.WebApi {
             options.UseSqlServer(Configuration.GetConnectionString("DataContext"));
          });
 
-         services.AddScoped<IUnitOfWork<DataContext>, UnitOfWork>();
+         var settings = new Settings();
+         Configuration.Bind(Settings.SectionName, settings);
 
-         services.AddScoped<IGenderService, GenderService>();
-         services.AddScoped<IMaritalStatusTypeService, MaritalStatusTypeService>();
-         services.AddScoped<IOrganizationNameValueService, OrganizationNameValueService>();
+         services.AddPeopleAndOrganizations(settings);
 
          services.AddControllers()
              .AddJsonOptions(options =>
@@ -50,8 +51,6 @@ namespace GalacticSenate.WebApi {
                        .Converters
                        .Add(new JsonStringEnumConverter());
              });
-
-         ;
       }
 
       // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

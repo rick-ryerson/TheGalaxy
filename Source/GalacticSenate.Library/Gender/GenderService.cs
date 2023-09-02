@@ -1,7 +1,10 @@
-﻿using GalacticSenate.Data.Implementations.EntityFramework;
+﻿using EventBus.Abstractions;
+using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
 using GalacticSenate.Domain.Exceptions;
+using GalacticSenate.Domain.Model;
+using GalacticSenate.Library.Events;
 using GalacticSenate.Library.Gender.Requests;
 using System;
 using System.Collections.Generic;
@@ -21,10 +24,12 @@ namespace GalacticSenate.Library.Gender {
 
    public class GenderService : IGenderService {
       private readonly IUnitOfWork<DataContext> unitOfWork;
+      private readonly IEventBus eventBus;
       private readonly IGenderRepository genderRepository;
 
-      public GenderService(IUnitOfWork<DataContext> unitOfWork) {
+      public GenderService(IUnitOfWork<DataContext> unitOfWork, IEventBus eventBus) {
          this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+         this.eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
          this.genderRepository = unitOfWork.GetGenderRepository() ?? throw new ApplicationException("Couldn't create gender repository");
       }
 
@@ -43,6 +48,8 @@ namespace GalacticSenate.Library.Gender {
                existing = await genderRepository.AddAsync(new Model.Gender { Value = request.Value });
                unitOfWork.Save();
 
+               eventBus.Publish(new Created<Model.Gender>(existing));
+
                response.Messages.Add($"Gender with value {request.Value} added.");
             } else {
                response.Messages.Add($"Gender with value {request.Value} already exists.");
@@ -51,7 +58,8 @@ namespace GalacticSenate.Library.Gender {
             response.Results.Add(existing);
 
             response.Status = StatusEnum.Successful;
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             response.Status = StatusEnum.Failed;
             response.Messages.Add(ex.Message);
          }
@@ -70,7 +78,8 @@ namespace GalacticSenate.Library.Gender {
 
          try {
             existing = await genderRepository.GetAsync(request.Id);
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             response.Messages.Add(ex.Message);
             response.Status = StatusEnum.Failed;
          }
@@ -80,23 +89,26 @@ namespace GalacticSenate.Library.Gender {
             response.Status = StatusEnum.Failed;
          } else {
             try {
-               var oldValue = existing.Value;
+               var oldObject = existing;
+               var newObject = oldObject;
 
-               if (oldValue == request.NewValue) {
-                  response.Messages.Add($"Gender with id {existing.Id} already has a value of {oldValue}.");
+               if (oldObject.Value == request.NewValue) {
+                  response.Messages.Add($"Gender with id {newObject.Id} already has a value of {oldObject.Value}.");
                } else {
-                  existing.Value = request.NewValue;
+                  newObject.Value = request.NewValue;
 
-                  genderRepository.Update(existing);
+                  genderRepository.Update(newObject);
                   unitOfWork.Save();
 
-                  response.Messages.Add($"Gender with id {existing.Id} updated from {oldValue} to {existing.Value}.");
+                  eventBus.Publish(new Updated<Model.Gender>(newObject, oldObject));
+                  response.Messages.Add($"Gender with id {newObject.Id} updated from {oldObject.Value} to {newObject.Value}.");
                }
 
                response.Results.Add(existing);
 
                response.Status = StatusEnum.Successful;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                response.Messages.Add(ex.Message);
                response.Status = StatusEnum.Failed;
             }
@@ -112,7 +124,8 @@ namespace GalacticSenate.Library.Gender {
             response.Results.AddRange(genderRepository.Get(request.PageIndex, request.PageSize));
 
             response.Status = StatusEnum.Successful;
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             response.Messages.Add(ex.Message);
             response.Status = StatusEnum.Failed;
          }
@@ -135,7 +148,8 @@ namespace GalacticSenate.Library.Gender {
                response.Results.AddRange(genderRepository.GetContains(request.Value));
 
             response.Status = StatusEnum.Successful;
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             response.Messages.Add(ex.Message);
             response.Status = StatusEnum.Failed;
          }
@@ -151,7 +165,8 @@ namespace GalacticSenate.Library.Gender {
                response.Results.Add(await genderRepository.GetAsync(request.Id));
 
             response.Status = StatusEnum.Successful;
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             response.Messages.Add(ex.Message);
             response.Status = StatusEnum.Failed;
          }
@@ -166,7 +181,8 @@ namespace GalacticSenate.Library.Gender {
             unitOfWork.Save();
 
             response.Status = StatusEnum.Successful;
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             response.Status = StatusEnum.Failed;
             response.Messages.Add(ex.Message);
          }
