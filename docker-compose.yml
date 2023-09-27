@@ -1,6 +1,13 @@
 version: '3.4'
 
 services:
+  celestial.rabbitmq:
+    image: 'rabbitmq:3.8.3-management-alpine'
+    ports:
+      - '25672:5672'
+      - '35672:15672'
+    networks:
+      - celestials
   galacticsenate.consoleapp:
     image: ${DOCKER_REGISTRY-}galacticsenateconsoleapp
     build:
@@ -8,6 +15,9 @@ services:
       dockerfile: Source/GalacticSenate.ConsoleApp/Dockerfile
     depends_on:
         - galacticsenate.db
+        - celestial.rabbitmq
+    networks:
+      - celestials
   galacticsenate.db:
     image: "mcr.microsoft.com/mssql/server"
     hostname: galacticsenatedb
@@ -21,6 +31,8 @@ services:
        - ./data/data:/var/opt/mssql/data
        - ./data/log:/var/opt/mssql/log
        - ./data/secrets:/var/opt/mssql/secrets
+    networks:
+      - celestials
   jediorder.web:
     image: ${DOCKER_REGISTRY-}jediorderweb
     ports:
@@ -43,4 +55,10 @@ services:
     build:
       context: .
       dockerfile: Source/GalacticSenate.WebApi/Dockerfile
-
+    networks:
+      - celestials
+    depends_on:
+        - galacticsenate.db
+        - celestial.rabbitmq
+networks:
+  celestials: {}

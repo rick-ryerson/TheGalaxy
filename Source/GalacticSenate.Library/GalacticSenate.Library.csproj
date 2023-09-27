@@ -9,6 +9,8 @@
 		<PackageReference Include="GreyEagleSoftware.EventBus.RabbitMQ" Version="1.1.0" />
 	</ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\EventBus\Source\EventBus.RabbitMQ\EventBus.RabbitMQ.csproj" />
+    <ProjectReference Include="..\..\..\EventBus\Source\EventBus\EventBus.csproj" />
     <ProjectReference Include="..\GalacticSenate.Data\GalacticSenate.Data.csproj" />
     <ProjectReference Include="..\GalacticSenate.Domain\GalacticSenate.Domain.csproj" />
   </ItemGroup>

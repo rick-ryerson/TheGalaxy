@@ -39,8 +39,8 @@ namespace GalacticSenate.WebApi {
             options.UseSqlServer(Configuration.GetConnectionString("DataContext"));
          });
 
-         var settings = new Settings();
-         Configuration.Bind(Settings.SectionName, settings);
+         var settings = new EventBusSettings();
+         Configuration.Bind(EventBusSettings.SectionName, settings);
 
          services.AddPeopleAndOrganizations(settings);
 

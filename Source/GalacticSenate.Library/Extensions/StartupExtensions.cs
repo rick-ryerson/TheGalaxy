@@ -11,7 +11,7 @@ using System.Text;
 
 namespace GalacticSenate.Library.Extensions {
    public static class StartupExtensions {
-      public static IServiceCollection AddPeopleAndOrganizations(this IServiceCollection services, Settings settings) {
+      public static IServiceCollection AddPeopleAndOrganizations(this IServiceCollection services, EventBusSettings settings) {
          if (settings is null)
             throw new ArgumentNullException(nameof(settings));
 
