@@ -5,6 +5,7 @@ using GalacticSenate.Data.Interfaces.Repositories;
 using GalacticSenate.Domain.Exceptions;
 using GalacticSenate.Library.Events;
 using GalacticSenate.Library.MaritalStatusType.Requests;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -25,12 +26,14 @@ namespace GalacticSenate.Library.MaritalStatusType {
       private readonly IUnitOfWork<DataContext> unitOfWork;
       private readonly IEventBus eventBus;
       private readonly IEventFactory eventFactory;
+      private readonly ILogger<MaritalStatusTypeService> logger;
       private readonly IMaritalStatusTypeRepository maritalStatusTypeRepository;
 
-      public MaritalStatusTypeService(IUnitOfWork<DataContext> unitOfWork, IEventBus eventBus, IEventFactory eventFactory) {
+      public MaritalStatusTypeService(IUnitOfWork<DataContext> unitOfWork, IEventBus eventBus, IEventFactory eventFactory, ILogger<MaritalStatusTypeService> logger) {
          this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
          this.eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
          this.eventFactory = eventFactory ?? throw new ArgumentNullException(nameof(eventFactory));
+         this.logger = logger;
          this.maritalStatusTypeRepository = unitOfWork.GetMaritalStatusTypeRepository() ?? throw new ApplicationException("Couldn't create maritalStatusType repository");
       }
 
@@ -49,8 +52,6 @@ namespace GalacticSenate.Library.MaritalStatusType {
                existing = await maritalStatusTypeRepository.AddAsync(new Model.MaritalStatusType { Value = request.Value });
                unitOfWork.Save();
 
-               eventBus.Publish(eventFactory.CreateCreated(existing));
-
                response.Messages.Add($"MaritalStatusType with value {request.Value} added.");
             } else {
                response.Messages.Add($"MaritalStatusType with value {request.Value} already exists.");
@@ -65,6 +66,14 @@ namespace GalacticSenate.Library.MaritalStatusType {
             response.Messages.Add(ex.Message);
          }
 
+         if (response.Status == StatusEnum.Successful) {
+            try {
+               eventBus.Publish(eventFactory.CreateCreated(existing));
+            }
+            catch (Exception ex) {
+               logger.LogError(ex, "An exception occurred while attempting to add new MaritalStatusType");
+            }
+         }
          return response.Finalize();
       }
       public async Task<ModelResponse<Model.MaritalStatusType, UpdateMaritalStatusTypeRequest>> UpdateAsync(UpdateMaritalStatusTypeRequest request) {
@@ -76,7 +85,7 @@ namespace GalacticSenate.Library.MaritalStatusType {
          var response = new ModelResponse<Model.MaritalStatusType, UpdateMaritalStatusTypeRequest>(DateTime.Now, request);
 
          Model.MaritalStatusType existingItem = null;
-
+         Model.MaritalStatusType newItem = null;
          try {
             existingItem = await maritalStatusTypeRepository.GetAsync(request.Id);
          }
@@ -91,7 +100,7 @@ namespace GalacticSenate.Library.MaritalStatusType {
          } else {
             try {
                var oldValue = existingItem.Value;
-               var newItem = existingItem;
+               newItem = existingItem;
 
                if (oldValue == request.NewValue) {
                   response.Messages.Add($"MaritalStatusType with id {existingItem.Id} already has a value of {oldValue}.");
@@ -101,7 +110,6 @@ namespace GalacticSenate.Library.MaritalStatusType {
                   maritalStatusTypeRepository.Update(newItem);
                   unitOfWork.Save();
 
-                  eventBus.Publish(eventFactory.CreateUpdated(newItem, existingItem));
                   response.Messages.Add($"MaritalStatusType with id {existingItem.Id} updated from {oldValue} to {existingItem.Value}.");
                }
 
@@ -112,6 +120,15 @@ namespace GalacticSenate.Library.MaritalStatusType {
             catch (Exception ex) {
                response.Messages.Add(ex.Message);
                response.Status = StatusEnum.Failed;
+            }
+         }
+
+         if (response.Status == StatusEnum.Successful) {
+            try {
+               eventBus.Publish(eventFactory.CreateUpdated(newItem, existingItem));
+            }
+            catch (Exception ex) {
+               logger.LogError(ex, "An exception occurred while attempting to update existing MaritalStatusType");
             }
          }
 
@@ -175,8 +192,6 @@ namespace GalacticSenate.Library.MaritalStatusType {
             await maritalStatusTypeRepository.DeleteAsync(request.Id);
             unitOfWork.Save();
 
-            eventBus.Publish(eventFactory.CreateDeleted(request.Id));
-
             response.Status = StatusEnum.Successful;
          }
          catch (Exception ex) {
@@ -184,6 +199,14 @@ namespace GalacticSenate.Library.MaritalStatusType {
             response.Messages.Add(ex.Message);
          }
 
+         if (response.Status == StatusEnum.Successful) {
+            try {
+               eventBus.Publish(eventFactory.CreateDeleted(request.Id));
+            }
+            catch (Exception ex) {
+               logger.LogError(ex, "An exception occurred while attempting to publish delete event for {id}", request.Id);
+            }
+         }
          return response.Finalize();
       }
    }
