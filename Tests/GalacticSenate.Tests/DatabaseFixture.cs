@@ -1,12 +1,26 @@
-﻿using GalacticSenate.Data.Implementations.EntityFramework;
+﻿using EventBus.Abstractions;
+using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Seeding;
 using GalacticSenate.Domain.Model;
+using GalacticSenate.Library.Events;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace GalacticSenate.Tests {
+   public abstract class GalacticSenateFixture : DatabaseFixture {
+      protected readonly UnitOfWork unitOfWork;
+      protected readonly Mock<IEventBus> eventBusMock;
+      protected readonly IEventFactory eventFactory;
+
+      protected GalacticSenateFixture(string databaseName) : base(databaseName) {
+         unitOfWork = new UnitOfWork(dataContext);
+         eventBusMock = new Mock<IEventBus>();
+         eventFactory = new EventFactory();
+      }
+   }
    public abstract class DatabaseFixture : IDisposable {
 
       private bool disposedValue;

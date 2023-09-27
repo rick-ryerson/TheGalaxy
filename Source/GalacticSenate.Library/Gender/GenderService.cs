@@ -25,11 +25,13 @@ namespace GalacticSenate.Library.Gender {
    public class GenderService : IGenderService {
       private readonly IUnitOfWork<DataContext> unitOfWork;
       private readonly IEventBus eventBus;
+      private readonly IEventFactory eventFactory;
       private readonly IGenderRepository genderRepository;
 
-      public GenderService(IUnitOfWork<DataContext> unitOfWork, IEventBus eventBus) {
+      public GenderService(IUnitOfWork<DataContext> unitOfWork, IEventBus eventBus, IEventFactory eventFactory) {
          this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
          this.eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+         this.eventFactory = eventFactory ?? throw new ArgumentNullException(nameof(eventFactory));
          this.genderRepository = unitOfWork.GetGenderRepository() ?? throw new ApplicationException("Couldn't create gender repository");
       }
 
@@ -42,20 +44,20 @@ namespace GalacticSenate.Library.Gender {
             throw new ArgumentNullException(nameof(request.Value));
 
          try {
-            var existing = await genderRepository.GetExactAsync(request.Value);
+            var item = await genderRepository.GetExactAsync(request.Value);
 
-            if (existing is null) {
-               existing = await genderRepository.AddAsync(new Model.Gender { Value = request.Value });
+            if (item is null) {
+               item = await genderRepository.AddAsync(new Model.Gender { Value = request.Value });
                unitOfWork.Save();
 
-               eventBus.Publish(new Created<Model.Gender>(existing));
+               eventBus.Publish(eventFactory.CreateCreated<Model.Gender>(item));
 
                response.Messages.Add($"Gender with value {request.Value} added.");
             } else {
                response.Messages.Add($"Gender with value {request.Value} already exists.");
             }
 
-            response.Results.Add(existing);
+            response.Results.Add(item);
 
             response.Status = StatusEnum.Successful;
          }
@@ -100,7 +102,7 @@ namespace GalacticSenate.Library.Gender {
                   genderRepository.Update(newObject);
                   unitOfWork.Save();
 
-                  eventBus.Publish(new Updated<Model.Gender>(newObject, oldObject));
+                  eventBus.Publish(eventFactory.CreateUpdated(oldObject, newObject));
                   response.Messages.Add($"Gender with id {newObject.Id} updated from {oldObject.Value} to {newObject.Value}.");
                }
 
@@ -142,8 +144,6 @@ namespace GalacticSenate.Library.Gender {
                if (r != null) {
                   response.Results.Add(r);
                }
-
-
             } else
                response.Results.AddRange(genderRepository.GetContains(request.Value));
 
@@ -179,6 +179,9 @@ namespace GalacticSenate.Library.Gender {
          try {
             await genderRepository.DeleteAsync(request.Id);
             unitOfWork.Save();
+
+
+            eventBus.Publish(eventFactory.CreateDeleted(request.Id));
 
             response.Status = StatusEnum.Successful;
          }

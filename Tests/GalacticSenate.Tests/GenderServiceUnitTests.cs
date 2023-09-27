@@ -1,3 +1,4 @@
+using EventBus.Abstractions;
 using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Library;
@@ -5,19 +6,19 @@ using GalacticSenate.Library.Gender;
 using GalacticSenate.Library.Gender.Requests;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace GalacticSenate.Tests {
    [TestClass]
-   public class GenderServiceUnitTests : DatabaseFixture {
+   public class GenderServiceUnitTests : GalacticSenateFixture {
       private readonly IGenderService genderService;
-      private readonly UnitOfWork unitOfWork;
 
       public GenderServiceUnitTests() : base("DataContext") {
-         unitOfWork = new UnitOfWork(dataContext);
          var genderRepository = unitOfWork.GetGenderRepository();
-         genderService = new GenderService(unitOfWork);
+         genderService = new GenderService(unitOfWork, eventBusMock.Object, eventFactory);
       }
       [TestMethod]
       public async Task Add_Test() {
@@ -30,16 +31,13 @@ namespace GalacticSenate.Tests {
       }
 
       [TestMethod]
-      public async Task AddMissingValue_Test() {
+      public void AddMissingValue_Test() {
          var request = new AddGenderRequest
          {
             Value = ""
          };
 
-         var response = await genderService.AddAsync(request);
-
-         Assert.IsTrue(response.Status == StatusEnum.Failed);
-         Assert.IsTrue(response.Messages.Contains("Value cannot be null. (Parameter 'Value')"));
+         Assert.ThrowsException<ArgumentNullException>(() => (genderService.AddAsync(request)).GetAwaiter().GetResult());
       }
       [TestMethod]
       public async Task AddDuplicate_Test() {
