@@ -4,6 +4,7 @@ using GalacticSenate.Library;
 using GalacticSenate.Library.MaritalStatusType;
 using GalacticSenate.Library.MaritalStatusType.Requests;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,7 +16,7 @@ namespace GalacticSenate.Tests {
 
       public MaritalStatusTypeServiceUnitTests() : base("DataContext") {
          var maritalStatusTypeRepository = unitOfWork.GetMaritalStatusTypeRepository();
-         MaritalStatusTypeService = new MaritalStatusTypeService(unitOfWork, eventBusMock.Object, eventFactory);
+         MaritalStatusTypeService = new MaritalStatusTypeService(unitOfWork, eventBusMock.Object, eventFactory, NullLogger<MaritalStatusTypeService>.Instance);
       }
       [TestMethod]
       public async Task Add_Test() {
