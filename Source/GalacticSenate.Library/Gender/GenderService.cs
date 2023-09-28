@@ -6,6 +6,7 @@ using GalacticSenate.Domain.Exceptions;
 using GalacticSenate.Domain.Model;
 using GalacticSenate.Library.Events;
 using GalacticSenate.Library.Gender.Requests;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,16 +23,10 @@ namespace GalacticSenate.Library.Gender {
       Task<ModelResponse<Model.Gender, UpdateGenderRequest>> UpdateAsync(UpdateGenderRequest request);
    }
 
-   public class GenderService : IGenderService {
-      private readonly IUnitOfWork<DataContext> unitOfWork;
-      private readonly IEventBus eventBus;
-      private readonly IEventFactory eventFactory;
+   public class GenderService : BasicServiceBase, IGenderService {
       private readonly IGenderRepository genderRepository;
 
-      public GenderService(IUnitOfWork<DataContext> unitOfWork, IEventBus eventBus, IEventFactory eventFactory) {
-         this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-         this.eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
-         this.eventFactory = eventFactory ?? throw new ArgumentNullException(nameof(eventFactory));
+      public GenderService(IUnitOfWork<DataContext> unitOfWork, IEventBus eventBus, IEventFactory eventFactory, ILogger<GenderService> logger) : base(unitOfWork, eventBus, eventFactory, logger) {
          this.genderRepository = unitOfWork.GetGenderRepository() ?? throw new ApplicationException("Couldn't create gender repository");
       }
 

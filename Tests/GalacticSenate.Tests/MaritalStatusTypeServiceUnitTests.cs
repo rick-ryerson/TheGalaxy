@@ -47,7 +47,6 @@ namespace GalacticSenate.Tests {
          };
 
          var addResponse1 = await MaritalStatusTypeService.AddAsync(request);
-
          var addResponse2 = await MaritalStatusTypeService.AddAsync(request);
 
          Assert.IsTrue(addResponse1.Status == StatusEnum.Successful);

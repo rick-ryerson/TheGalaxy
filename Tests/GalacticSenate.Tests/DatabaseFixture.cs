@@ -11,7 +11,7 @@ using System.Text;
 
 namespace GalacticSenate.Tests {
    public abstract class GalacticSenateFixture : DatabaseFixture {
-      protected readonly UnitOfWork unitOfWork;
+      internal readonly UnitOfWork unitOfWork;
       protected readonly Mock<IEventBus> eventBusMock;
       protected readonly IEventFactory eventFactory;
 

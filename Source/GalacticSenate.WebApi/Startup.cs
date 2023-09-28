@@ -1,4 +1,5 @@
 using EventBus.RabbitMQ;
+using GalacticSenate.Data.Extensions;
 using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Library.Extensions;
@@ -33,16 +34,21 @@ namespace GalacticSenate.WebApi {
       // This method gets called by the runtime. Use this method to add services to the container.
       public void ConfigureServices(IServiceCollection services) {
          var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
+         var connectionString = Configuration.GetConnectionString("DataContext");
 
          services.AddDbContext<DataContext>(options =>
          {
-            options.UseSqlServer(Configuration.GetConnectionString("DataContext"));
+            options.UseSqlServer(connectionString);
          });
 
-         var settings = new EventBusSettings();
-         Configuration.Bind(EventBusSettings.SectionName, settings);
+         EventBusSettings eventBusSettings = new EventBusSettings();
+         Configuration.Bind(EventBusSettings.SectionName, eventBusSettings);
+         EfDataSettings efDataSettings = new EfDataSettings()
+         {
+            ConnectionString = connectionString
+         };
 
-         services.AddPeopleAndOrganizations(settings);
+         services.AddPeopleAndOrganizations(eventBusSettings, efDataSettings);
 
          services.AddControllers()
              .AddJsonOptions(options =>

@@ -5,6 +5,8 @@ using GalacticSenate.Library;
 using GalacticSenate.Library.Gender;
 using GalacticSenate.Library.Gender.Requests;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System;
@@ -18,7 +20,8 @@ namespace GalacticSenate.Tests {
 
       public GenderServiceUnitTests() : base("DataContext") {
          var genderRepository = unitOfWork.GetGenderRepository();
-         genderService = new GenderService(unitOfWork, eventBusMock.Object, eventFactory);
+
+         genderService = new GenderService(unitOfWork, eventBusMock.Object, eventFactory, NullLogger<GenderService>.Instance);
       }
       [TestMethod]
       public async Task Add_Test() {

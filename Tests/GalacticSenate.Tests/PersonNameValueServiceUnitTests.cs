@@ -11,21 +11,21 @@ using System.Threading.Tasks;
 namespace GalacticSenate.Tests
 {
     [TestClass]
-    public class PersonNameValueServiceUnitTests : DatabaseFixture
+   public class PersonNameValueServiceUnitTests : DatabaseFixture
     {
-        private readonly IPersonNameValueService genderService;
+        private readonly IPersonNameValueService personNameValueService;
         private readonly UnitOfWork unitOfWork;
 
         public PersonNameValueServiceUnitTests() : base("DataContext")
         {
             unitOfWork = new UnitOfWork(dataContext);
             var genderRepository = unitOfWork.GetPersonNameValueRepository();
-            genderService = new PersonNameValueService(unitOfWork);
+            personNameValueService = new PersonNameValueService(unitOfWork);
         }
         [TestMethod]
         public async Task Add_Test()
         {
-            var addResponse = await genderService.AddAsync(new AddPersonNameValueRequest
+            var addResponse = await personNameValueService.AddAsync(new AddPersonNameValueRequest
             {
                 Value = "Fourth"
             });
@@ -40,7 +40,7 @@ namespace GalacticSenate.Tests
                 Value = ""
             };
 
-            var response = await genderService.AddAsync(request);
+            var response = await personNameValueService.AddAsync(request);
 
             Assert.IsTrue(response.Status == StatusEnum.Failed);
             Assert.IsTrue(response.Messages.Contains("Value cannot be null. (Parameter 'Value')"));
@@ -53,9 +53,9 @@ namespace GalacticSenate.Tests
                 Value = "Duplicate"
             };
 
-            var addResponse1 = await genderService.AddAsync(request);
+            var addResponse1 = await personNameValueService.AddAsync(request);
 
-            var addResponse2 = await genderService.AddAsync(request);
+            var addResponse2 = await personNameValueService.AddAsync(request);
 
             Assert.IsTrue(addResponse1.Status == StatusEnum.Successful);
             Assert.IsTrue(addResponse2.Messages.Contains($"PersonNameValue with value {request.Value} already exists."));
@@ -63,7 +63,7 @@ namespace GalacticSenate.Tests
         [TestMethod]
         public async Task ReadPaged_Test()
         {
-            var readResponse = await genderService.ReadAsync(new ReadPersonNameValueMultiRequest
+            var readResponse = await personNameValueService.ReadAsync(new ReadPersonNameValueMultiRequest
             {
                 PageIndex = 0,
                 PageSize = 2
@@ -75,7 +75,7 @@ namespace GalacticSenate.Tests
         [TestMethod]
         public async Task ReadAll_Test()
         {
-            var readResponse = await genderService.ReadAsync(new ReadPersonNameValueMultiRequest
+            var readResponse = await personNameValueService.ReadAsync(new ReadPersonNameValueMultiRequest
             {
                 PageIndex = 0,
                 PageSize = int.MaxValue
@@ -86,7 +86,7 @@ namespace GalacticSenate.Tests
         [TestMethod]
         public async Task UpdateExisting_Test()
         {
-            var getResponse = await genderService.ReadAsync(new ReadPersonNameValueMultiRequest
+            var getResponse = await personNameValueService.ReadAsync(new ReadPersonNameValueMultiRequest
             {
                 PageIndex = 0,
                 PageSize = 1
@@ -98,7 +98,7 @@ namespace GalacticSenate.Tests
                 NewValue = string.Concat("updated-", getResponse.Results.First().Value)
             };
 
-            var updateResponse = await genderService.UpdateAsync(request);
+            var updateResponse = await personNameValueService.UpdateAsync(request);
 
             Assert.IsTrue(updateResponse.Status == StatusEnum.Successful);
             Assert.IsTrue(updateResponse.Results.FirstOrDefault().Value == request.NewValue);
@@ -112,7 +112,7 @@ namespace GalacticSenate.Tests
                 NewValue = "test"
             };
 
-            var updateResponse = await genderService.UpdateAsync(request);
+            var updateResponse = await personNameValueService.UpdateAsync(request);
 
             Assert.IsTrue(updateResponse.Status == StatusEnum.Failed);
             Assert.IsTrue(updateResponse.Messages.Contains($"PersonNameValue with id {request.Id} does not exist."));

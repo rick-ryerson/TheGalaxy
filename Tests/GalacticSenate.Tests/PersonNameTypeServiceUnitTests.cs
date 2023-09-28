@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace GalacticSenate.Tests
 {
     [TestClass]
-    public class PersonNameTypeServiceUnitTests : DatabaseFixture
+   public class PersonNameTypeServiceUnitTests : DatabaseFixture
     {
         private readonly IPersonNameTypeService personNameTypeService;
         private readonly UnitOfWork unitOfWork;

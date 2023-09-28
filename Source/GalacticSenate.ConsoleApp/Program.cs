@@ -6,6 +6,7 @@ using GalacticSenate.Data.Seeding;
 using Microsoft.Extensions.DependencyInjection;
 using GalacticSenate.Data.Interfaces;
 using Microsoft.Extensions.Configuration;
+using GalacticSenate.Data.Extensions;
 
 namespace GalacticSenate.ConsoleApp {
    class Program {
@@ -24,13 +25,13 @@ namespace GalacticSenate.ConsoleApp {
 
                var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
 
-               services.AddDbContext<DataContext>(options =>
+               var connectionString = Configuration.GetConnectionString("DataContext");
+               var settings = new EfDataSettings()
                {
+                  ConnectionString = connectionString
+               };
 
-                  options.UseSqlServer(Configuration.GetConnectionString("DataContext"));
-               });
-
-               services.AddScoped<IUnitOfWork<DataContext>, UnitOfWork>();
+               services.AddEntityFramework(settings);
             })
             .Build()
             .SeedData()

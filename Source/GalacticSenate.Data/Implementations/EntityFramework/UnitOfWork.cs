@@ -10,7 +10,7 @@ using GalacticSenate.Data.Interfaces.Repositories;
 using GalacticSenate.Data.Implementations.EntityFramework.Repositories;
 
 namespace GalacticSenate.Data.Implementations.EntityFramework {
-   public class UnitOfWork : IUnitOfWork<DataContext>, IDisposable {
+   internal class UnitOfWork : IUnitOfWork<DataContext>, IDisposable {
       private bool disposedValue;
       private IDbContextTransaction transaction;
       private readonly DataContext context;
@@ -36,7 +36,8 @@ namespace GalacticSenate.Data.Implementations.EntityFramework {
       public void Rollback() {
          try {
             transaction.Rollback();
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             throw new RollbackException(new List<string> { "An error occurred while attempting to rollback.", ex.Message }, ex);
          }
 
@@ -45,7 +46,8 @@ namespace GalacticSenate.Data.Implementations.EntityFramework {
       public void Save() {
          try {
             context.SaveChanges();
-         } catch (DbUpdateException dbue) {
+         }
+         catch (DbUpdateException dbue) {
             throw new SaveException(new List<string> { "An error occurred while attempting to save.", dbue.Message }, dbue.Entries.Select(e => e.Entity.ToString()).ToList(), dbue);
          }
       }
