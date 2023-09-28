@@ -1,9 +1,12 @@
-﻿using GalacticSenate.Data.Implementations.EntityFramework;
+﻿using EventBus.Abstractions;
+using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
+using GalacticSenate.Library.Events;
 using GalacticSenate.Library.OrganizationName.Requests;
 using GalacticSenate.Library.OrganizationNameValue;
 using GalacticSenate.Library.OrganizationNameValue.Requests;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,15 +18,13 @@ namespace GalacticSenate.Library.OrganizationName {
    public interface IOrganizationNameService {
       Task<ModelResponse<Model.OrganizationName, AddOrganizationNameRequest>> AddAsync(AddOrganizationNameRequest request);
    }
-   public class OrganizationNameService : IOrganizationNameService {
-      private readonly IUnitOfWork<DataContext> unitOfWork;
+   public class OrganizationNameService : BasicServiceBase, IOrganizationNameService {
+
       private readonly IOrganizationNameRepository organizationNameRepository;
       private readonly IOrganizationNameValueService organizationNameValueService;
 
-      public OrganizationNameService(IUnitOfWork<DataContext> unitOfWork, IOrganizationNameValueService organizationNameValueService) {
-         this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-         this.organizationNameRepository = unitOfWork.GetOrganizationNameRepository();
-         this.organizationNameValueService = organizationNameValueService ?? throw new ArgumentNullException(nameof(organizationNameValueService));
+      public OrganizationNameService(IUnitOfWork<DataContext> unitOfWork, IEventBus eventBus, IEventFactory eventFactory, ILogger<OrganizationNameValueService> logger) : base(unitOfWork, eventBus, eventFactory, logger) {
+         
       }
 
       public async Task<ModelResponse<Model.OrganizationName, AddOrganizationNameRequest>> AddAsync(AddOrganizationNameRequest request) {

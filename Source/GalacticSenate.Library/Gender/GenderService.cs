@@ -26,8 +26,8 @@ namespace GalacticSenate.Library.Gender {
    public class GenderService : BasicServiceBase, IGenderService {
       private readonly IGenderRepository genderRepository;
 
-      public GenderService(IUnitOfWork<DataContext> unitOfWork, IEventBus eventBus, IEventFactory eventFactory, ILogger<GenderService> logger) : base(unitOfWork, eventBus, eventFactory, logger) {
-         this.genderRepository = unitOfWork.GetGenderRepository() ?? throw new ApplicationException("Couldn't create gender repository");
+      public GenderService(IUnitOfWork<DataContext> unitOfWork, IGenderRepository genderRepository, IEventBus eventBus, IEventFactory eventFactory, ILogger<GenderService> logger) : base(unitOfWork, eventBus, eventFactory, logger) {
+         this.genderRepository = genderRepository ?? throw new ArgumentNullException(nameof(genderRepository));
       }
 
       public async Task<ModelResponse<Model.Gender, AddGenderRequest>> AddAsync(AddGenderRequest request) {

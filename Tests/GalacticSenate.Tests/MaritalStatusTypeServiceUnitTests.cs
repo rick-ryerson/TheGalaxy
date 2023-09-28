@@ -1,4 +1,5 @@
 using GalacticSenate.Data.Implementations.EntityFramework;
+using GalacticSenate.Data.Implementations.EntityFramework.Repositories;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Library;
 using GalacticSenate.Library.MaritalStatusType;
@@ -15,8 +16,8 @@ namespace GalacticSenate.Tests {
       private readonly IMaritalStatusTypeService MaritalStatusTypeService;
 
       public MaritalStatusTypeServiceUnitTests() : base("DataContext") {
-         var maritalStatusTypeRepository = unitOfWork.GetMaritalStatusTypeRepository();
-         MaritalStatusTypeService = new MaritalStatusTypeService(unitOfWork, eventBusMock.Object, eventFactory, NullLogger<MaritalStatusTypeService>.Instance);
+         var maritalStatusTypeRepository = new MaritalStatusTypeRepository(unitOfWork);
+         MaritalStatusTypeService = new MaritalStatusTypeService(unitOfWork, maritalStatusTypeRepository, eventBusMock.Object, eventFactory, NullLogger<MaritalStatusTypeService>.Instance);
       }
       [TestMethod]
       public async Task Add_Test() {

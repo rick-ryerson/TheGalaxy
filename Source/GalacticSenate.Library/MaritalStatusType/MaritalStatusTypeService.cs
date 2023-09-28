@@ -29,12 +29,17 @@ namespace GalacticSenate.Library.MaritalStatusType {
       private readonly ILogger<MaritalStatusTypeService> logger;
       private readonly IMaritalStatusTypeRepository maritalStatusTypeRepository;
 
-      public MaritalStatusTypeService(IUnitOfWork<DataContext> unitOfWork, IEventBus eventBus, IEventFactory eventFactory, ILogger<MaritalStatusTypeService> logger) {
+      public MaritalStatusTypeService(IUnitOfWork<DataContext> unitOfWork, 
+         IMaritalStatusTypeRepository maritalStatusTypeRepository,
+         IEventBus eventBus, 
+         IEventFactory eventFactory, 
+         ILogger<MaritalStatusTypeService> logger) {
          this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+         
          this.eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
          this.eventFactory = eventFactory ?? throw new ArgumentNullException(nameof(eventFactory));
          this.logger = logger;
-         this.maritalStatusTypeRepository = unitOfWork.GetMaritalStatusTypeRepository() ?? throw new ApplicationException("Couldn't create maritalStatusType repository");
+         this.maritalStatusTypeRepository = maritalStatusTypeRepository ?? throw new ArgumentNullException(nameof(maritalStatusTypeRepository));
       }
 
       public async Task<ModelResponse<Model.MaritalStatusType, AddMaritalStatusTypeRequest>> AddAsync(AddMaritalStatusTypeRequest request) {

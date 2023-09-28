@@ -1,7 +1,11 @@
-﻿using GalacticSenate.Data.Implementations.EntityFramework;
+﻿using EventBus.Abstractions;
+using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
+using GalacticSenate.Library.Events;
+using GalacticSenate.Library.OrganizationNameValue;
 using GalacticSenate.Library.PersonNameType.Requests;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,12 +21,10 @@ namespace GalacticSenate.Library.PersonNameType {
       Task<ModelResponse<Model.PersonNameType, ReadPersonNameTypeValueRequest>> ReadAsync(ReadPersonNameTypeValueRequest request);
       Task<ModelResponse<Model.PersonNameType, UpdatePersonNameTypeRequest>> UpdateAsync(UpdatePersonNameTypeRequest request);
    }
-   public class PersonNameTypeService : IPersonNameTypeService {
-      private readonly IUnitOfWork<DataContext> unitOfWork;
+   public class PersonNameTypeService : BasicServiceBase, IPersonNameTypeService {
       private readonly IPersonNameTypeRepository personNameTypeRepository;
-      public PersonNameTypeService(IUnitOfWork<DataContext> unitOfWork) {
-         this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-         this.personNameTypeRepository = this.unitOfWork.GetPersonNameTypeRepository();
+      public PersonNameTypeService(IUnitOfWork<DataContext> unitOfWork, IEventBus eventBus, IEventFactory eventFactory, ILogger<OrganizationNameValueService> logger) : base(unitOfWork, eventBus, eventFactory, logger) {
+
       }
 
       public async Task<ModelResponse<Model.PersonNameType, AddPersonNameTypeRequest>> AddAsync(AddPersonNameTypeRequest request) {
@@ -48,7 +50,8 @@ namespace GalacticSenate.Library.PersonNameType {
             response.Results.Add(existing);
 
             response.Status = StatusEnum.Successful;
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             response.Status = StatusEnum.Failed;
             response.Messages.Add(ex.Message);
          }
@@ -64,7 +67,8 @@ namespace GalacticSenate.Library.PersonNameType {
             unitOfWork.Save();
 
             response.Status = StatusEnum.Successful;
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             response.Status = StatusEnum.Failed;
             response.Messages.Add(ex.Message);
          }
@@ -79,7 +83,8 @@ namespace GalacticSenate.Library.PersonNameType {
             response.Results.AddRange(personNameTypeRepository.Get(request.PageIndex, request.PageSize));
 
             response.Status = StatusEnum.Successful;
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             response.Messages.Add(ex.Message);
             response.Status = StatusEnum.Failed;
          }
@@ -96,7 +101,8 @@ namespace GalacticSenate.Library.PersonNameType {
                response.Results.AddRange(personNameTypeRepository.GetContains(request.Value));
 
             response.Status = StatusEnum.Successful;
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             response.Messages.Add(ex.Message);
             response.Status = StatusEnum.Failed;
          }
@@ -112,7 +118,8 @@ namespace GalacticSenate.Library.PersonNameType {
                response.Results.Add(await personNameTypeRepository.GetAsync(request.Id));
 
             response.Status = StatusEnum.Successful;
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             response.Messages.Add(ex.Message);
             response.Status = StatusEnum.Failed;
          }
@@ -131,7 +138,8 @@ namespace GalacticSenate.Library.PersonNameType {
 
          try {
             existing = await personNameTypeRepository.GetAsync(request.Id);
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             response.Messages.Add(ex.Message);
             response.Status = StatusEnum.Failed;
          }
@@ -157,7 +165,8 @@ namespace GalacticSenate.Library.PersonNameType {
                response.Results.Add(existing);
 
                response.Status = StatusEnum.Successful;
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                response.Messages.Add(ex.Message);
                response.Status = StatusEnum.Failed;
             }

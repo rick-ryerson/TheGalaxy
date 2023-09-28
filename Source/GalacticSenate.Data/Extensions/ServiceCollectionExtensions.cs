@@ -19,9 +19,13 @@ namespace GalacticSenate.Data.Extensions {
 
          services.AddLogging();
 
-         services.AddDbContext<DataContext>(options =>
+         services.AddDbContext<DataContext>((provider, options) =>
          {
-            options.UseSqlServer(settings.ConnectionString);
+            options
+               .UseSqlServer(settings.ConnectionString)
+               .UseLoggerFactory(provider.GetRequiredService<ILoggerFactory>())
+               .EnableDetailedErrors()
+               .EnableSensitiveDataLogging();
          });
 
          services.AddScoped<IUnitOfWork<DataContext>, UnitOfWork>();

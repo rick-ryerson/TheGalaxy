@@ -1,7 +1,11 @@
-﻿using GalacticSenate.Data.Implementations.EntityFramework;
+﻿using EventBus.Abstractions;
+using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
+using GalacticSenate.Library.Events;
+using GalacticSenate.Library.Gender;
 using GalacticSenate.Library.Organization.Requests;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,19 +17,25 @@ namespace GalacticSenate.Library.Organization {
    public interface IOrganizationService {
       Task<ModelResponse<Model.Organization, AddOrganizationRequest>> AddAsync(AddOrganizationRequest request);
    }
-   public class OrganizationService : IOrganizationService {
-      private readonly IUnitOfWork<DataContext> unitOfWork;
+   public class OrganizationService : BasicServiceBase, IOrganizationService {
       private readonly IOrganizationRepository organizationRepository;
       private readonly IPartyRepository partyRepository;
       private readonly IOrganizationNameRepository organizationNameRepository;
       private readonly IOrganizationNameValueRepository organizationNameValueRepository;
 
-      public OrganizationService(IUnitOfWork<DataContext> unitOfWork) {
-         this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-         this.organizationRepository = unitOfWork.GetOrganizationRepository();
-         this.partyRepository = unitOfWork.GetPartyRepository();
-         this.organizationNameRepository = unitOfWork.GetOrganizationNameRepository();
-         this.organizationNameValueRepository = unitOfWork.GetOrganizationNameValueRepository();
+      public OrganizationService(IUnitOfWork<DataContext> unitOfWork,
+         IPartyRepository partyRepository,
+         IOrganizationRepository organizationRepository,
+         IOrganizationNameRepository organizationNameRepository,
+         IOrganizationNameValueRepository organizationNameValueRepository,
+         IEventBus eventBus,
+         IEventFactory eventFactory,
+         ILogger<OrganizationService> logger) : base(unitOfWork, eventBus, eventFactory, logger) {
+
+         this.partyRepository = partyRepository ?? throw new ArgumentNullException(nameof(partyRepository));
+         this.organizationRepository = organizationRepository ?? throw new ArgumentNullException(nameof(organizationRepository));
+         this.organizationNameRepository = organizationNameRepository ?? throw new ArgumentNullException(nameof(organizationNameRepository));
+         this.organizationNameValueRepository = organizationNameValueRepository ?? throw new ArgumentNullException(nameof(organizationNameValueRepository));
       }
       private async Task<Model.OrganizationNameValue> AddOrganizationNameValueAsync(string value) {
          var nameValue = await organizationNameValueRepository.GetExactAsync(value);

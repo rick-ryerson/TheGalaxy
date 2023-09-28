@@ -1,8 +1,12 @@
-﻿using GalacticSenate.Data.Implementations.EntityFramework;
+﻿using EventBus.Abstractions;
+using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
 using GalacticSenate.Domain.Exceptions;
+using GalacticSenate.Library.Events;
+using GalacticSenate.Library.OrganizationNameValue;
 using GalacticSenate.Library.Party.Requests;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,13 +21,11 @@ namespace GalacticSenate.Library.Party {
       Task<ModelResponse<Model.Party, ReadPartyRequest>> ReadAsync(ReadPartyRequest request);
    }
 
-   public class PartyService : IPartyService {
-      private readonly IUnitOfWork<DataContext> unitOfWork;
+   public class PartyService : BasicServiceBase, IPartyService {
       private readonly IPartyRepository partyRepository;
 
-      public PartyService(IUnitOfWork<DataContext> unitOfWork) {
-         this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-         this.partyRepository = unitOfWork.GetPartyRepository() ?? throw new ApplicationException("Couldn't create party repository");
+      public PartyService(IUnitOfWork<DataContext> unitOfWork, IEventBus eventBus, IEventFactory eventFactory, ILogger<OrganizationNameValueService> logger) : base(unitOfWork, eventBus, eventFactory, logger) {
+
       }
 
       public async Task<ModelResponse<Model.Party, AddPartyRequest>> AddAsync(AddPartyRequest request) {
@@ -47,7 +49,8 @@ namespace GalacticSenate.Library.Party {
             response.Results.Add(existing);
 
             response.Status = StatusEnum.Successful;
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             response.Status = StatusEnum.Failed;
             response.Messages.Add(ex.Message);
          }
@@ -61,7 +64,8 @@ namespace GalacticSenate.Library.Party {
             response.Results.AddRange(partyRepository.Get(request.PageIndex, request.PageSize));
 
             response.Status = StatusEnum.Successful;
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             response.Messages.Add(ex.Message);
             response.Status = StatusEnum.Failed;
          }
@@ -78,7 +82,8 @@ namespace GalacticSenate.Library.Party {
                response.Results.Add(await partyRepository.GetAsync(request.Id));
 
             response.Status = StatusEnum.Successful;
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             response.Messages.Add(ex.Message);
             response.Status = StatusEnum.Failed;
          }
@@ -93,7 +98,8 @@ namespace GalacticSenate.Library.Party {
             unitOfWork.Save();
 
             response.Status = StatusEnum.Successful;
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             response.Status = StatusEnum.Failed;
             response.Messages.Add(ex.Message);
          }

@@ -1,5 +1,6 @@
 using EventBus.Abstractions;
 using GalacticSenate.Data.Implementations.EntityFramework;
+using GalacticSenate.Data.Implementations.EntityFramework.Repositories;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Library;
 using GalacticSenate.Library.Gender;
@@ -19,9 +20,9 @@ namespace GalacticSenate.Tests {
       private readonly IGenderService genderService;
 
       public GenderServiceUnitTests() : base("DataContext") {
-         var genderRepository = unitOfWork.GetGenderRepository();
+         var genderRepository = new GenderRepository(unitOfWork);
 
-         genderService = new GenderService(unitOfWork, eventBusMock.Object, eventFactory, NullLogger<GenderService>.Instance);
+         genderService = new GenderService(unitOfWork, genderRepository, eventBusMock.Object, eventFactory, NullLogger<GenderService>.Instance);
       }
       [TestMethod]
       public async Task Add_Test() {

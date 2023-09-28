@@ -1,5 +1,6 @@
 ﻿using EventBus.Abstractions;
 using GalacticSenate.Data.Implementations.EntityFramework;
+using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Seeding;
 using GalacticSenate.Domain.Model;
 using GalacticSenate.Library.Events;
@@ -11,7 +12,7 @@ using System.Text;
 
 namespace GalacticSenate.Tests {
    public abstract class GalacticSenateFixture : DatabaseFixture {
-      internal readonly UnitOfWork unitOfWork;
+      internal readonly IUnitOfWork<DataContext> unitOfWork;
       protected readonly Mock<IEventBus> eventBusMock;
       protected readonly IEventFactory eventFactory;
 
@@ -29,6 +30,7 @@ namespace GalacticSenate.Tests {
       protected readonly DataContext dataContext;
 
       public DatabaseFixture(string databaseName) {
+         // TODO: implement DbContextOptionsBuilder.UseLoggerFactory
          options = new DbContextOptionsBuilder<DataContext>().UseInMemoryDatabase(databaseName).Options;
          contextFactory = new DataContextFactory(options);
 
