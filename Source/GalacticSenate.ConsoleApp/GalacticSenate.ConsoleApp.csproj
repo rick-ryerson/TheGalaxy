@@ -43,7 +43,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\EventBus\Source\EventBus.RabbitMQ\EventBus.RabbitMQ.csproj" />
     <ProjectReference Include="..\GalacticSenate.Data\GalacticSenate.Data.csproj" />
+    <ProjectReference Include="..\GalacticSenate.Library\GalacticSenate.Library.csproj" />
   </ItemGroup>
 
 </Project>

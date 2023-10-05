@@ -7,6 +7,9 @@ using Microsoft.Extensions.DependencyInjection;
 using GalacticSenate.Data.Interfaces;
 using Microsoft.Extensions.Configuration;
 using GalacticSenate.Data.Extensions;
+using GalacticSenate.Library.Extensions;
+
+using EventBus.RabbitMQ;
 
 namespace GalacticSenate.ConsoleApp {
    class Program {
@@ -19,19 +22,21 @@ namespace GalacticSenate.ConsoleApp {
             {
                IConfiguration Configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json", optional: true, reloadOnChange: true)
                 .AddEnvironmentVariables()
                 .AddCommandLine(args)
                 .Build();
 
                var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
 
-               var connectionString = Configuration.GetConnectionString("DataContext");
-               var settings = new EfDataSettings()
+               var efDataSettings = new EfDataSettings()
                {
-                  ConnectionString = connectionString
+                  ConnectionString = Configuration.GetConnectionString("DataContext")
                };
 
-               services.AddEntityFramework(settings);
+               var eventBusSettings = EventBusSettings.Bind(Configuration);
+
+               services.AddPeopleAndOrganizations(eventBusSettings, efDataSettings);
             })
             .Build()
             .SeedData()
