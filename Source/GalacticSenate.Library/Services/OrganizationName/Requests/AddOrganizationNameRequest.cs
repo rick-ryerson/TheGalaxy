@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace GalacticSenate.Library.Services.OrganizationName.Requests
-{
-    public class AddOrganizationNameRequest
+namespace GalacticSenate.Library.Services.OrganizationName.Requests {
+   public class AddOrganizationNameRequest
     {
         public Guid OrganizationId { get; set; }
         public string OrganizationName { get; set; }

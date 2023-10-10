@@ -1,9 +1,5 @@
-﻿using GalacticSenate.Data.Implementations.EntityFramework;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GalacticSenate.Data.Implementations.EntityFramework {
    /// <summary>

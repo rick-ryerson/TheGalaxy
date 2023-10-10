@@ -1,12 +1,8 @@
 ﻿using GalacticSenate.Library.Events;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Model = GalacticSenate.Domain.Model;
 
-namespace GalacticSenate.Library.Services.Organization.Events
-{
-    public interface IOrganizationEventsFactory :
+namespace GalacticSenate.Library.Services.Organization.Events {
+   public interface IOrganizationEventsFactory :
        ICreatedEventFactory<Model.Organization>,
        IUpdatedEventFactory<Model.Organization>,
        IDeletedEventFactory<int>

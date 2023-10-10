@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 
-namespace GalacticSenate.Domain.Exceptions
-{
-    public class SaveException : GalacticSenateException
+namespace GalacticSenate.Domain.Exceptions {
+   public class SaveException : GalacticSenateException
     {
         public SaveException(List<string> messages, List<string> entries, Exception innerException) : base(messages, innerException)
         {

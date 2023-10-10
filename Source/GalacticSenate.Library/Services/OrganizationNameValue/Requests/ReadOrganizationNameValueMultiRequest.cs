@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GalacticSenate.Library.Services.OrganizationNameValue.Requests
-{
-    public class ReadOrganizationNameValueMultiRequest
+﻿namespace GalacticSenate.Library.Services.OrganizationNameValue.Requests {
+   public class ReadOrganizationNameValueMultiRequest
     {
         public int PageIndex { get; set; }
         public int PageSize { get; set; }

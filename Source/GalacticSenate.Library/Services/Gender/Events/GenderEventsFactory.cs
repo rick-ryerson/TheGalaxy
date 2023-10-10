@@ -1,12 +1,8 @@
 ﻿using GalacticSenate.Library.Events;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Model = GalacticSenate.Domain.Model;
 
-namespace GalacticSenate.Library.Services.Gender.Events
-{
-    public interface IGenderEventsFactory :
+namespace GalacticSenate.Library.Services.Gender.Events {
+   public interface IGenderEventsFactory :
        ICreatedEventFactory<Model.Gender>,
        IUpdatedEventFactory<Model.Gender>,
        IDeletedEventFactory<int>

@@ -1,15 +1,11 @@
 ﻿using GalacticSenate.Library.Services.MaritalStatusType;
 using GalacticSenate.Library.Services.MaritalStatusType.Requests;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace GalacticSenate.WebApi.Controllers.v1
-{
-    [Route("api/v1/[controller]")]
+namespace GalacticSenate.WebApi.Controllers.v1 {
+   [Route("api/v1/[controller]")]
     [ApiController]
     public class MaritalStatusTypeController : ControllerBase
     {

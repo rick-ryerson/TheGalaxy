@@ -3,8 +3,6 @@ using GalacticSenate.Data.Implementations.EntityFramework;
 using System;
 using Microsoft.Extensions.Hosting;
 using GalacticSenate.Data.Seeding;
-using Microsoft.Extensions.DependencyInjection;
-using GalacticSenate.Data.Interfaces;
 using Microsoft.Extensions.Configuration;
 using GalacticSenate.Data.Extensions;
 using GalacticSenate.Library.Extensions;

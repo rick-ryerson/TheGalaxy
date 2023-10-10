@@ -8,15 +8,12 @@ using GalacticSenate.Library.Services.OrganizationNameValue;
 using GalacticSenate.Library.Services.OrganizationNameValue.Requests;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Model = GalacticSenate.Domain.Model;
 
-namespace GalacticSenate.Library.Services.OrganizationName
-{
-    public interface IOrganizationNameService
+namespace GalacticSenate.Library.Services.OrganizationName {
+   public interface IOrganizationNameService
     {
         Task<ModelResponse<Model.OrganizationName, AddOrganizationNameRequest>> AddAsync(AddOrganizationNameRequest request);
     }

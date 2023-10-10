@@ -2,11 +2,9 @@
 using GalacticSenate.Data.Interfaces.Repositories;
 using GalacticSenate.Domain.Exceptions;
 using GalacticSenate.Domain.Model;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GalacticSenate.Data.Implementations.EntityFramework.Repositories {

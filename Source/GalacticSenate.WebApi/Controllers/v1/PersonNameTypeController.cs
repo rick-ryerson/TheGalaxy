@@ -1,13 +1,11 @@
 ﻿using GalacticSenate.Library.Services.PersonNameType;
 using GalacticSenate.Library.Services.PersonNameType.Requests;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
-namespace GalacticSenate.WebApi.Controllers.v1
-{
-    [Route("api/[controller]")]
+namespace GalacticSenate.WebApi.Controllers.v1 {
+   [Route("api/[controller]")]
    [ApiController]
    public class PersonNameTypeController : ControllerBase {
       private readonly IPersonNameTypeService genderService;

@@ -1,13 +1,9 @@
 ﻿using GalacticSenate.Library.Events;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Model = GalacticSenate.Domain.Model;
 
-namespace GalacticSenate.Library.Services.MaritalStatusType.Events
-{
+namespace GalacticSenate.Library.Services.MaritalStatusType.Events {
 
-    public interface IMaritalStatusTypeEventsFactory :
+   public interface IMaritalStatusTypeEventsFactory :
     ICreatedEventFactory<Model.MaritalStatusType>,
     IUpdatedEventFactory<Model.MaritalStatusType>,
     IDeletedEventFactory<int>

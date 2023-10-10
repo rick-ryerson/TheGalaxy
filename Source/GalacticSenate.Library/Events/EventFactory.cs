@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GalacticSenate.Library.Events {
+﻿namespace GalacticSenate.Library.Events {
    public interface ICreatedEventFactory<M> {
       Created<M> Created(M item);
    }

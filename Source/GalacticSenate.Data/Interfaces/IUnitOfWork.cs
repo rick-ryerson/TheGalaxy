@@ -1,13 +1,7 @@
-﻿using GalacticSenate.Data.Interfaces.Repositories;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace GalacticSenate.Data.Interfaces
-{
-    public interface IUnitOfWork<out TContext> where TContext : DbContext
+namespace GalacticSenate.Data.Interfaces {
+   public interface IUnitOfWork<out TContext> where TContext : DbContext
     {
         TContext Context { get; }
 

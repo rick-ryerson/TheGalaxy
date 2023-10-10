@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace GalacticSenate.Domain.Exceptions
-{
-    public class GalacticSenateException : ApplicationException
+namespace GalacticSenate.Domain.Exceptions {
+   public class GalacticSenateException : ApplicationException
     {
         public GalacticSenateException()
         {

@@ -1,7 +1,4 @@
 ﻿using EventBus.Events;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GalacticSenate.Library.Events {
    public class Created<T> : Event {

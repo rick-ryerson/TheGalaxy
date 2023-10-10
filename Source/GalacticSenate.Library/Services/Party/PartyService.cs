@@ -7,14 +7,11 @@ using GalacticSenate.Library.Services.Party.Events;
 using GalacticSenate.Library.Services.Party.Requests;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Model = GalacticSenate.Domain.Model;
 
-namespace GalacticSenate.Library.Services.Party
-{
-    public interface IPartyService
+namespace GalacticSenate.Library.Services.Party {
+   public interface IPartyService
     {
         Task<ModelResponse<Model.Party, AddPartyRequest>> AddAsync(AddPartyRequest request);
         Task<BasicResponse<DeletePartyRequest>> DeleteAsync(DeletePartyRequest request);

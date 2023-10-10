@@ -1,10 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using GalacticSenate.Domain.Model;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using Newtonsoft.Json.Bson;
 
 namespace GalacticSenate.Data.Implementations.EntityFramework {
    public class DataContext : DbContext {

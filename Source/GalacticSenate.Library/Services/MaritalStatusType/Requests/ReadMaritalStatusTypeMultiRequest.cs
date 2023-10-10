@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GalacticSenate.Library.Services.MaritalStatusType.Requests
-{
-    public class ReadMaritalStatusTypeMultiRequest
+﻿namespace GalacticSenate.Library.Services.MaritalStatusType.Requests {
+   public class ReadMaritalStatusTypeMultiRequest
     {
         public int PageIndex { get; set; }
         public int PageSize { get; set; }

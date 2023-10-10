@@ -1,19 +1,15 @@
-using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Implementations.EntityFramework.Repositories;
-using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Library;
 using GalacticSenate.Library.Services.OrganizationNameValue;
 using GalacticSenate.Library.Services.OrganizationNameValue.Requests;
 using GalacticSenate.Tests.Fixtures;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GalacticSenate.Tests
-{
-    [TestClass]
+namespace GalacticSenate.Tests {
+   [TestClass]
    public class OrganizationNameValueServiceUnitTests : OrganizationNameValueServicesFixture {
       private readonly IOrganizationNameValueService organizationNameValueService;
 

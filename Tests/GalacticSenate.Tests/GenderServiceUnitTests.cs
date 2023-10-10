@@ -2,17 +2,14 @@ using GalacticSenate.Library;
 using GalacticSenate.Library.Services.Gender;
 using GalacticSenate.Library.Services.Gender.Requests;
 using GalacticSenate.Tests.Fixtures;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GalacticSenate.Tests
-{
-    [TestClass]
+namespace GalacticSenate.Tests {
+   [TestClass]
    public class GenderServiceUnitTests : GenderServicesFixture {
       private readonly IGenderService genderService;
 

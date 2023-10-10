@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GalacticSenate.Library.Services.PersonNameType.Requests
-{
-    public class ReadPersonNameTypeMultiRequest
+﻿namespace GalacticSenate.Library.Services.PersonNameType.Requests {
+   public class ReadPersonNameTypeMultiRequest
     {
         public int PageIndex { get; set; }
         public int PageSize { get; set; }

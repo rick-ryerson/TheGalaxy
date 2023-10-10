@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
-namespace GalacticSenate.Domain.Model
-{
-    public class Person
+namespace GalacticSenate.Domain.Model {
+   public class Person
     {
         public Guid Id { get; set; }
         public Guid PartyId { get; set; }

@@ -1,13 +1,9 @@
 ﻿using GalacticSenate.Data.Implementations.EntityFramework.Repositories;
 using GalacticSenate.Data.Interfaces.Repositories;
 using GalacticSenate.Library.Services.PersonNameType.Events;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace GalacticSenate.Tests.Fixtures
-{
-    public abstract class PersonNameTypeServicesFixture : GalacticSenateFixture {
+namespace GalacticSenate.Tests.Fixtures {
+   public abstract class PersonNameTypeServicesFixture : GalacticSenateFixture {
       protected readonly IPersonNameTypeRepository personNameTypeRepository;
       protected readonly IPersonNameTypeEventsFactory personNameTypeEventsFactory;
 

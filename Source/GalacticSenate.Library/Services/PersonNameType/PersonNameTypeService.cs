@@ -6,14 +6,11 @@ using GalacticSenate.Library.Services.PersonNameType.Events;
 using GalacticSenate.Library.Services.PersonNameType.Requests;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Model = GalacticSenate.Domain.Model;
 
-namespace GalacticSenate.Library.Services.PersonNameType
-{
-    public interface IPersonNameTypeService
+namespace GalacticSenate.Library.Services.PersonNameType {
+   public interface IPersonNameTypeService
     {
         Task<ModelResponse<Model.PersonNameType, AddPersonNameTypeRequest>> AddAsync(AddPersonNameTypeRequest request);
         Task<BasicResponse<DeletePersonNameTypeRequest>> DeleteAsync(DeletePersonNameTypeRequest request);

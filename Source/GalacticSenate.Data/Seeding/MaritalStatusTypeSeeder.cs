@@ -1,9 +1,7 @@
 ﻿using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Domain.Model;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace GalacticSenate.Data.Seeding {
    public class MaritalStatusTypeSeeder {

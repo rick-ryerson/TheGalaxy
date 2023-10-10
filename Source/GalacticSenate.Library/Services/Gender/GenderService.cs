@@ -2,21 +2,15 @@
 using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
-using GalacticSenate.Domain.Exceptions;
-using GalacticSenate.Domain.Model;
-using GalacticSenate.Library.Events;
 using GalacticSenate.Library.Services.Gender.Events;
 using GalacticSenate.Library.Services.Gender.Requests;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Model = GalacticSenate.Domain.Model;
 
-namespace GalacticSenate.Library.Services.Gender
-{
-    public interface IGenderService
+namespace GalacticSenate.Library.Services.Gender {
+   public interface IGenderService
     {
         Task<ModelResponse<Model.Gender, AddGenderRequest>> AddAsync(AddGenderRequest request);
         Task<BasicResponse<DeleteGenderRequest>> DeleteAsync(DeleteGenderRequest request);

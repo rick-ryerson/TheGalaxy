@@ -1,17 +1,12 @@
-﻿using GalacticSenate.Library;
-using GalacticSenate.Library.Services.OrganizationNameValue;
+﻿using GalacticSenate.Library.Services.OrganizationNameValue;
 using GalacticSenate.Library.Services.OrganizationNameValue.Requests;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Model = GalacticSenate.Domain.Model;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace GalacticSenate.WebApi.Controllers.v1
-{
-    [Route("api/v1/[controller]")]
+namespace GalacticSenate.WebApi.Controllers.v1 {
+   [Route("api/v1/[controller]")]
     [ApiController]
     public class OrganizationNameValueController : ControllerBase
     {

@@ -5,7 +5,6 @@ using GalacticSenate.Domain.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using GalacticSenate.Data.Interfaces.Repositories;
 using GalacticSenate.Data.Implementations.EntityFramework.Repositories;
 

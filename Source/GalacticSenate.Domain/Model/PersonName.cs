@@ -1,11 +1,7 @@
-﻿using Celestial.Common.Types;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
-namespace GalacticSenate.Domain.Model
-{
-    public class PersonName
+namespace GalacticSenate.Domain.Model {
+   public class PersonName
     {
         public Guid PersonId { get; set; }
         public int PersonNameValueId { get; set; }

@@ -6,15 +6,12 @@ using GalacticSenate.Library.Services.Organization.Requests;
 using GalacticSenate.Library.Services.OrganizationNameValue.Events;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 using Model = GalacticSenate.Domain.Model;
 
-namespace GalacticSenate.Library.Services.Organization
-{
-    public interface IOrganizationService
+namespace GalacticSenate.Library.Services.Organization {
+   public interface IOrganizationService
     {
         Task<ModelResponse<Model.Organization, AddOrganizationRequest>> AddAsync(AddOrganizationRequest request);
     }

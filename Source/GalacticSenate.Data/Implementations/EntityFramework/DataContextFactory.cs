@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GalacticSenate.Data.Implementations.EntityFramework {
    public interface IDataContextFactory {

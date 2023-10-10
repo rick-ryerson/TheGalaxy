@@ -1,9 +1,6 @@
 ﻿using GalacticSenate.Data.Implementations.EntityFramework;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace GalacticSenate.Data.Seeding {
    public static class HostExtensions {
