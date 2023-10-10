@@ -1,6 +1,6 @@
 ﻿using GalacticSenate.Library;
-using GalacticSenate.Library.Party;
-using GalacticSenate.Library.Party.Requests;
+using GalacticSenate.Library.Services.Party;
+using GalacticSenate.Library.Services.Party.Requests;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,8 +9,9 @@ using System.Threading.Tasks;
 using Model = GalacticSenate.Domain.Model;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace GalacticSenate.WebApi.Controllers.v1 {
-   [Route("api/v1/[controller]")]
+namespace GalacticSenate.WebApi.Controllers.v1
+{
+    [Route("api/v1/[controller]")]
    [ApiController]
    public class PartyController : ControllerBase {
       private readonly IPartyService partyService;

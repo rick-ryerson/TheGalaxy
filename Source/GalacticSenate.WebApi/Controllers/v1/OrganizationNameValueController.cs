@@ -1,6 +1,6 @@
 ﻿using GalacticSenate.Library;
-using GalacticSenate.Library.OrganizationNameValue;
-using GalacticSenate.Library.OrganizationNameValue.Requests;
+using GalacticSenate.Library.Services.OrganizationNameValue;
+using GalacticSenate.Library.Services.OrganizationNameValue.Requests;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;

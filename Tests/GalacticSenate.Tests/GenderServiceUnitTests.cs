@@ -1,13 +1,8 @@
-using EventBus.Abstractions;
-using GalacticSenate.Data.Implementations.EntityFramework;
-using GalacticSenate.Data.Implementations.EntityFramework.Repositories;
-using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Library;
-using GalacticSenate.Library.Gender;
-using GalacticSenate.Library.Gender.Requests;
+using GalacticSenate.Library.Services.Gender;
+using GalacticSenate.Library.Services.Gender.Requests;
 using GalacticSenate.Tests.Fixtures;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

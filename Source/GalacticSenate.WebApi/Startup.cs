@@ -1,12 +1,7 @@
 using EventBus.RabbitMQ;
 using GalacticSenate.Data.Extensions;
 using GalacticSenate.Data.Implementations.EntityFramework;
-using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Library.Extensions;
-using GalacticSenate.Library.Gender;
-using GalacticSenate.Library.MaritalStatusType;
-using GalacticSenate.Library.OrganizationName;
-using GalacticSenate.Library.OrganizationNameValue;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;

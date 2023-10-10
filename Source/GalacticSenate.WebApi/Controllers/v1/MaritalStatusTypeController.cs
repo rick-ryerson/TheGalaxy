@@ -1,5 +1,5 @@
-﻿using GalacticSenate.Library.MaritalStatusType;
-using GalacticSenate.Library.MaritalStatusType.Requests;
+﻿using GalacticSenate.Library.Services.MaritalStatusType;
+using GalacticSenate.Library.Services.MaritalStatusType.Requests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
