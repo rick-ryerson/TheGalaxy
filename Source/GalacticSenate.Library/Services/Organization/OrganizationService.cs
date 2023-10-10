@@ -53,12 +53,12 @@ namespace GalacticSenate.Library.Services.Organization
 
             return nameValue;
         }
-        private async Task<Model.OrganizationName> AddOrganizationNameAsync(Guid organizationId, string organizationNameValue)
+        private Task<Model.OrganizationName> AddOrganizationNameAsync(Guid organizationId, string organizationNameValue)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<ModelResponse<Model.Organization, AddOrganizationRequest>> AddAsync(AddOrganizationRequest request)
+        public Task<ModelResponse<Model.Organization, AddOrganizationRequest>> AddAsync(AddOrganizationRequest request)
         {
             throw new NotImplementedException();
         }
