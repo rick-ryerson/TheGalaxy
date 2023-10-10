@@ -4,6 +4,7 @@ using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Library;
 using GalacticSenate.Library.OrganizationNameValue;
 using GalacticSenate.Library.OrganizationNameValue.Requests;
+using GalacticSenate.Tests.Fixtures;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -12,12 +13,16 @@ using System.Threading.Tasks;
 
 namespace GalacticSenate.Tests {
    [TestClass]
-   public class OrganizationNameValueServiceUnitTests : GalacticSenateFixture {
+   public class OrganizationNameValueServiceUnitTests : OrganizationNameValueServicesFixture {
       private readonly IOrganizationNameValueService organizationNameValueService;
 
       public OrganizationNameValueServiceUnitTests() : base("DataContext") {
          var organizationNameValueRepository = new OrganizationNameValueRepository(unitOfWork);
-         organizationNameValueService = new OrganizationNameValueService(unitOfWork, eventBusMock.Object, eventFactory, NullLogger<OrganizationNameValueService>.Instance);
+         organizationNameValueService = new OrganizationNameValueService(unitOfWork,
+            organizationNameValueRepository,
+            eventBusMock.Object,
+            organizationNameValueEventsFactory,
+            NullLogger<OrganizationNameValueService>.Instance);
       }
       [TestMethod]
       public async Task Add_Test() {

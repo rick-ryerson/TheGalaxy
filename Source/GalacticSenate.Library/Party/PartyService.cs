@@ -4,7 +4,9 @@ using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
 using GalacticSenate.Domain.Exceptions;
 using GalacticSenate.Library.Events;
+using GalacticSenate.Library.Gender.Events;
 using GalacticSenate.Library.OrganizationNameValue;
+using GalacticSenate.Library.Party.Events;
 using GalacticSenate.Library.Party.Requests;
 using Microsoft.Extensions.Logging;
 using System;
@@ -23,9 +25,15 @@ namespace GalacticSenate.Library.Party {
 
    public class PartyService : BasicServiceBase, IPartyService {
       private readonly IPartyRepository partyRepository;
+      private readonly IPartyEventsFactory partyEventsFactory;
 
-      public PartyService(IUnitOfWork<DataContext> unitOfWork, IEventBus eventBus, IEventFactory eventFactory, ILogger<OrganizationNameValueService> logger) : base(unitOfWork, eventBus, eventFactory, logger) {
-
+      public PartyService(IUnitOfWork<DataContext> unitOfWork,
+         IPartyRepository partyRepository,
+         IEventBus eventBus,
+         IPartyEventsFactory partyEventsFactory,
+         ILogger<OrganizationNameValueService> logger) : base(unitOfWork, eventBus, logger) {
+         this.partyRepository = partyRepository ?? throw new ArgumentNullException(nameof(partyRepository));
+         this.partyEventsFactory = partyEventsFactory ?? throw new ArgumentNullException(nameof(partyEventsFactory));
       }
 
       public async Task<ModelResponse<Model.Party, AddPartyRequest>> AddAsync(AddPartyRequest request) {
@@ -35,18 +43,21 @@ namespace GalacticSenate.Library.Party {
             if (request is null)
                throw new ArgumentNullException(nameof(request));
 
-            var existing = await partyRepository.GetAsync(request.Id);
+            var party = await partyRepository.GetAsync(request.Id);
 
-            if (existing is null) {
-               existing = await partyRepository.AddAsync(new Model.Party { Id = request.Id });
+            if (party is null) {
+               party = await partyRepository.AddAsync(new Model.Party { Id = request.Id });
+
                unitOfWork.Save();
+
+               eventBus.Publish(partyEventsFactory.Created(party));
 
                response.Messages.Add($"Party with id {request.Id} added.");
             } else {
                response.Messages.Add($"Party with id {request.Id} already exists.");
             }
 
-            response.Results.Add(existing);
+            response.Results.Add(party);
 
             response.Status = StatusEnum.Successful;
          }
@@ -97,6 +108,7 @@ namespace GalacticSenate.Library.Party {
             await partyRepository.DeleteAsync(request.Id);
             unitOfWork.Save();
 
+            eventBus.Publish(partyEventsFactory.Deleted(request.Id));
             response.Status = StatusEnum.Successful;
          }
          catch (Exception ex) {

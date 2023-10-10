@@ -5,6 +5,7 @@ using GalacticSenate.Data.Interfaces.Repositories;
 using GalacticSenate.Library.Events;
 using GalacticSenate.Library.Gender;
 using GalacticSenate.Library.Organization.Requests;
+using GalacticSenate.Library.OrganizationNameValue.Events;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace GalacticSenate.Library.Organization {
       private readonly IPartyRepository partyRepository;
       private readonly IOrganizationNameRepository organizationNameRepository;
       private readonly IOrganizationNameValueRepository organizationNameValueRepository;
+      private readonly IOrganizationNameValueEventsFactory organizationNameValueEventsFactory;
 
       public OrganizationService(IUnitOfWork<DataContext> unitOfWork,
          IPartyRepository partyRepository,
@@ -29,13 +31,14 @@ namespace GalacticSenate.Library.Organization {
          IOrganizationNameRepository organizationNameRepository,
          IOrganizationNameValueRepository organizationNameValueRepository,
          IEventBus eventBus,
-         IEventFactory eventFactory,
-         ILogger<OrganizationService> logger) : base(unitOfWork, eventBus, eventFactory, logger) {
+         IOrganizationNameValueEventsFactory organizationNameValueEventsFactory,
+         ILogger<OrganizationService> logger) : base(unitOfWork, eventBus, logger) {
 
          this.partyRepository = partyRepository ?? throw new ArgumentNullException(nameof(partyRepository));
          this.organizationRepository = organizationRepository ?? throw new ArgumentNullException(nameof(organizationRepository));
          this.organizationNameRepository = organizationNameRepository ?? throw new ArgumentNullException(nameof(organizationNameRepository));
          this.organizationNameValueRepository = organizationNameValueRepository ?? throw new ArgumentNullException(nameof(organizationNameValueRepository));
+         this.organizationNameValueEventsFactory = organizationNameValueEventsFactory;
       }
       private async Task<Model.OrganizationNameValue> AddOrganizationNameValueAsync(string value) {
          var nameValue = await organizationNameValueRepository.GetExactAsync(value);
@@ -51,11 +54,7 @@ namespace GalacticSenate.Library.Organization {
       }
 
       public async Task<ModelResponse<Model.Organization, AddOrganizationRequest>> AddAsync(AddOrganizationRequest request) {
-         var response = new ModelResponse<Model.Organization, AddOrganizationRequest>(DateTime.Now, request);
-
          throw new NotImplementedException();
-
-         return response.Finalize();
       }
    }
 }

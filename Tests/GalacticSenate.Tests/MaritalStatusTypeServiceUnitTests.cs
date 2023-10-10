@@ -4,20 +4,22 @@ using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Library;
 using GalacticSenate.Library.MaritalStatusType;
 using GalacticSenate.Library.MaritalStatusType.Requests;
+using GalacticSenate.Tests.Fixtures;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GalacticSenate.Tests {
-   [TestClass]
-   public class MaritalStatusTypeServiceUnitTests : GalacticSenateFixture {
+namespace GalacticSenate.Tests
+{
+    [TestClass]
+   public class MaritalStatusTypeServiceUnitTests : MaritalStatusTypeServicesFixture {
       private readonly IMaritalStatusTypeService MaritalStatusTypeService;
 
       public MaritalStatusTypeServiceUnitTests() : base("DataContext") {
          var maritalStatusTypeRepository = new MaritalStatusTypeRepository(unitOfWork);
-         MaritalStatusTypeService = new MaritalStatusTypeService(unitOfWork, maritalStatusTypeRepository, eventBusMock.Object, eventFactory, NullLogger<MaritalStatusTypeService>.Instance);
+         MaritalStatusTypeService = new MaritalStatusTypeService(unitOfWork, maritalStatusTypeRepository, eventBusMock.Object, maritalStatusTypeEventsFactory, NullLogger<MaritalStatusTypeService>.Instance);
       }
       [TestMethod]
       public async Task Add_Test() {

@@ -3,7 +3,9 @@ using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
 using GalacticSenate.Library.Events;
+using GalacticSenate.Library.Gender.Events;
 using GalacticSenate.Library.OrganizationNameValue;
+using GalacticSenate.Library.PersonNameType.Events;
 using GalacticSenate.Library.PersonNameType.Requests;
 using Microsoft.Extensions.Logging;
 using System;
@@ -23,8 +25,15 @@ namespace GalacticSenate.Library.PersonNameType {
    }
    public class PersonNameTypeService : BasicServiceBase, IPersonNameTypeService {
       private readonly IPersonNameTypeRepository personNameTypeRepository;
-      public PersonNameTypeService(IUnitOfWork<DataContext> unitOfWork, IEventBus eventBus, IEventFactory eventFactory, ILogger<OrganizationNameValueService> logger) : base(unitOfWork, eventBus, eventFactory, logger) {
+      private readonly IPersonNameTypeEventsFactory personNameTypeEventsFactory;
 
+      public PersonNameTypeService(IUnitOfWork<DataContext> unitOfWork, 
+         IPersonNameTypeRepository personNameTypeRepository,
+         IEventBus eventBus, 
+         IPersonNameTypeEventsFactory personNameTypeEventsFactory, 
+         ILogger<PersonNameTypeService> logger) : base(unitOfWork, eventBus, logger) {
+         this.personNameTypeRepository = personNameTypeRepository ?? throw new ArgumentNullException(nameof(personNameTypeRepository));
+         this.personNameTypeEventsFactory = personNameTypeEventsFactory ?? throw new ArgumentNullException(nameof(personNameTypeEventsFactory));
       }
 
       public async Task<ModelResponse<Model.PersonNameType, AddPersonNameTypeRequest>> AddAsync(AddPersonNameTypeRequest request) {

@@ -11,13 +11,11 @@ namespace GalacticSenate.Library {
    public abstract class BasicServiceBase {
       protected readonly IUnitOfWork<DataContext> unitOfWork;
       protected readonly IEventBus eventBus;
-      protected readonly IEventFactory eventFactory;
       protected readonly ILogger logger;
 
-      protected BasicServiceBase(IUnitOfWork<DataContext> unitOfWork, IEventBus eventBus, IEventFactory eventFactory, ILogger logger) {
+      protected BasicServiceBase(IUnitOfWork<DataContext> unitOfWork, IEventBus eventBus, ILogger logger) {
          this.unitOfWork = unitOfWork;
          this.eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
-         this.eventFactory = eventFactory ?? throw new ArgumentNullException(nameof(eventFactory));
          this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
       }
    }

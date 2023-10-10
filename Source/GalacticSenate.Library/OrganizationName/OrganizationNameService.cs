@@ -3,8 +3,11 @@ using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
 using GalacticSenate.Library.Events;
+using GalacticSenate.Library.Gender.Events;
+using GalacticSenate.Library.OrganizationName.Events;
 using GalacticSenate.Library.OrganizationName.Requests;
 using GalacticSenate.Library.OrganizationNameValue;
+using GalacticSenate.Library.OrganizationNameValue.Events;
 using GalacticSenate.Library.OrganizationNameValue.Requests;
 using Microsoft.Extensions.Logging;
 using System;
@@ -21,10 +24,18 @@ namespace GalacticSenate.Library.OrganizationName {
    public class OrganizationNameService : BasicServiceBase, IOrganizationNameService {
 
       private readonly IOrganizationNameRepository organizationNameRepository;
+      private readonly IOrganizationNameEventsFactory organizationNameEventsFactory;
       private readonly IOrganizationNameValueService organizationNameValueService;
 
-      public OrganizationNameService(IUnitOfWork<DataContext> unitOfWork, IEventBus eventBus, IEventFactory eventFactory, ILogger<OrganizationNameValueService> logger) : base(unitOfWork, eventBus, eventFactory, logger) {
-         
+      public OrganizationNameService(IUnitOfWork<DataContext> unitOfWork, 
+         IOrganizationNameRepository organizationNameRepository,
+         IEventBus eventBus, 
+         IOrganizationNameEventsFactory organizationNameEventsFactory,
+         IOrganizationNameValueService organizationNameValueService,
+         ILogger<OrganizationNameValueService> logger) : base(unitOfWork, eventBus, logger) {
+         this.organizationNameRepository = organizationNameRepository ?? throw new ArgumentNullException(nameof(organizationNameRepository));
+         this.organizationNameEventsFactory = organizationNameEventsFactory ?? throw new ArgumentNullException(nameof(organizationNameEventsFactory));
+         this.organizationNameValueService = organizationNameValueService ?? throw new ArgumentNullException(nameof(organizationNameValueService));
       }
 
       public async Task<ModelResponse<Model.OrganizationName, AddOrganizationNameRequest>> AddAsync(AddOrganizationNameRequest request) {

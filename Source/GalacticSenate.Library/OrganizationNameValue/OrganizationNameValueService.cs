@@ -4,6 +4,7 @@ using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
 using GalacticSenate.Domain.Exceptions;
 using GalacticSenate.Library.Events;
+using GalacticSenate.Library.OrganizationNameValue.Events;
 using GalacticSenate.Library.OrganizationNameValue.Requests;
 using Microsoft.Extensions.Logging;
 using System;
@@ -24,9 +25,15 @@ namespace GalacticSenate.Library.OrganizationNameValue {
 
    public class OrganizationNameValueService : BasicServiceBase, IOrganizationNameValueService {
       private readonly IOrganizationNameValueRepository organizationNameValueRepository;
+      private readonly IOrganizationNameValueEventsFactory eventFactory;
 
-      public OrganizationNameValueService(IUnitOfWork<DataContext> unitOfWork, IEventBus eventBus, IEventFactory eventFactory, ILogger<OrganizationNameValueService> logger) : base(unitOfWork, eventBus, eventFactory, logger) {
-
+      public OrganizationNameValueService(IUnitOfWork<DataContext> unitOfWork,
+         IOrganizationNameValueRepository organizationNameValueRepository,
+         IEventBus eventBus,
+         IOrganizationNameValueEventsFactory eventFactory,
+         ILogger<OrganizationNameValueService> logger) : base(unitOfWork, eventBus, logger) {
+         this.organizationNameValueRepository = organizationNameValueRepository ?? throw new ArgumentNullException(nameof(organizationNameValueRepository));
+         this.eventFactory = eventFactory ?? throw new ArgumentNullException(nameof(eventFactory));
       }
 
       public async Task<ModelResponse<Model.OrganizationNameValue, AddOrganizationNameValueRequest>> AddAsync(AddOrganizationNameValueRequest request) {

@@ -5,6 +5,7 @@ using GalacticSenate.Data.Interfaces.Repositories;
 using GalacticSenate.Domain.Exceptions;
 using GalacticSenate.Domain.Model;
 using GalacticSenate.Library.Events;
+using GalacticSenate.Library.Gender.Events;
 using GalacticSenate.Library.Gender.Requests;
 using Microsoft.Extensions.Logging;
 using System;
@@ -25,9 +26,15 @@ namespace GalacticSenate.Library.Gender {
 
    public class GenderService : BasicServiceBase, IGenderService {
       private readonly IGenderRepository genderRepository;
+      private readonly IGenderEventsFactory genderEventsFactory;
 
-      public GenderService(IUnitOfWork<DataContext> unitOfWork, IGenderRepository genderRepository, IEventBus eventBus, IEventFactory eventFactory, ILogger<GenderService> logger) : base(unitOfWork, eventBus, eventFactory, logger) {
+      public GenderService(IUnitOfWork<DataContext> unitOfWork,
+         IGenderRepository genderRepository,
+         IEventBus eventBus,
+         IGenderEventsFactory genderEventsFactory,
+         ILogger<GenderService> logger) : base(unitOfWork, eventBus, logger) {
          this.genderRepository = genderRepository ?? throw new ArgumentNullException(nameof(genderRepository));
+         this.genderEventsFactory = genderEventsFactory ?? throw new ArgumentNullException(nameof(genderEventsFactory));
       }
 
       public async Task<ModelResponse<Model.Gender, AddGenderRequest>> AddAsync(AddGenderRequest request) {
@@ -45,7 +52,7 @@ namespace GalacticSenate.Library.Gender {
                item = await genderRepository.AddAsync(new Model.Gender { Value = request.Value });
                unitOfWork.Save();
 
-               eventBus.Publish(eventFactory.CreateCreated<Model.Gender>(item));
+               eventBus.Publish(genderEventsFactory.Created(item));
 
                response.Messages.Add($"Gender with value {request.Value} added.");
             } else {
@@ -97,7 +104,7 @@ namespace GalacticSenate.Library.Gender {
                   genderRepository.Update(newObject);
                   unitOfWork.Save();
 
-                  eventBus.Publish(eventFactory.CreateUpdated(oldObject, newObject));
+                  eventBus.Publish(genderEventsFactory.Updated(oldObject, newObject));
                   response.Messages.Add($"Gender with id {newObject.Id} updated from {oldObject.Value} to {newObject.Value}.");
                }
 
@@ -176,7 +183,7 @@ namespace GalacticSenate.Library.Gender {
             unitOfWork.Save();
 
 
-            eventBus.Publish(eventFactory.CreateDeleted(request.Id));
+            eventBus.Publish(genderEventsFactory.Deleted(request.Id));
 
             response.Status = StatusEnum.Successful;
          }

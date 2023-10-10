@@ -1,6 +1,8 @@
 ﻿using EventBus.RabbitMQ;
 using GalacticSenate.Data.Extensions;
+using GalacticSenate.Library.Events;
 using GalacticSenate.Library.Gender;
+using GalacticSenate.Library.Gender.Events;
 using GalacticSenate.Library.MaritalStatusType;
 using GalacticSenate.Library.OrganizationNameValue;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +28,9 @@ namespace GalacticSenate.Library.Extensions {
          services.AddScoped<IOrganizationNameValueService, OrganizationNameValueService>();
 
          services.AddEventBus(eventBusSettings);
+
+         services.AddSingleton<IGenderEventsFactory, GenderEventsFactory>();
+
          return services;
       }
    }

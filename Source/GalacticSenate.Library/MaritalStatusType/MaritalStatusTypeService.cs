@@ -4,6 +4,7 @@ using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
 using GalacticSenate.Domain.Exceptions;
 using GalacticSenate.Library.Events;
+using GalacticSenate.Library.MaritalStatusType.Events;
 using GalacticSenate.Library.MaritalStatusType.Requests;
 using Microsoft.Extensions.Logging;
 using System;
@@ -25,19 +26,19 @@ namespace GalacticSenate.Library.MaritalStatusType {
    public class MaritalStatusTypeService : IMaritalStatusTypeService {
       private readonly IUnitOfWork<DataContext> unitOfWork;
       private readonly IEventBus eventBus;
-      private readonly IEventFactory eventFactory;
+      private readonly IMaritalStatusTypeEventsFactory maritalStatusTypeEventsFactory;
       private readonly ILogger<MaritalStatusTypeService> logger;
       private readonly IMaritalStatusTypeRepository maritalStatusTypeRepository;
 
-      public MaritalStatusTypeService(IUnitOfWork<DataContext> unitOfWork, 
+      public MaritalStatusTypeService(IUnitOfWork<DataContext> unitOfWork,
          IMaritalStatusTypeRepository maritalStatusTypeRepository,
-         IEventBus eventBus, 
-         IEventFactory eventFactory, 
+         IEventBus eventBus,
+         IMaritalStatusTypeEventsFactory maritalStatusTypeEventsFactory,
          ILogger<MaritalStatusTypeService> logger) {
          this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-         
+
          this.eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
-         this.eventFactory = eventFactory ?? throw new ArgumentNullException(nameof(eventFactory));
+         this.maritalStatusTypeEventsFactory = maritalStatusTypeEventsFactory ?? throw new ArgumentNullException(nameof(maritalStatusTypeEventsFactory));
          this.logger = logger;
          this.maritalStatusTypeRepository = maritalStatusTypeRepository ?? throw new ArgumentNullException(nameof(maritalStatusTypeRepository));
       }
@@ -73,7 +74,7 @@ namespace GalacticSenate.Library.MaritalStatusType {
 
          if (response.Status == StatusEnum.Successful) {
             try {
-               eventBus.Publish(eventFactory.CreateCreated(existing));
+               eventBus.Publish(maritalStatusTypeEventsFactory.Created(existing));
             }
             catch (Exception ex) {
                logger.LogError(ex, "An exception occurred while attempting to add new MaritalStatusType");
@@ -130,7 +131,7 @@ namespace GalacticSenate.Library.MaritalStatusType {
 
          if (response.Status == StatusEnum.Successful) {
             try {
-               eventBus.Publish(eventFactory.CreateUpdated(newItem, existingItem));
+               eventBus.Publish(maritalStatusTypeEventsFactory.Updated(newItem, existingItem));
             }
             catch (Exception ex) {
                logger.LogError(ex, "An exception occurred while attempting to update existing MaritalStatusType");
@@ -206,7 +207,7 @@ namespace GalacticSenate.Library.MaritalStatusType {
 
          if (response.Status == StatusEnum.Successful) {
             try {
-               eventBus.Publish(eventFactory.CreateDeleted(request.Id));
+               eventBus.Publish(maritalStatusTypeEventsFactory.Deleted(request.Id));
             }
             catch (Exception ex) {
                logger.LogError(ex, "An exception occurred while attempting to publish delete event for {id}", request.Id);

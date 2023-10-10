@@ -5,6 +5,7 @@ using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Library;
 using GalacticSenate.Library.Gender;
 using GalacticSenate.Library.Gender.Requests;
+using GalacticSenate.Tests.Fixtures;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -14,15 +15,15 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GalacticSenate.Tests {
-   [TestClass]
-   public class GenderServiceUnitTests : GalacticSenateFixture {
+namespace GalacticSenate.Tests
+{
+    [TestClass]
+   public class GenderServiceUnitTests : GenderServicesFixture {
       private readonly IGenderService genderService;
 
       public GenderServiceUnitTests() : base("DataContext") {
-         var genderRepository = new GenderRepository(unitOfWork);
+         genderService = new GenderService(unitOfWork, genderRepository, eventBusMock.Object, genderEventsFactory, NullLogger<GenderService>.Instance);
 
-         genderService = new GenderService(unitOfWork, genderRepository, eventBusMock.Object, eventFactory, NullLogger<GenderService>.Instance);
       }
       [TestMethod]
       public async Task Add_Test() {

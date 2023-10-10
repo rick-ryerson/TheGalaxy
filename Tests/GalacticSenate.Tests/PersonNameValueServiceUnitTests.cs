@@ -4,18 +4,26 @@ using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Library;
 using GalacticSenate.Library.PersonNameValue;
 using GalacticSenate.Library.PersonNameValue.Requests;
+using GalacticSenate.Tests.Fixtures;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace GalacticSenate.Tests {
    [TestClass]
-   public class PersonNameValueServiceUnitTests : GalacticSenateFixture {
+   public class PersonNameValueServiceUnitTests : PersonNameValueServicesFixture {
       private readonly IPersonNameValueService personNameValueService;
 
       public PersonNameValueServiceUnitTests() : base("DataContext") {
          var genderRepository = new GenderRepository(unitOfWork);
+
+         personNameValueService = new PersonNameValueService(unitOfWork,
+            personNameValueRepository,
+            eventBusMock.Object,
+            personNameValueEventsFactory,
+            NullLogger<PersonNameValueService>.Instance);
       }
       [TestMethod]
       public async Task Add_Test() {
