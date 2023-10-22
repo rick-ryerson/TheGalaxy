@@ -5,7 +5,7 @@
     <DockerTargetOS>Linux</DockerTargetOS>
     <ProjectGuid>7aba526a-0d00-48d0-bffe-fcf9775e75d5</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
-    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
+    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/.well-known/openid-configuration</DockerServiceUrl>
     <DockerServiceName>jediorder.web</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
