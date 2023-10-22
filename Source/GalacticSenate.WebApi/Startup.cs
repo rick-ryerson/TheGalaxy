@@ -2,6 +2,7 @@ using EventBus.RabbitMQ;
 using GalacticSenate.Data.Extensions;
 using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Library.Extensions;
+using GalacticSenate.Library.Services.MaritalStatusType.Events;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
 
 namespace GalacticSenate.WebApi {
@@ -37,7 +39,7 @@ namespace GalacticSenate.WebApi {
          };
 
          services.AddPeopleAndOrganizations(eventBusSettings, efDataSettings);
-
+         
          services.AddControllers()
              .AddJsonOptions(options =>
              {
@@ -45,6 +47,17 @@ namespace GalacticSenate.WebApi {
                        .Converters
                        .Add(new JsonStringEnumConverter());
              });
+
+         services.AddAuthentication("Bearer")
+            .AddJwtBearer("Bearer", options =>
+            {
+               options.Authority = "https://jediorder.web";
+
+               options.TokenValidationParameters = new TokenValidationParameters
+               {
+                  ValidateAudience = true
+               };
+            });
       }
 
       // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,6 +70,7 @@ namespace GalacticSenate.WebApi {
 
          app.UseRouting();
 
+         app.UseAuthentication();
          app.UseAuthorization();
 
          app.UseEndpoints(endpoints =>
