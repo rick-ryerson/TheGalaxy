@@ -13,7 +13,10 @@ namespace JediOrder.Web {
       public void ConfigureServices(IServiceCollection services) {
          services.AddControllersWithViews();
 
-         var builder = services.AddIdentityServer()
+         var builder = services.AddIdentityServer(options =>
+         {
+            options.IssuerUri = "http://JediOrder.Web;https://JediOrder.Web";
+         })
             .AddInMemoryIdentityResources(Config.IdentityResources)
             .AddInMemoryApiScopes(Config.ApiScopes)
             .AddInMemoryClients(Config.Clients)
@@ -24,6 +27,8 @@ namespace JediOrder.Web {
          services.AddAuthentication()
             .AddGoogle("Google", options =>
             {
+               options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+
                options.ClientId = "asdasd";
                options.ClientSecret = "dsdfsdfsfd";
             })

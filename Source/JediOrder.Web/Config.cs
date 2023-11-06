@@ -14,7 +14,7 @@ namespace JediOrder.Web {
       public static IEnumerable<ApiScope> ApiScopes =>
          new List<ApiScope>
          {
-            new ApiScope("api1", "My API")
+            new ApiScope("api1", "My API" )
          };
       public static IEnumerable<Client> Clients =>
          new List<Client>
@@ -26,13 +26,20 @@ namespace JediOrder.Web {
                AllowedGrantTypes = GrantTypes.ClientCredentials,
                AllowedScopes = { "api1" }
             },
+            //new Client
+            //{
+            //   ClientId = "ro.client",
+            //   ClientSecrets = { new Secret("secret".Sha256()) },
+            //   AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+            //   AllowedScopes = { "api1" }
+            //},
             new Client
             {
                ClientId = "mvc",
                ClientSecrets = { new Secret("secret".Sha256()) },
                AllowedGrantTypes = GrantTypes.Code,
-               RedirectUris = { "https://localhost:5002/signin-oidc" },
-               PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+               RedirectUris = { "https://localhost/signin-oidc" },
+               PostLogoutRedirectUris = { "https://localhost/signout-callback-oidc" },
                AllowedScopes =
                {
                   IdentityServerConstants.StandardScopes.OpenId,

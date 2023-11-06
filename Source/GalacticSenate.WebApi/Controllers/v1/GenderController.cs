@@ -1,5 +1,6 @@
 ﻿using GalacticSenate.Library.Services.Gender;
 using GalacticSenate.Library.Services.Gender.Requests;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 namespace GalacticSenate.WebApi.Controllers.v1 {
    [Route("api/v1/[controller]")]
    [ApiController]
+   [Authorize]
    public class GenderController : ControllerBase {
       private readonly IGenderService genderService;
 
@@ -20,7 +22,8 @@ namespace GalacticSenate.WebApi.Controllers.v1 {
       public async Task<IActionResult> Get(int pageIndex = 0, int pageSize = int.MaxValue) {
          try {
             return Ok(await genderService.ReadAsync(new ReadGenderMultiRequest { PageIndex = pageIndex, PageSize = pageSize }));
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             return Problem(detail: ex.Message);
          }
       }
@@ -30,7 +33,8 @@ namespace GalacticSenate.WebApi.Controllers.v1 {
       public async Task<IActionResult> Get(int id) {
          try {
             return Ok(await genderService.ReadAsync(new ReadGenderRequest { Id = id }));
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             return Problem(detail: ex.Message);
          }
       }
@@ -39,7 +43,8 @@ namespace GalacticSenate.WebApi.Controllers.v1 {
       public async Task<IActionResult> GetExact([FromQuery] string value) {
          try {
             return Ok(await genderService.ReadAsync(new ReadGenderValueRequest { Exact = true, Value = value }));
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             return Problem(detail: ex.Message);
          }
       }
@@ -48,7 +53,8 @@ namespace GalacticSenate.WebApi.Controllers.v1 {
       public async Task<IActionResult> GetContains([FromQuery] string value) {
          try {
             return Ok(await genderService.ReadAsync(new ReadGenderValueRequest { Exact = false, Value = value }));
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             return Problem(detail: ex.Message);
          }
       }
@@ -57,7 +63,8 @@ namespace GalacticSenate.WebApi.Controllers.v1 {
       public async Task<IActionResult> Post([FromBody] string value) {
          try {
             return Ok(await genderService.AddAsync(new AddGenderRequest { Value = value }));
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             return Problem(detail: ex.Message);
          }
       }
@@ -67,7 +74,8 @@ namespace GalacticSenate.WebApi.Controllers.v1 {
       public async Task<IActionResult> Put(int id, [FromBody] string value) {
          try {
             return Ok(await genderService.UpdateAsync(new UpdateGenderRequest { Id = id, NewValue = value }));
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             return Problem(detail: ex.Message);
          }
       }
@@ -77,7 +85,8 @@ namespace GalacticSenate.WebApi.Controllers.v1 {
       public async Task<IActionResult> DeleteAsync(int id) {
          try {
             return Ok(await genderService.DeleteAsync(new DeleteGenderRequest { Id = id }));
-         } catch (Exception ex) {
+         }
+         catch (Exception ex) {
             return Problem(detail: ex.Message);
          }
       }

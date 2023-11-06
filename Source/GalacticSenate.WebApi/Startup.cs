@@ -39,7 +39,7 @@ namespace GalacticSenate.WebApi {
          };
 
          services.AddPeopleAndOrganizations(eventBusSettings, efDataSettings);
-         
+
          services.AddControllers()
              .AddJsonOptions(options =>
              {
@@ -51,13 +51,22 @@ namespace GalacticSenate.WebApi {
          services.AddAuthentication("Bearer")
             .AddJwtBearer("Bearer", options =>
             {
-               options.Authority = "https://jediorder.web";
-
+               options.Authority = "http://JediOrder.Web";
+               options.Audience = "api1";
+               options.RequireHttpsMetadata = false;
                options.TokenValidationParameters = new TokenValidationParameters
                {
-                  ValidateAudience = true
+                  ValidateAudience = false
                };
             });
+         services.AddAuthorization(options =>
+         {
+            options.AddPolicy("ApiScope", policy =>
+            {
+               policy.RequireAuthenticatedUser();
+               policy.RequireClaim("scope", "api1");
+            });
+         });
       }
 
       // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,7 +84,7 @@ namespace GalacticSenate.WebApi {
 
          app.UseEndpoints(endpoints =>
          {
-            endpoints.MapControllers();
+            endpoints.MapControllers().RequireAuthorization("ApiScope");
 
             endpoints.MapGet("/", async context =>
             {

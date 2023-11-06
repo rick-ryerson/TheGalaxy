@@ -1,0 +1,7 @@
+Launching JediOrder.Web
+	{Scheme}://localhost:{ServicePort}/.well-known/openid-configuration
+Launching GalacticSenate.WebApi
+	{Scheme}://localhost:{ServicePort}/swagger/index.html
+
+
+secret.Sha256 = K7gNU3sdo+OL0wNhqoVWhr3g6s1xYv72ol/pe/Unols=
