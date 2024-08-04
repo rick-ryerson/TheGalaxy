@@ -29,13 +29,12 @@ namespace GalacticSenate.Library.Extensions {
          services.AddScoped<IOrganizationNameValueService, OrganizationNameValueService>();
          services.AddScoped<IPersonNameTypeService, PersonNameTypeService>();
 
-         services.AddSingleton<IMaritalStatusTypeEventsFactory, MaritalStatusTypeEventsFactory>();
-         services.AddSingleton<IOrganizationNameValueEventsFactory, OrganizationNameValueEventsFactory>();
-         services.AddSingleton<IPersonNameTypeEventsFactory, PersonNameTypeEventsFactory>();
-
          services.AddEventBus(eventBusSettings);
 
          services.AddSingleton<IGenderEventsFactory, GenderEventsFactory>();
+         services.AddSingleton<IMaritalStatusTypeEventsFactory, MaritalStatusTypeEventsFactory>();
+         services.AddSingleton<IOrganizationNameValueEventsFactory, OrganizationNameValueEventsFactory>();
+         services.AddSingleton<IPersonNameTypeEventsFactory, PersonNameTypeEventsFactory>();
 
          return services;
       }
