@@ -29,14 +29,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Products", "Products", "{92
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HolowanMechanicals.Domain", "Source\HolowanMechanicals.Domain\HolowanMechanicals.Domain.csproj", "{B7E2C7FF-A2AC-4837-BF93-ADBE4AB5A866}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus.RabbitMQ", "..\EventBus\Source\EventBus.RabbitMQ\EventBus.RabbitMQ.csproj", "{6B8C3ED1-45B6-4398-A4B3-0D936101E21A}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus", "..\EventBus\Source\EventBus\EventBus.csproj", "{B35CAEDA-2B1C-40D1-BB6B-3465E3A3EF57}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Info", "Info", "{B8AC0734-1903-49AA-B52A-E5691C8CC780}"
 	ProjectSection(SolutionItems) = preProject
 		LaunchSettings.txt = LaunchSettings.txt
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus", "..\rick-ryerson\EventBus\Source\EventBus\EventBus.csproj", "{593FED5F-8C57-464A-95B2-9A5909FF5D3D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus.RabbitMQ", "..\rick-ryerson\EventBus\Source\EventBus.RabbitMQ\EventBus.RabbitMQ.csproj", "{D14150DE-54A4-490C-AB91-F54C4C0750A4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -84,14 +84,14 @@ Global
 		{B7E2C7FF-A2AC-4837-BF93-ADBE4AB5A866}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7E2C7FF-A2AC-4837-BF93-ADBE4AB5A866}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7E2C7FF-A2AC-4837-BF93-ADBE4AB5A866}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6B8C3ED1-45B6-4398-A4B3-0D936101E21A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6B8C3ED1-45B6-4398-A4B3-0D936101E21A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6B8C3ED1-45B6-4398-A4B3-0D936101E21A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6B8C3ED1-45B6-4398-A4B3-0D936101E21A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B35CAEDA-2B1C-40D1-BB6B-3465E3A3EF57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B35CAEDA-2B1C-40D1-BB6B-3465E3A3EF57}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B35CAEDA-2B1C-40D1-BB6B-3465E3A3EF57}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B35CAEDA-2B1C-40D1-BB6B-3465E3A3EF57}.Release|Any CPU.Build.0 = Release|Any CPU
+		{593FED5F-8C57-464A-95B2-9A5909FF5D3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{593FED5F-8C57-464A-95B2-9A5909FF5D3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{593FED5F-8C57-464A-95B2-9A5909FF5D3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{593FED5F-8C57-464A-95B2-9A5909FF5D3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D14150DE-54A4-490C-AB91-F54C4C0750A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D14150DE-54A4-490C-AB91-F54C4C0750A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D14150DE-54A4-490C-AB91-F54C4C0750A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D14150DE-54A4-490C-AB91-F54C4C0750A4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
