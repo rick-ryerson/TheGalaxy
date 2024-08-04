@@ -43,7 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\rick-ryerson\EventBus\Source\EventBus\EventBus.csproj" />
+    <ProjectReference Include="..\..\..\EventBus\Source\EventBus\EventBus.csproj" />
     <ProjectReference Include="..\GalacticSenate.Data\GalacticSenate.Data.csproj" />
     <ProjectReference Include="..\GalacticSenate.Library\GalacticSenate.Library.csproj" />
   </ItemGroup>
