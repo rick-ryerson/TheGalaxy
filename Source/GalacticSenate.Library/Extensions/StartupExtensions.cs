@@ -6,6 +6,8 @@ using GalacticSenate.Library.Services.MaritalStatusType;
 using GalacticSenate.Library.Services.MaritalStatusType.Events;
 using GalacticSenate.Library.Services.OrganizationNameValue;
 using GalacticSenate.Library.Services.OrganizationNameValue.Events;
+using GalacticSenate.Library.Services.PersonNameType;
+using GalacticSenate.Library.Services.PersonNameType.Events;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -25,9 +27,11 @@ namespace GalacticSenate.Library.Extensions {
          services.AddScoped<IGenderService, GenderService>();
          services.AddScoped<IMaritalStatusTypeService, MaritalStatusTypeService>();
          services.AddScoped<IOrganizationNameValueService, OrganizationNameValueService>();
-         
+         services.AddScoped<IPersonNameTypeService, PersonNameTypeService>();
+
          services.AddSingleton<IMaritalStatusTypeEventsFactory, MaritalStatusTypeEventsFactory>();
          services.AddSingleton<IOrganizationNameValueEventsFactory, OrganizationNameValueEventsFactory>();
+         services.AddSingleton<IPersonNameTypeEventsFactory, PersonNameTypeEventsFactory>();
 
          services.AddEventBus(eventBusSettings);
 

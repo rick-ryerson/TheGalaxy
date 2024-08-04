@@ -9,9 +9,9 @@ namespace GalacticSenate.Data.Implementations.EntityFramework {
       public DataContext CreateDbContext(string[] args) {
          var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
 
-         optionsBuilder.UseSqlServer("Server=localhost,14331;Database=GalacticSenate;User Id=sa;Password=qweasd!@!;");
+         optionsBuilder.UseSqlServer("Server=localhost,14331;Database=GalacticSenate;User Id=sa;Password=Qwerty!@!");
 
          return new DataContext(optionsBuilder.Options);
-      }
+      }  
    }
 }

@@ -26,7 +26,7 @@ services:
     ports:
         - "14331:1433"
     environment:
-        SA_PASSWORD: "qweasd!@!"
+        SA_PASSWORD: "Qwerty!@!"
         ACCEPT_EULA: "Y"
     volumes:
        - ./data/data:/var/opt/mssql/data
