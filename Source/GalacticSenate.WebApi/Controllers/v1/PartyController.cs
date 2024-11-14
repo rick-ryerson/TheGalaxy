@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 namespace GalacticSenate.WebApi.Controllers.v1 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    [AllowAnonymous]
     public class PartyController : ControllerBase {
         private readonly IPartyService partyService;
 
