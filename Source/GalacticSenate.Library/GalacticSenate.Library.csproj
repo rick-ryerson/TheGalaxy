@@ -3,10 +3,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
   </PropertyGroup>
-
-	<ItemGroup>
-		<PackageReference Include="GreyEagleSoftware.EventBus" Version="1.1.0" />
-	</ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\EventBus\Source\EventBus.RabbitMQ\EventBus.RabbitMQ.csproj" />
     <ProjectReference Include="..\..\..\EventBus\Source\EventBus\EventBus.csproj" />

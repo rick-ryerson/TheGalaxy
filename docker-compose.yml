@@ -1,5 +1,5 @@
 version: '3.4'
-
+name: TheGalaxy
 services:
   thegalaxy.rabbitmq:
     image: 'rabbitmq:3.8.3-management-alpine'
@@ -20,7 +20,7 @@ services:
     networks:
       - thegalaxy
   galacticsenate.db:
-    image: "mcr.microsoft.com/mssql/server"
+    image: "mcr.microsoft.com/azure-sql-edge:latest"
     hostname: galacticsenatedb
     container_name: GalacticSenate.DB
     ports:

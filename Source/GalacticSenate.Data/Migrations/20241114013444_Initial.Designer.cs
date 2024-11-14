@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GalacticSenate.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230324061744_RoleTypes5")]
-    partial class RoleTypes5
+    [Migration("20241114013444_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
