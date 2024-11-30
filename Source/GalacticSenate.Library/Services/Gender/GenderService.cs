@@ -2,7 +2,7 @@
 using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
-using GalacticSenate.Library.Services.Gender.Events;
+using GalacticSenate.Library.Events;
 using GalacticSenate.Library.Services.Gender.Requests;
 using Microsoft.Extensions.Logging;
 using System;
@@ -23,12 +23,12 @@ namespace GalacticSenate.Library.Services.Gender {
     public class GenderService : BasicServiceBase, IGenderService
     {
         private readonly IGenderRepository genderRepository;
-        private readonly IGenderEventsFactory genderEventsFactory;
+        private readonly IEventsFactory<Model.Gender, int> genderEventsFactory;
 
         public GenderService(IUnitOfWork<DataContext> unitOfWork,
            IGenderRepository genderRepository,
            IEventBus eventBus,
-           IGenderEventsFactory genderEventsFactory,
+           IEventsFactory<Model.Gender, int> genderEventsFactory,
            ILogger<GenderService> logger) : base(unitOfWork, eventBus, logger)
         {
             this.genderRepository = genderRepository ?? throw new ArgumentNullException(nameof(genderRepository));

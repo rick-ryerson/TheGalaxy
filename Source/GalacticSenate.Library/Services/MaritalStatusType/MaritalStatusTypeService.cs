@@ -2,7 +2,7 @@
 using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
-using GalacticSenate.Library.Services.MaritalStatusType.Events;
+using GalacticSenate.Library.Events;
 using GalacticSenate.Library.Services.MaritalStatusType.Requests;
 using Microsoft.Extensions.Logging;
 using System;
@@ -24,14 +24,14 @@ namespace GalacticSenate.Library.Services.MaritalStatusType {
     {
         private readonly IUnitOfWork<DataContext> unitOfWork;
         private readonly IEventBus eventBus;
-        private readonly IMaritalStatusTypeEventsFactory maritalStatusTypeEventsFactory;
+        private readonly IEventsFactory<Model.MaritalStatusType, int> maritalStatusTypeEventsFactory;
         private readonly ILogger<MaritalStatusTypeService> logger;
         private readonly IMaritalStatusTypeRepository maritalStatusTypeRepository;
 
         public MaritalStatusTypeService(IUnitOfWork<DataContext> unitOfWork,
            IMaritalStatusTypeRepository maritalStatusTypeRepository,
            IEventBus eventBus,
-           IMaritalStatusTypeEventsFactory maritalStatusTypeEventsFactory,
+           IEventsFactory<Model.MaritalStatusType, int> maritalStatusTypeEventsFactory,
            ILogger<MaritalStatusTypeService> logger)
         {
             this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));

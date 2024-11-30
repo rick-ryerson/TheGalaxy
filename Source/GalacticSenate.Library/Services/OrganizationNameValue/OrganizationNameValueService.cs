@@ -2,7 +2,7 @@
 using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
-using GalacticSenate.Library.Services.OrganizationNameValue.Events;
+using GalacticSenate.Library.Events;
 using GalacticSenate.Library.Services.OrganizationNameValue.Requests;
 using Microsoft.Extensions.Logging;
 using System;
@@ -23,12 +23,12 @@ namespace GalacticSenate.Library.Services.OrganizationNameValue {
     public class OrganizationNameValueService : BasicServiceBase, IOrganizationNameValueService
     {
         private readonly IOrganizationNameValueRepository organizationNameValueRepository;
-        private readonly IOrganizationNameValueEventsFactory eventFactory;
+        private readonly IEventsFactory<Model.OrganizationNameValue, int> eventFactory;
 
         public OrganizationNameValueService(IUnitOfWork<DataContext> unitOfWork,
            IOrganizationNameValueRepository organizationNameValueRepository,
            IEventBus eventBus,
-           IOrganizationNameValueEventsFactory eventFactory,
+           IEventsFactory<Model.OrganizationNameValue, int> eventFactory,
            ILogger<OrganizationNameValueService> logger) : base(unitOfWork, eventBus, logger)
         {
             this.organizationNameValueRepository = organizationNameValueRepository ?? throw new ArgumentNullException(nameof(organizationNameValueRepository));

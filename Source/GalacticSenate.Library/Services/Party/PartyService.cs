@@ -2,8 +2,9 @@
 using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
+using GalacticSenate.Domain.Model;
+using GalacticSenate.Library.Events;
 using GalacticSenate.Library.Services.OrganizationNameValue;
-using GalacticSenate.Library.Services.Party.Events;
 using GalacticSenate.Library.Services.Party.Requests;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,42 +12,36 @@ using System.Threading.Tasks;
 using Model = GalacticSenate.Domain.Model;
 
 namespace GalacticSenate.Library.Services.Party {
-   public interface IPartyService
-    {
+    public interface IPartyService {
         Task<ModelResponse<Model.Party, AddPartyRequest>> AddAsync(AddPartyRequest request);
         Task<BasicResponse<DeletePartyRequest>> DeleteAsync(DeletePartyRequest request);
         Task<ModelResponse<Model.Party, ReadPartyMultiRequest>> ReadAsync(ReadPartyMultiRequest request);
         Task<ModelResponse<Model.Party, ReadPartyRequest>> ReadAsync(ReadPartyRequest request);
     }
 
-    public class PartyService : BasicServiceBase, IPartyService
-    {
+    public class PartyService : BasicServiceBase, IPartyService {
         private readonly IPartyRepository partyRepository;
-        private readonly IPartyEventsFactory partyEventsFactory;
+        private readonly IEventsFactory<Model.Party, Guid> partyEventsFactory;
 
         public PartyService(IUnitOfWork<DataContext> unitOfWork,
            IPartyRepository partyRepository,
            IEventBus eventBus,
-           IPartyEventsFactory partyEventsFactory,
-           ILogger<OrganizationNameValueService> logger) : base(unitOfWork, eventBus, logger)
-        {
+           IEventsFactory<Model.Party, Guid> partyEventsFactory,
+           ILogger logger) : base(unitOfWork, eventBus, logger) {
             this.partyRepository = partyRepository ?? throw new ArgumentNullException(nameof(partyRepository));
             this.partyEventsFactory = partyEventsFactory ?? throw new ArgumentNullException(nameof(partyEventsFactory));
         }
 
-        public async Task<ModelResponse<Model.Party, AddPartyRequest>> AddAsync(AddPartyRequest request)
-        {
+        public async Task<ModelResponse<Model.Party, AddPartyRequest>> AddAsync(AddPartyRequest request) {
             var response = new ModelResponse<Model.Party, AddPartyRequest>(DateTime.Now, request);
 
-            try
-            {
+            try {
                 if (request is null)
                     throw new ArgumentNullException(nameof(request));
 
                 var party = await partyRepository.GetAsync(request.Id);
 
-                if (party is null)
-                {
+                if (party is null) {
                     party = await partyRepository.AddAsync(new Model.Party { Id = request.Id });
 
                     unitOfWork.Save();
@@ -54,9 +49,7 @@ namespace GalacticSenate.Library.Services.Party {
                     eventBus.Publish(partyEventsFactory.Created(party));
 
                     response.Messages.Add($"Party with id {request.Id} added.");
-                }
-                else
-                {
+                } else {
                     response.Messages.Add($"Party with id {request.Id} already exists.");
                 }
 
@@ -64,38 +57,32 @@ namespace GalacticSenate.Library.Services.Party {
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Status = StatusEnum.Failed;
                 response.Messages.Add(ex.Message);
             }
 
             return response.Finalize();
         }
-        public async Task<ModelResponse<Model.Party, ReadPartyMultiRequest>> ReadAsync(ReadPartyMultiRequest request)
-        {
+        public async Task<ModelResponse<Model.Party, ReadPartyMultiRequest>> ReadAsync(ReadPartyMultiRequest request) {
             var response = new ModelResponse<Model.Party, ReadPartyMultiRequest>(DateTime.Now, request);
 
-            try
-            {
+            try {
                 response.Results.AddRange(partyRepository.Get(request.PageIndex, request.PageSize));
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Messages.Add(ex.Message);
                 response.Status = StatusEnum.Failed;
             }
 
             return await Task.Run(() => { return response.Finalize(); });
         }
-        public async Task<ModelResponse<Model.Party, ReadPartyRequest>> ReadAsync(ReadPartyRequest request)
-        {
+        public async Task<ModelResponse<Model.Party, ReadPartyRequest>> ReadAsync(ReadPartyRequest request) {
             var response = new ModelResponse<Model.Party, ReadPartyRequest>(DateTime.Now, request);
 
-            try
-            {
+            try {
                 var party = await partyRepository.GetAsync(request.Id);
 
                 if (party != null)
@@ -103,28 +90,24 @@ namespace GalacticSenate.Library.Services.Party {
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Messages.Add(ex.Message);
                 response.Status = StatusEnum.Failed;
             }
             return response.Finalize();
         }
 
-        public async Task<BasicResponse<DeletePartyRequest>> DeleteAsync(DeletePartyRequest request)
-        {
+        public async Task<BasicResponse<DeletePartyRequest>> DeleteAsync(DeletePartyRequest request) {
             var response = new BasicResponse<DeletePartyRequest>(DateTime.Now, request);
 
-            try
-            {
+            try {
                 await partyRepository.DeleteAsync(request.Id);
                 unitOfWork.Save();
 
                 eventBus.Publish(partyEventsFactory.Deleted(request.Id));
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Status = StatusEnum.Failed;
                 response.Messages.Add(ex.Message);
             }

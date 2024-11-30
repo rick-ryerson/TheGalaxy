@@ -9,23 +9,24 @@
       Deleted<M> Deleted(M id);
    }
 
+    public interface IEventsFactory<T, K> :
+    ICreatedEventFactory<T>,
+    IUpdatedEventFactory<T>,
+    IDeletedEventFactory<K> {
 
-   //public interface IEventFactory3 {
-   //   Created<T> CreateCreated<T>(T item);
-   //   Deleted<T> CreateDeleted<T>(T item);
-   //   Updated<T> CreateUpdated<T>(T newValue, T oldValue);
-   //}
-   //public class EventFactory3 : IEventFactory3 {
-   //   public Created<T> CreateCreated<T>(T item) {
-   //      return new Created<T>(item);
-   //   }
+    }
 
-   //   public Updated<T> CreateUpdated<T>(T newValue, T oldValue) {
-   //      return new Updated<T>(newValue, oldValue);
-   //   }
+    public class EventsFactory<T, K> : IEventsFactory<T, K> {
+        public Created<T> Created(T item) {
+            return new Created<T>(item);
+        }
 
-   //   public Deleted<T> CreateDeleted<T>(T item) {
-   //      return new Deleted<T>(item);
-   //   }
-   //}
+        public Deleted<K> Deleted(K id) {
+            return new Deleted<K>(id);
+        }
+
+        public Updated<T> Updated(T newValue, T oldValue) {
+            return new Updated<T>(newValue, oldValue);
+        }
+    }
 }

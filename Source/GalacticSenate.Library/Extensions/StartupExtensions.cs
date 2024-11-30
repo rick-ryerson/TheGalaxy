@@ -1,19 +1,16 @@
 ﻿using EventBus.RabbitMQ;
 using GalacticSenate.Data.Extensions;
+using GalacticSenate.Library.Events;
 using GalacticSenate.Library.Services.Gender;
-using GalacticSenate.Library.Services.Gender.Events;
 using GalacticSenate.Library.Services.MaritalStatusType;
-using GalacticSenate.Library.Services.MaritalStatusType.Events;
 using GalacticSenate.Library.Services.OrganizationNameValue;
-using GalacticSenate.Library.Services.OrganizationNameValue.Events;
 using GalacticSenate.Library.Services.Party;
-using GalacticSenate.Library.Services.Party.Events;
 using GalacticSenate.Library.Services.PersonNameType;
-using GalacticSenate.Library.Services.PersonNameType.Events;
 using GalacticSenate.Library.Services.PersonNameValue;
-using GalacticSenate.Library.Services.PersonNameValue.Events;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+
+using Model = GalacticSenate.Domain.Model;
 
 namespace GalacticSenate.Library.Extensions {
     public static class StartupExtensions {
@@ -37,12 +34,12 @@ namespace GalacticSenate.Library.Extensions {
 
             services.AddEventBus(eventBusSettings);
 
-            services.AddSingleton<IGenderEventsFactory, GenderEventsFactory>();
-            services.AddSingleton<IMaritalStatusTypeEventsFactory, MaritalStatusTypeEventsFactory>();
-            services.AddSingleton<IOrganizationNameValueEventsFactory, OrganizationNameValueEventsFactory>();
-            services.AddSingleton<IPersonNameTypeEventsFactory, PersonNameTypeEventsFactory>();
-            services.AddSingleton<IPersonNameValueEventsFactory, PersonNameValueEventsFactory>();
-            services.AddSingleton<IPartyEventsFactory, PartyEventsFactory>();
+            services.AddSingleton<IEventsFactory<Model.Gender, int>, EventsFactory<Model.Gender, int>>();
+            services.AddSingleton<IEventsFactory<Model.MaritalStatusType, int>, EventsFactory<Model.MaritalStatusType, int>>();
+            services.AddSingleton<IEventsFactory<Model.OrganizationNameValue, int>, EventsFactory<Model.OrganizationNameValue, int>>();
+            services.AddSingleton<IEventsFactory<Model.PersonNameType, int>, EventsFactory<Model.PersonNameType, int>>();
+            services.AddSingleton<IEventsFactory<Model.PersonNameValue, int>, EventsFactory<Model.PersonNameValue, int>>();
+            services.AddSingleton<IEventsFactory<Model.Party, Guid>, EventsFactory<Model.Party, Guid>>();
 
             return services;
         }

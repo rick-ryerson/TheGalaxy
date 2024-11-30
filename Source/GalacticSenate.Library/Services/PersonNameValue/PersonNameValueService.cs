@@ -2,7 +2,7 @@
 using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
-using GalacticSenate.Library.Services.PersonNameValue.Events;
+using GalacticSenate.Library.Events;
 using GalacticSenate.Library.Services.PersonNameValue.Requests;
 using Microsoft.Extensions.Logging;
 using System;
@@ -10,8 +10,7 @@ using System.Threading.Tasks;
 using Model = GalacticSenate.Domain.Model;
 
 namespace GalacticSenate.Library.Services.PersonNameValue {
-   public interface IPersonNameValueService
-    {
+    public interface IPersonNameValueService {
         Task<ModelResponse<Model.PersonNameValue, AddPersonNameValueRequest>> AddAsync(AddPersonNameValueRequest request);
         Task<BasicResponse<DeletePersonNameValueRequest>> DeleteAsync(DeletePersonNameValueRequest request);
         Task<ModelResponse<Model.PersonNameValue, ReadPersonNameValueMultiRequest>> ReadAsync(ReadPersonNameValueMultiRequest request);
@@ -20,43 +19,36 @@ namespace GalacticSenate.Library.Services.PersonNameValue {
         Task<ModelResponse<Model.PersonNameValue, UpdatePersonNameValueRequest>> UpdateAsync(UpdatePersonNameValueRequest request);
     }
 
-    public class PersonNameValueService : BasicServiceBase, IPersonNameValueService
-    {
+    public class PersonNameValueService : BasicServiceBase, IPersonNameValueService {
         private readonly IPersonNameValueRepository personNameValueRepository;
-        private readonly IPersonNameValueEventsFactory personNameValueEventsFactory;
+        private readonly IEventsFactory<Model.PersonNameValue, int> personNameValueEventsFactory;
 
         public PersonNameValueService(IUnitOfWork<DataContext> unitOfWork,
            IPersonNameValueRepository personNameValueRepository,
            IEventBus eventBus,
-           IPersonNameValueEventsFactory personNameValueEventsFactory,
-           ILogger<PersonNameValueService> logger) : base(unitOfWork, eventBus, logger)
-        {
+           IEventsFactory<Model.PersonNameValue, int> personNameValueEventsFactory,
+           ILogger<PersonNameValueService> logger) : base(unitOfWork, eventBus, logger) {
             this.personNameValueRepository = personNameValueRepository ?? throw new ArgumentNullException(nameof(personNameValueRepository));
             this.personNameValueEventsFactory = personNameValueEventsFactory ?? throw new ArgumentNullException(nameof(personNameValueEventsFactory));
         }
 
-        public async Task<ModelResponse<Model.PersonNameValue, AddPersonNameValueRequest>> AddAsync(AddPersonNameValueRequest request)
-        {
+        public async Task<ModelResponse<Model.PersonNameValue, AddPersonNameValueRequest>> AddAsync(AddPersonNameValueRequest request) {
             var response = new ModelResponse<Model.PersonNameValue, AddPersonNameValueRequest>(DateTime.Now, request);
 
             var existing = await personNameValueRepository.GetExactAsync(request.Value);
 
-            try
-            {
+            try {
                 if (request is null)
                     throw new ArgumentNullException(nameof(request));
                 if (string.IsNullOrEmpty(request.Value))
                     throw new ArgumentNullException(nameof(request.Value));
 
-                if (existing is null)
-                {
+                if (existing is null) {
                     existing = await personNameValueRepository.AddAsync(new Model.PersonNameValue { Value = request.Value });
                     unitOfWork.Save();
 
                     response.Messages.Add($"PersonNameValue with value {request.Value} added.");
-                }
-                else
-                {
+                } else {
                     response.Messages.Add($"PersonNameValue with value {request.Value} already exists.");
                 }
 
@@ -64,16 +56,14 @@ namespace GalacticSenate.Library.Services.PersonNameValue {
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Status = StatusEnum.Failed;
                 response.Messages.Add(ex.Message);
             }
 
             return response.Finalize();
         }
-        public async Task<ModelResponse<Model.PersonNameValue, UpdatePersonNameValueRequest>> UpdateAsync(UpdatePersonNameValueRequest request)
-        {
+        public async Task<ModelResponse<Model.PersonNameValue, UpdatePersonNameValueRequest>> UpdateAsync(UpdatePersonNameValueRequest request) {
             if (request is null)
                 throw new ArgumentNullException(nameof(request));
             if (string.IsNullOrEmpty(request.NewValue))
@@ -83,33 +73,24 @@ namespace GalacticSenate.Library.Services.PersonNameValue {
 
             Model.PersonNameValue existing = null;
 
-            try
-            {
+            try {
                 existing = await personNameValueRepository.GetAsync(request.Id);
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Messages.Add(ex.Message);
                 response.Status = StatusEnum.Failed;
             }
 
-            if (existing is null)
-            {
+            if (existing is null) {
                 response.Messages.Add($"PersonNameValue with id {request.Id} does not exist.");
                 response.Status = StatusEnum.Failed;
-            }
-            else
-            {
-                try
-                {
+            } else {
+                try {
                     var oldValue = existing.Value;
 
-                    if (oldValue == request.NewValue)
-                    {
+                    if (oldValue == request.NewValue) {
                         response.Messages.Add($"PersonNameValue with id {existing.Id} already has a value of {oldValue}.");
-                    }
-                    else
-                    {
+                    } else {
                         existing.Value = request.NewValue;
 
                         personNameValueRepository.Update(existing);
@@ -122,8 +103,7 @@ namespace GalacticSenate.Library.Services.PersonNameValue {
 
                     response.Status = StatusEnum.Successful;
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     response.Messages.Add(ex.Message);
                     response.Status = StatusEnum.Failed;
                 }
@@ -132,30 +112,25 @@ namespace GalacticSenate.Library.Services.PersonNameValue {
             return response.Finalize();
         }
 
-        public async Task<ModelResponse<Model.PersonNameValue, ReadPersonNameValueMultiRequest>> ReadAsync(ReadPersonNameValueMultiRequest request)
-        {
+        public async Task<ModelResponse<Model.PersonNameValue, ReadPersonNameValueMultiRequest>> ReadAsync(ReadPersonNameValueMultiRequest request) {
             var response = new ModelResponse<Model.PersonNameValue, ReadPersonNameValueMultiRequest>(DateTime.Now, request);
 
-            try
-            {
+            try {
                 response.Results.AddRange(personNameValueRepository.Get(request.PageIndex, request.PageSize));
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Messages.Add(ex.Message);
                 response.Status = StatusEnum.Failed;
             }
 
             return await Task.Run(() => { return response.Finalize(); });
         }
-        public async Task<ModelResponse<Model.PersonNameValue, ReadPersonNameValueValueRequest>> ReadAsync(ReadPersonNameValueValueRequest request)
-        {
+        public async Task<ModelResponse<Model.PersonNameValue, ReadPersonNameValueValueRequest>> ReadAsync(ReadPersonNameValueValueRequest request) {
             var response = new ModelResponse<Model.PersonNameValue, ReadPersonNameValueValueRequest>(DateTime.Now, request);
 
-            try
-            {
+            try {
                 if (request.Exact)
                     response.Results.Add(await personNameValueRepository.GetExactAsync(request.Value));
                 else
@@ -163,19 +138,16 @@ namespace GalacticSenate.Library.Services.PersonNameValue {
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Messages.Add(ex.Message);
                 response.Status = StatusEnum.Failed;
             }
             return response.Finalize();
         }
-        public async Task<ModelResponse<Model.PersonNameValue, ReadPersonNameValueRequest>> ReadAsync(ReadPersonNameValueRequest request)
-        {
+        public async Task<ModelResponse<Model.PersonNameValue, ReadPersonNameValueRequest>> ReadAsync(ReadPersonNameValueRequest request) {
             var response = new ModelResponse<Model.PersonNameValue, ReadPersonNameValueRequest>(DateTime.Now, request);
 
-            try
-            {
+            try {
                 var personNameValue = await personNameValueRepository.GetAsync(request.Id);
 
                 if (personNameValue != null)
@@ -183,27 +155,23 @@ namespace GalacticSenate.Library.Services.PersonNameValue {
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Messages.Add(ex.Message);
                 response.Status = StatusEnum.Failed;
             }
             return response.Finalize();
         }
 
-        public async Task<BasicResponse<DeletePersonNameValueRequest>> DeleteAsync(DeletePersonNameValueRequest request)
-        {
+        public async Task<BasicResponse<DeletePersonNameValueRequest>> DeleteAsync(DeletePersonNameValueRequest request) {
             var response = new BasicResponse<DeletePersonNameValueRequest>(DateTime.Now, request);
 
-            try
-            {
+            try {
                 await personNameValueRepository.DeleteAsync(request.Id);
                 unitOfWork.Save();
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Status = StatusEnum.Failed;
                 response.Messages.Add(ex.Message);
             }

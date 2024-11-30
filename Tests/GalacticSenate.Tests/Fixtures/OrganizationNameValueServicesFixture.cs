@@ -1,15 +1,16 @@
 ﻿using GalacticSenate.Data.Implementations.EntityFramework.Repositories;
 using GalacticSenate.Data.Interfaces.Repositories;
-using GalacticSenate.Library.Services.OrganizationNameValue.Events;
+using GalacticSenate.Library.Events;
+using Model = GalacticSenate.Domain.Model;
 
 namespace GalacticSenate.Tests.Fixtures {
-   public abstract class OrganizationNameValueServicesFixture : GalacticSenateFixture {
-      protected readonly IOrganizationNameValueRepository organizationNameValueRepository;
-      protected readonly IOrganizationNameValueEventsFactory organizationNameValueEventsFactory;
+    public abstract class OrganizationNameValueServicesFixture : GalacticSenateFixture {
+        protected readonly IOrganizationNameValueRepository organizationNameValueRepository;
+        protected readonly IEventsFactory<Model.OrganizationNameValue, int> organizationNameValueEventsFactory;
 
-      protected OrganizationNameValueServicesFixture(string databaseName) : base(databaseName) {
-         this.organizationNameValueRepository = new OrganizationNameValueRepository(unitOfWork);
-         this.organizationNameValueEventsFactory = new OrganizationNameValueEventsFactory();
-      }
-   }
+        protected OrganizationNameValueServicesFixture(string databaseName) : base(databaseName) {
+            this.organizationNameValueRepository = new OrganizationNameValueRepository(unitOfWork);
+            this.organizationNameValueEventsFactory = new EventsFactory<Model.OrganizationNameValue, int>();
+        }
+    }
 }
