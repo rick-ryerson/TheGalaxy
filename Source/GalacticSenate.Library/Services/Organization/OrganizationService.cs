@@ -3,7 +3,7 @@ using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
 using GalacticSenate.Library.Events;
-using GalacticSenate.Library.Services.Organization.Requests;
+using GalacticSenate.Library.Requests;
 using GalacticSenate.Library.Services.Party;
 using Microsoft.Extensions.Logging;
 using System;

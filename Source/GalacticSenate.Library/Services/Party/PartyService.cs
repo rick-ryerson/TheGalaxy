@@ -4,6 +4,7 @@ using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
 using GalacticSenate.Domain.Model;
 using GalacticSenate.Library.Events;
+using GalacticSenate.Library.Requests;
 using GalacticSenate.Library.Services.OrganizationNameValue;
 using GalacticSenate.Library.Services.Party.Requests;
 using Microsoft.Extensions.Logging;
