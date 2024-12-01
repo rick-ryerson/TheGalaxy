@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Celestial.WebApi.Core\Celestial.WebApi.Core.csproj" />
     <ProjectReference Include="..\GalacticSenate.Library\GalacticSenate.Library.csproj" />
   </ItemGroup>
 

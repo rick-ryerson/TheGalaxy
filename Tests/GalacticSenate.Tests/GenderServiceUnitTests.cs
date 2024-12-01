@@ -1,6 +1,6 @@
 using GalacticSenate.Library;
+using GalacticSenate.Library.Requests;
 using GalacticSenate.Library.Services.Gender;
-using GalacticSenate.Library.Services.Gender.Requests;
 using GalacticSenate.Tests.Fixtures;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

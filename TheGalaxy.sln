@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31321.278
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GalacticSenate.Domain", "Source\GalacticSenate.Domain\GalacticSenate.Domain.csproj", "{4EE62A59-4385-49D3-8D2B-331C206969AF}"
 EndProject
@@ -37,6 +37,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus", "..\EventBus\Source\EventBus\EventBus.csproj", "{B9C904A9-EC0B-44BD-9AC6-0F5F27B85A04}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventBus.RabbitMQ", "..\EventBus\Source\EventBus.RabbitMQ\EventBus.RabbitMQ.csproj", "{13D8BC67-E35C-42E5-A8FC-F1466F4FB5F6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Celestial.WebApi.Core", "Source\Celestial.WebApi.Core\Celestial.WebApi.Core.csproj", "{47C4F62A-C9D3-4018-972E-E8C611445964}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -92,6 +94,10 @@ Global
 		{13D8BC67-E35C-42E5-A8FC-F1466F4FB5F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13D8BC67-E35C-42E5-A8FC-F1466F4FB5F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13D8BC67-E35C-42E5-A8FC-F1466F4FB5F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47C4F62A-C9D3-4018-972E-E8C611445964}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47C4F62A-C9D3-4018-972E-E8C611445964}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47C4F62A-C9D3-4018-972E-E8C611445964}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47C4F62A-C9D3-4018-972E-E8C611445964}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

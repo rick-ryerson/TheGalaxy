@@ -62,9 +62,9 @@ namespace GalacticSenate.WebApi {
             {
                 options.AddPolicy("ApiScope", policy =>
              {
-                   policy.RequireAuthenticatedUser();
-                   policy.RequireClaim("scope", "api1");
-               });
+                 policy.RequireAuthenticatedUser();
+                 policy.RequireClaim("scope", "api1");
+             });
             });
         }
 
@@ -87,8 +87,8 @@ namespace GalacticSenate.WebApi {
 
                 endpoints.MapGet("/", async context =>
              {
-                   await context.Response.WriteAsync("Hello World from GalacticSenate.WebApi!");
-               });
+                 await context.Response.WriteAsync("Hello World from GalacticSenate.WebApi!");
+             });
             });
         }
     }

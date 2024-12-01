@@ -1,5 +1,5 @@
-﻿using GalacticSenate.Library.Services.Gender;
-using GalacticSenate.Library.Services.Gender.Requests;
+﻿using GalacticSenate.Library.Requests;
+using GalacticSenate.Library.Services.Gender;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
