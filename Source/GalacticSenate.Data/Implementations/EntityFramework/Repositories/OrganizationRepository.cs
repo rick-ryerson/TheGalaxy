@@ -9,56 +9,41 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace GalacticSenate.Data.Implementations.EntityFramework.Repositories {
-   internal class OrganizationRepository : IOrganizationRepository {
-      private readonly IUnitOfWork<DataContext> unitOfWork;
+    public class OrganizationRepository : PartyRepository, IOrganizationRepository {
+        public OrganizationRepository(IUnitOfWork<DataContext> unitOfWork) : base(unitOfWork) {
+        }
 
-      public OrganizationRepository(IUnitOfWork<DataContext> unitOfWork) {
-         this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-      }
+        async Task<Organization> IRepository<Organization, Guid>.AddAsync(Organization organization) {
+            await unitOfWork.Context.Organizations.AddAsync(organization);
 
-      public async Task<Organization> AddAsync(Organization organization) {
-         await unitOfWork.Context.Organizations.AddAsync(organization);
+            return organization;
+        }
 
-         return organization;
-      }
+        async Task IRepository<Organization, Guid>.DeleteAsync(Organization model) {
+            var entity = await GetAsync(model.Id);
 
-      public async Task DeleteAsync(Guid organizationId) {
-         var organization = await GetAsync(organizationId);
+            if (entity == null)
+                throw new DeleteException($"Organization with id {model.Id} does not exist.");
 
-         if (organization == null)
-            throw new DeleteException($"Organization with id {organizationId} does not exist.");
+            unitOfWork
+               .Context
+               .Organizations
+               .Remove(model);
+        }
 
-         unitOfWork
-            .Context
-            .Organizations
-            .Remove(organization);
-      }
+        IEnumerable<Organization> IRepository<Organization, Guid>.Get(int pageIndex, int pageSize) {
+            return unitOfWork
+               .Context
+               .Organizations
+               .Skip(pageSize * pageIndex)
+               .Take(pageSize);
+        }
 
-      public IEnumerable<Organization> Get(int pageIndex, int pageSize) {
-         return unitOfWork
-            .Context
-            .Organizations
-            .Skip(pageSize * pageIndex)
-            .Take(pageSize);
-      }
-
-      public async Task<Organization> GetAsync(Guid organizationId) {
-         return await unitOfWork
-            .Context
-            .Organizations
-            .FindAsync(organizationId);
-      }
-
-      public void UpdateAsync(Organization organization) {
-         unitOfWork
-            .Context
-            .Organizations
-            .Attach(organization);
-
-         unitOfWork
-            .Context
-            .Entry(organization)
-            .State = EntityState.Modified;
-      }
-   }
+        async Task<Organization> IRepository<Organization, Guid>.GetAsync(Guid id) {
+            return await unitOfWork
+               .Context
+               .Organizations
+               .FindAsync(id);
+        }
+    }
 }

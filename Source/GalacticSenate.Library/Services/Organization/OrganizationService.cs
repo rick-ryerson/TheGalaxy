@@ -23,14 +23,13 @@ namespace GalacticSenate.Library.Services.Organization {
         private readonly IEventsFactory<Model.OrganizationNameValue, int> organizationNameValueEventsFactory;
 
         public OrganizationService(IUnitOfWork<DataContext> unitOfWork,
-           IPartyRepository partyRepository,
            IOrganizationRepository organizationRepository,
            IOrganizationNameRepository organizationNameRepository,
            IOrganizationNameValueRepository organizationNameValueRepository,
            IEventBus eventBus,
            IEventsFactory<Model.Party, Guid> partyEventsFactory,
            IEventsFactory<Model.OrganizationNameValue, int> organizationNameValueEventsFactory,
-           ILogger logger) : base(unitOfWork, partyRepository, eventBus, partyEventsFactory, logger) { 
+           ILogger logger) : base(unitOfWork, organizationRepository, eventBus, partyEventsFactory, logger) { 
             
             // base(unitOfWork, eventBus, logger) {
 

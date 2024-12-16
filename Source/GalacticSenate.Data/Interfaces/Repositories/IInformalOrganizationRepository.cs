@@ -1,10 +1,9 @@
 ﻿using GalacticSenate.Domain.Model;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Text;
 
 namespace GalacticSenate.Data.Interfaces.Repositories {
-    public interface IPartyRepository : IRepository<Party, Guid> {
-
+    public interface IInformalOrganizationRepository : IOrganizationRepository, IRepository<InformalOrganization, Guid> {
     }
 }

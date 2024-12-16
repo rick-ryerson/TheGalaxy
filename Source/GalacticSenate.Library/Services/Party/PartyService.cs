@@ -102,7 +102,8 @@ namespace GalacticSenate.Library.Services.Party {
             var response = new BasicResponse<DeletePartyRequest>(DateTime.Now, request);
 
             try {
-                await partyRepository.DeleteAsync(request.Id);
+                var party = await partyRepository.GetAsync(request.Id);
+                await partyRepository.DeleteAsync(party);
                 unitOfWork.Save();
 
                 eventBus.Publish(partyEventsFactory.Deleted(request.Id));
