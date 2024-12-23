@@ -28,7 +28,7 @@ namespace GalacticSenate.Domain.Model {
         public virtual Organization Organization { get; set; }
     }
 
-    public class Corporation {
+    public class Company {
         public Guid Id { get; set; }
 
         public virtual LegalOrganization LegalOrganization { get; set; }
