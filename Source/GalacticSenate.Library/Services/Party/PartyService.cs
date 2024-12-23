@@ -22,15 +22,15 @@ namespace GalacticSenate.Library.Services.Party {
 
     public class PartyService : BasicServiceBase, IPartyService {
         private readonly IPartyRepository partyRepository;
-        private readonly IEventsFactory<Model.Party, Guid> partyEventsFactory;
+        private readonly IEventsFactory eventsFactory;
 
         public PartyService(IUnitOfWork<DataContext> unitOfWork,
            IPartyRepository partyRepository,
            IEventBus eventBus,
-           IEventsFactory<Model.Party, Guid> partyEventsFactory,
+           IEventsFactory eventsFactory,
            ILogger logger) : base(unitOfWork, eventBus, logger) {
             this.partyRepository = partyRepository ?? throw new ArgumentNullException(nameof(partyRepository));
-            this.partyEventsFactory = partyEventsFactory ?? throw new ArgumentNullException(nameof(partyEventsFactory));
+            this.eventsFactory = eventsFactory ?? throw new ArgumentNullException(nameof(eventsFactory));
         }
 
         public async Task<ModelResponse<Model.Party, AddPartyRequest>> AddAsync(AddPartyRequest request) {
@@ -47,7 +47,7 @@ namespace GalacticSenate.Library.Services.Party {
 
                     unitOfWork.Save();
 
-                    eventBus.Publish(partyEventsFactory.Created(party));
+                    eventBus.Publish(eventsFactory.Created(party));
 
                     response.Messages.Add($"Party with id {request.Id} added.");
                 } else {
@@ -106,7 +106,7 @@ namespace GalacticSenate.Library.Services.Party {
                 await partyRepository.DeleteAsync(party);
                 unitOfWork.Save();
 
-                eventBus.Publish(partyEventsFactory.Deleted(request.Id));
+                eventBus.Publish(eventsFactory.Deleted(request.Id));
                 response.Status = StatusEnum.Successful;
             }
             catch (Exception ex) {

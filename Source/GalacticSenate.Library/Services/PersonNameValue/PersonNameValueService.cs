@@ -21,15 +21,15 @@ namespace GalacticSenate.Library.Services.PersonNameValue {
 
     public class PersonNameValueService : BasicServiceBase, IPersonNameValueService {
         private readonly IPersonNameValueRepository personNameValueRepository;
-        private readonly IEventsFactory<Model.PersonNameValue, int> personNameValueEventsFactory;
+        private readonly IEventsFactory eventsFactory;
 
         public PersonNameValueService(IUnitOfWork<DataContext> unitOfWork,
            IPersonNameValueRepository personNameValueRepository,
            IEventBus eventBus,
-           IEventsFactory<Model.PersonNameValue, int> personNameValueEventsFactory,
+           IEventsFactory eventsFactory,
            ILogger<PersonNameValueService> logger) : base(unitOfWork, eventBus, logger) {
             this.personNameValueRepository = personNameValueRepository ?? throw new ArgumentNullException(nameof(personNameValueRepository));
-            this.personNameValueEventsFactory = personNameValueEventsFactory ?? throw new ArgumentNullException(nameof(personNameValueEventsFactory));
+            this.eventsFactory = eventsFactory ?? throw new ArgumentNullException(nameof(eventsFactory));
         }
 
         public async Task<ModelResponse<Model.PersonNameValue, AddPersonNameValueRequest>> AddAsync(AddPersonNameValueRequest request) {

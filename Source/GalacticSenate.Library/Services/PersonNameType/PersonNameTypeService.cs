@@ -20,15 +20,15 @@ namespace GalacticSenate.Library.Services.PersonNameType {
     }
     public class PersonNameTypeService : BasicServiceBase, IPersonNameTypeService {
         private readonly IPersonNameTypeRepository personNameTypeRepository;
-        private readonly IEventsFactory<Model.PersonNameType, int> personNameTypeEventsFactory;
+        private readonly IEventsFactory eventsFactory;
 
         public PersonNameTypeService(IUnitOfWork<DataContext> unitOfWork,
            IPersonNameTypeRepository personNameTypeRepository,
            IEventBus eventBus,
-           IEventsFactory<Model.PersonNameType, int> personNameTypeEventsFactory,
+           IEventsFactory eventsFactory,
            ILogger<PersonNameTypeService> logger) : base(unitOfWork, eventBus, logger) {
             this.personNameTypeRepository = personNameTypeRepository ?? throw new ArgumentNullException(nameof(personNameTypeRepository));
-            this.personNameTypeEventsFactory = personNameTypeEventsFactory ?? throw new ArgumentNullException(nameof(personNameTypeEventsFactory));
+            this.eventsFactory = eventsFactory ?? throw new ArgumentNullException(nameof(eventsFactory));
         }
 
         public async Task<ModelResponse<Model.PersonNameType, AddPersonNameTypeRequest>> AddAsync(AddPersonNameTypeRequest request) {

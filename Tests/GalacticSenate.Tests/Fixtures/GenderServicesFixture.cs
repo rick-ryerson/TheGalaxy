@@ -7,11 +7,11 @@ using Model = GalacticSenate.Domain.Model;
 namespace GalacticSenate.Tests.Fixtures {
     public abstract class GenderServicesFixture : GalacticSenateFixture {
         protected readonly IGenderRepository genderRepository;
-        protected readonly IEventsFactory<Model.Gender, int> genderEventsFactory;
+        protected readonly IEventsFactory eventsFactory;
 
         protected GenderServicesFixture(string databaseName) : base(databaseName) {
             this.genderRepository = new GenderRepository(unitOfWork);
-            this.genderEventsFactory = new EventsFactory<Model.Gender, int>();
+            this.eventsFactory = new EventsFactory();
         }
     }
 }

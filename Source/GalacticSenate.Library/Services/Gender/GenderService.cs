@@ -23,16 +23,16 @@ namespace GalacticSenate.Library.Services.Gender {
     public class GenderService : BasicServiceBase, IGenderService
     {
         private readonly IGenderRepository genderRepository;
-        private readonly IEventsFactory<Model.Gender, int> genderEventsFactory;
+        private readonly IEventsFactory eventsFactory;
 
         public GenderService(IUnitOfWork<DataContext> unitOfWork,
            IGenderRepository genderRepository,
            IEventBus eventBus,
-           IEventsFactory<Model.Gender, int> genderEventsFactory,
+           IEventsFactory eventsFactory,
            ILogger<GenderService> logger) : base(unitOfWork, eventBus, logger)
         {
             this.genderRepository = genderRepository ?? throw new ArgumentNullException(nameof(genderRepository));
-            this.genderEventsFactory = genderEventsFactory ?? throw new ArgumentNullException(nameof(genderEventsFactory));
+            this.eventsFactory = eventsFactory ?? throw new ArgumentNullException(nameof(eventsFactory));
         }
 
         public async Task<ModelResponse<Model.Gender, AddGenderRequest>> AddAsync(AddGenderRequest request)
@@ -53,7 +53,7 @@ namespace GalacticSenate.Library.Services.Gender {
                     item = await genderRepository.AddAsync(new Model.Gender { Value = request.Value });
                     unitOfWork.Save();
 
-                    eventBus.Publish(genderEventsFactory.Created(item));
+                    eventBus.Publish(eventsFactory.Created(item));
 
                     response.Messages.Add($"Gender with value {request.Value} added.");
                 }
@@ -118,7 +118,7 @@ namespace GalacticSenate.Library.Services.Gender {
                         genderRepository.Update(newObject);
                         unitOfWork.Save();
 
-                        eventBus.Publish(genderEventsFactory.Updated(oldObject, newObject));
+                        eventBus.Publish(eventsFactory.Updated(oldObject, newObject));
                         response.Messages.Add($"Gender with id {newObject.Id} updated from {oldObject.Value} to {newObject.Value}.");
                     }
 
@@ -212,7 +212,7 @@ namespace GalacticSenate.Library.Services.Gender {
                 unitOfWork.Save();
 
 
-                eventBus.Publish(genderEventsFactory.Deleted(request.Id));
+                eventBus.Publish(eventsFactory.Deleted(request.Id));
 
                 response.Status = StatusEnum.Successful;
             }

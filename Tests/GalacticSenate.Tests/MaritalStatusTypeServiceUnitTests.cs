@@ -15,7 +15,7 @@ namespace GalacticSenate.Tests {
 
       public MaritalStatusTypeServiceUnitTests() : base("DataContext") {
          var maritalStatusTypeRepository = new MaritalStatusTypeRepository(unitOfWork);
-         MaritalStatusTypeService = new MaritalStatusTypeService(unitOfWork, maritalStatusTypeRepository, eventBusMock.Object, maritalStatusTypeEventsFactory, NullLogger<MaritalStatusTypeService>.Instance);
+         MaritalStatusTypeService = new MaritalStatusTypeService(unitOfWork, maritalStatusTypeRepository, eventBusMock.Object, eventsFactory, NullLogger<MaritalStatusTypeService>.Instance);
       }
       [TestMethod]
       public async Task Add_Test() {

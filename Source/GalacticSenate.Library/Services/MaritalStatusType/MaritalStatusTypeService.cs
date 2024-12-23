@@ -24,20 +24,20 @@ namespace GalacticSenate.Library.Services.MaritalStatusType {
     {
         private readonly IUnitOfWork<DataContext> unitOfWork;
         private readonly IEventBus eventBus;
-        private readonly IEventsFactory<Model.MaritalStatusType, int> maritalStatusTypeEventsFactory;
+        private readonly IEventsFactory eventsFactory;
         private readonly ILogger<MaritalStatusTypeService> logger;
         private readonly IMaritalStatusTypeRepository maritalStatusTypeRepository;
 
         public MaritalStatusTypeService(IUnitOfWork<DataContext> unitOfWork,
            IMaritalStatusTypeRepository maritalStatusTypeRepository,
            IEventBus eventBus,
-           IEventsFactory<Model.MaritalStatusType, int> maritalStatusTypeEventsFactory,
+           IEventsFactory eventsFactory,
            ILogger<MaritalStatusTypeService> logger)
         {
             this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
 
             this.eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
-            this.maritalStatusTypeEventsFactory = maritalStatusTypeEventsFactory ?? throw new ArgumentNullException(nameof(maritalStatusTypeEventsFactory));
+            this.eventsFactory = eventsFactory ?? throw new ArgumentNullException(nameof(eventsFactory));
             this.logger = logger;
             this.maritalStatusTypeRepository = maritalStatusTypeRepository ?? throw new ArgumentNullException(nameof(maritalStatusTypeRepository));
         }
@@ -81,7 +81,7 @@ namespace GalacticSenate.Library.Services.MaritalStatusType {
             {
                 try
                 {
-                    eventBus.Publish(maritalStatusTypeEventsFactory.Created(existing));
+                    eventBus.Publish(eventsFactory.Created(existing));
                 }
                 catch (Exception ex)
                 {
@@ -152,7 +152,7 @@ namespace GalacticSenate.Library.Services.MaritalStatusType {
             {
                 try
                 {
-                    eventBus.Publish(maritalStatusTypeEventsFactory.Updated(newItem, existingItem));
+                    eventBus.Publish(eventsFactory.Updated(newItem, existingItem));
                 }
                 catch (Exception ex)
                 {
@@ -243,7 +243,7 @@ namespace GalacticSenate.Library.Services.MaritalStatusType {
             {
                 try
                 {
-                    eventBus.Publish(maritalStatusTypeEventsFactory.Deleted(request.Id));
+                    eventBus.Publish(eventsFactory.Deleted(request.Id));
                 }
                 catch (Exception ex)
                 {

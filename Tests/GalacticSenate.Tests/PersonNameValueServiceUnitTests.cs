@@ -19,7 +19,7 @@ namespace GalacticSenate.Tests {
          personNameValueService = new PersonNameValueService(unitOfWork,
             personNameValueRepository,
             eventBusMock.Object,
-            personNameValueEventsFactory,
+            eventsFactory,
             NullLogger<PersonNameValueService>.Instance);
       }
       [TestMethod]

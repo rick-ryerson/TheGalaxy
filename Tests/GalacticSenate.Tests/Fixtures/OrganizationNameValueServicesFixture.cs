@@ -6,11 +6,11 @@ using Model = GalacticSenate.Domain.Model;
 namespace GalacticSenate.Tests.Fixtures {
     public abstract class OrganizationNameValueServicesFixture : GalacticSenateFixture {
         protected readonly IOrganizationNameValueRepository organizationNameValueRepository;
-        protected readonly IEventsFactory<Model.OrganizationNameValue, int> organizationNameValueEventsFactory;
+        protected readonly IEventsFactory eventsFactory;
 
         protected OrganizationNameValueServicesFixture(string databaseName) : base(databaseName) {
             this.organizationNameValueRepository = new OrganizationNameValueRepository(unitOfWork);
-            this.organizationNameValueEventsFactory = new EventsFactory<Model.OrganizationNameValue, int>();
+            this.eventsFactory = new EventsFactory();
         }
     }
 }

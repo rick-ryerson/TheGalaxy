@@ -14,7 +14,7 @@ namespace GalacticSenate.Tests {
       private readonly IGenderService genderService;
 
       public GenderServiceUnitTests() : base("DataContext") {
-         genderService = new GenderService(unitOfWork, genderRepository, eventBusMock.Object, genderEventsFactory, NullLogger<GenderService>.Instance);
+         genderService = new GenderService(unitOfWork, genderRepository, eventBusMock.Object, eventsFactory, NullLogger<GenderService>.Instance);
 
       }
       [TestMethod]

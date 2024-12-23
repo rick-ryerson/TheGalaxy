@@ -23,12 +23,12 @@ namespace GalacticSenate.Library.Services.OrganizationNameValue {
     public class OrganizationNameValueService : BasicServiceBase, IOrganizationNameValueService
     {
         private readonly IOrganizationNameValueRepository organizationNameValueRepository;
-        private readonly IEventsFactory<Model.OrganizationNameValue, int> eventFactory;
+        private readonly IEventsFactory eventFactory;
 
         public OrganizationNameValueService(IUnitOfWork<DataContext> unitOfWork,
            IOrganizationNameValueRepository organizationNameValueRepository,
            IEventBus eventBus,
-           IEventsFactory<Model.OrganizationNameValue, int> eventFactory,
+           IEventsFactory eventFactory,
            ILogger<OrganizationNameValueService> logger) : base(unitOfWork, eventBus, logger)
         {
             this.organizationNameValueRepository = organizationNameValueRepository ?? throw new ArgumentNullException(nameof(organizationNameValueRepository));

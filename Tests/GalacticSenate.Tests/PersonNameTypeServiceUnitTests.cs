@@ -17,7 +17,7 @@ namespace GalacticSenate.Tests {
             unitOfWork, 
             personNameTypeRepository, 
             eventBusMock.Object, 
-            personNameTypeEventsFactory, 
+            eventsFactory, 
             NullLogger<PersonNameTypeService>.Instance);
 
       }
