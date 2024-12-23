@@ -12,6 +12,7 @@
   <ItemGroup>
     <Folder Include="Services\Families\" />
     <Folder Include="Services\InformalOrganizations\" />
+    <Folder Include="Services\OrganizationName\Events\" />
   </ItemGroup>
 
 </Project>
