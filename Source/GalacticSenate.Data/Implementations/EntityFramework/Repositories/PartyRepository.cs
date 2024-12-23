@@ -57,5 +57,21 @@ namespace GalacticSenate.Data.Implementations.EntityFramework.Repositories {
                .Parties
                .Remove(model);
         }
+
+        public void Update(Party model) {
+            var entity = unitOfWork
+               .Context
+               .Parties
+               .Find(model.Id);
+
+            if (entity == null)
+                return;
+
+            var entry = unitOfWork
+               .Context
+               .Entry(entity);
+
+            entry.CurrentValues.SetValues(model);
+        }
     }
 }

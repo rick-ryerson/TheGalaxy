@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace GalacticSenate.Data.Implementations.EntityFramework.Repositories {
-   public class OrganizationNameRepository : IOrganizationNameRepository {
+   internal class OrganizationNameRepository : IOrganizationNameRepository {
       private readonly IUnitOfWork<DataContext> unitOfWork;
 
       public OrganizationNameRepository(IUnitOfWork<DataContext> unitOfWork) {

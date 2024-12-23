@@ -9,12 +9,31 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace GalacticSenate.Data.Implementations.EntityFramework.Repositories {
-    public class OrganizationRepository : PartyRepository, IOrganizationRepository {
+    internal class OrganizationRepository : PartyRepository, IOrganizationRepository {
         public OrganizationRepository(IUnitOfWork<DataContext> unitOfWork) : base(unitOfWork) {
         }
 
+        public void Update(Organization model) {
+            var entity = unitOfWork
+               .Context
+               .Organizations
+               .Find(model.Id);
+
+            if (entity == null)
+                return;
+
+            var entry = unitOfWork
+               .Context
+               .Entry(entity);
+
+            entry.CurrentValues.SetValues(model);
+        }
+
         async Task<Organization> IRepository<Organization, Guid>.AddAsync(Organization organization) {
-            await unitOfWork.Context.Organizations.AddAsync(organization);
+            await unitOfWork
+                .Context
+                .Organizations
+                .AddAsync(organization);
 
             return organization;
         }

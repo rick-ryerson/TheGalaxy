@@ -10,5 +10,7 @@ namespace GalacticSenate.Data.Interfaces.Repositories {
         Task<TModel> GetAsync(TKey id);
         Task<TModel> AddAsync(TModel model);
         Task DeleteAsync(TModel model);
+        Task DeleteAsync(TKey id);
+        void Update(TModel model);
     }
 }

@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace GalacticSenate.Data.Implementations.EntityFramework.Repositories {
-    public class InformalOrganizationRepository : OrganizationRepository, IInformalOrganizationRepository {
+    internal class InformalOrganizationRepository : OrganizationRepository, IInformalOrganizationRepository {
         public InformalOrganizationRepository(IUnitOfWork<DataContext> unitOfWork) : base(unitOfWork) {
         }
 
@@ -16,6 +16,10 @@ namespace GalacticSenate.Data.Implementations.EntityFramework.Repositories {
         }
 
         public Task DeleteAsync(InformalOrganization model) {
+            throw new NotImplementedException();
+        }
+
+        public void Update(InformalOrganization model) {
             throw new NotImplementedException();
         }
 
