@@ -34,12 +34,7 @@ namespace GalacticSenate.Library.Extensions {
 
             services.AddEventBus(eventBusSettings);
 
-            services.AddSingleton<IEventsFactory<Model.Gender, int>, EventsFactory<Model.Gender, int>>();
-            services.AddSingleton<IEventsFactory<Model.MaritalStatusType, int>, EventsFactory<Model.MaritalStatusType, int>>();
-            services.AddSingleton<IEventsFactory<Model.OrganizationNameValue, int>, EventsFactory<Model.OrganizationNameValue, int>>();
-            services.AddSingleton<IEventsFactory<Model.PersonNameType, int>, EventsFactory<Model.PersonNameType, int>>();
-            services.AddSingleton<IEventsFactory<Model.PersonNameValue, int>, EventsFactory<Model.PersonNameValue, int>>();
-            services.AddSingleton<IEventsFactory<Model.Party, Guid>, EventsFactory<Model.Party, Guid>>();
+            services.AddSingleton<IEventsFactory, EventsFactory>();
 
             return services;
         }
