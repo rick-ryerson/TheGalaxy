@@ -20,24 +20,26 @@ namespace GalacticSenate.Library.Services.Organization {
         private readonly IPartyRepository partyRepository;
         private readonly IOrganizationNameRepository organizationNameRepository;
         private readonly IOrganizationNameValueRepository organizationNameValueRepository;
-        private readonly IEventsFactory<Model.OrganizationNameValue, int> organizationNameValueEventsFactory;
 
         public OrganizationService(IUnitOfWork<DataContext> unitOfWork,
            IOrganizationRepository organizationRepository,
            IOrganizationNameRepository organizationNameRepository,
            IOrganizationNameValueRepository organizationNameValueRepository,
            IEventBus eventBus,
-           IEventsFactory<Model.Party, Guid> partyEventsFactory,
-           IEventsFactory<Model.OrganizationNameValue, int> organizationNameValueEventsFactory,
-           ILogger logger) : base(unitOfWork, organizationRepository, eventBus, partyEventsFactory, logger) { 
-            
+           IEventsFactory eventsFactory,
+           ILogger logger) :
+            base(unitOfWork,
+               organizationRepository,
+               eventBus,
+               eventsFactory,
+               logger) {
+
             // base(unitOfWork, eventBus, logger) {
 
             this.partyRepository = partyRepository ?? throw new ArgumentNullException(nameof(partyRepository));
             this.organizationRepository = organizationRepository ?? throw new ArgumentNullException(nameof(organizationRepository));
             this.organizationNameRepository = organizationNameRepository ?? throw new ArgumentNullException(nameof(organizationNameRepository));
             this.organizationNameValueRepository = organizationNameValueRepository ?? throw new ArgumentNullException(nameof(organizationNameValueRepository));
-            this.organizationNameValueEventsFactory = organizationNameValueEventsFactory;
         }
         private async Task<Model.OrganizationNameValue> AddOrganizationNameValueAsync(string value) {
             var nameValue = await organizationNameValueRepository.GetExactAsync(value);

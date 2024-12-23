@@ -24,10 +24,15 @@ namespace GalacticSenate.Library.Services.Organization {
             IOrganizationNameRepository organizationNameRepository,
             IOrganizationNameValueRepository organizationNameValueRepository,
             IEventBus eventBus,
-            IEventsFactory<Model.Party, Guid> partyEventsFactory,
-            IEventsFactory<Model.OrganizationNameValue, int> organizationNameValueEventsFactory,
+            IEventsFactory eventsFactory,
             ILogger logger) :
-            base(unitOfWork, informalOrganizationRepository, organizationNameRepository, organizationNameValueRepository, eventBus, partyEventsFactory, organizationNameValueEventsFactory, logger) {
+            base(unitOfWork,
+                informalOrganizationRepository,
+                organizationNameRepository,
+                organizationNameValueRepository,
+                eventBus,
+                eventsFactory,
+                logger) {
         }
 
         public Task<ModelResponse<InformalOrganization, AddInformalOrganizationRequest>> AddAsync(AddInformalOrganizationRequest request) {
