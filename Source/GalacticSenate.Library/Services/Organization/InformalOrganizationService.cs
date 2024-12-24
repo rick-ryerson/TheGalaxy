@@ -9,6 +9,7 @@ using GalacticSenate.Library.Requests;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,8 +36,37 @@ namespace GalacticSenate.Library.Services.Organization {
                 logger) {
         }
 
-        public Task<ModelResponse<InformalOrganization, AddInformalOrganizationRequest>> AddAsync(AddInformalOrganizationRequest request) {
-            throw new NotImplementedException();
+        public async Task<ModelResponse<InformalOrganization, AddInformalOrganizationRequest>> AddAsync(AddInformalOrganizationRequest request) {
+            var response = new ModelResponse<Model.InformalOrganization, AddInformalOrganizationRequest>(DateTime.Now, request);
+
+            try {
+                if (request is not null) {
+                    var organizationResponse = this.AddAsync((AddOrganizationRequest)request);
+                    var informalOrganization = await ((IRepository<Model.InformalOrganization, Guid>)organizationRepository).GetAsync(request.Id);
+
+                    if (informalOrganization is null) {
+                        informalOrganization = await ((IRepository<Model.InformalOrganization, Guid>)organizationRepository).AddAsync(new Model.InformalOrganization
+                        {
+                            Id = organizationResponse.Result.Results.FirstOrDefault().Id,
+                        });
+
+                        unitOfWork.Save();
+                        eventBus.Publish(eventsFactory.Created(informalOrganization));
+                        response.Messages.Add($"Informal Organization with id {request.Id} added.");
+                    } else {
+                        response.Messages.Add($"Informal Organization with id {request.Id} already exists.");
+                    }
+                    response.Results.Add(informalOrganization);
+                    response.Status = StatusEnum.Successful;
+                } else
+                    throw new ArgumentNullException(nameof(request));
+            }
+            catch (Exception ex) {
+                response.Status = StatusEnum.Failed;
+                response.Messages.Add(ex.Message);
+            }
+
+            return response;
         }
     }
 }

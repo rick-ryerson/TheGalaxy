@@ -21,8 +21,8 @@ namespace GalacticSenate.Library.Services.Party {
     }
 
     public class PartyService : BasicServiceBase, IPartyService {
-        private readonly IPartyRepository partyRepository;
-        private readonly IEventsFactory eventsFactory;
+        protected readonly IPartyRepository partyRepository;
+        protected readonly IEventsFactory eventsFactory;
 
         public PartyService(IUnitOfWork<DataContext> unitOfWork,
            IPartyRepository partyRepository,
