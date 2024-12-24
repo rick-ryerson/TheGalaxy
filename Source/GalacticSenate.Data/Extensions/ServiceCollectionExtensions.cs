@@ -8,36 +8,40 @@ using Microsoft.Extensions.Logging;
 using System;
 
 namespace GalacticSenate.Data.Extensions {
-   public class EfDataSettings {
-      public string ConnectionString { get; set; }
-   }
-   public static class ServiceCollectionExtensions {
-      public static IServiceCollection AddEntityFramework(this IServiceCollection services, EfDataSettings settings) {
-         if (settings is null) throw new ArgumentNullException(nameof(settings));
+    public class EfDataSettings {
+        public string ConnectionString { get; set; }
+    }
+    public static class ServiceCollectionExtensions {
+        public static IServiceCollection AddEntityFramework(this IServiceCollection services, EfDataSettings settings) {
+            if (settings is null) throw new ArgumentNullException(nameof(settings));
 
-         services.AddLogging();
+            services.AddLogging();
 
-         services.AddDbContext<DataContext>((provider, options) =>
-         {
-            options
-               .UseSqlServer(settings.ConnectionString)
-               .UseLoggerFactory(provider.GetRequiredService<ILoggerFactory>())
-               .EnableDetailedErrors()
-               .EnableSensitiveDataLogging();
-         });
+            services.AddDbContext<DataContext>((provider, options) =>
+            {
+                options
+                .UseSqlServer(settings.ConnectionString)
+                .UseLoggerFactory(provider.GetRequiredService<ILoggerFactory>())
+                .EnableDetailedErrors()
+                .EnableSensitiveDataLogging();
+            });
 
-         services.AddScoped<IUnitOfWork<DataContext>, UnitOfWork>();
+            services.AddScoped<IUnitOfWork<DataContext>, UnitOfWork>();
 
-         services.AddScoped<IGenderRepository, GenderRepository>();
-         services.AddScoped<IMaritalStatusTypeRepository, MaritalStatusTypeRepository>();
-         services.AddScoped<IOrganizationRepository, OrganizationRepository>();
-         services.AddScoped<IOrganizationNameRepository, OrganizationNameRepository>();
-         services.AddScoped<IOrganizationNameValueRepository, OrganizationNameValueRepository>();
-         services.AddScoped<IPartyRepository, PartyRepository>();
-         services.AddScoped<IPersonNameTypeRepository, PersonNameTypeRepository>();
-         services.AddScoped<IPersonNameValueRepository, PersonNameValueRepository>();
+            services.AddScoped<IGenderRepository, GenderRepository>();
+            services.AddScoped<IMaritalStatusTypeRepository, MaritalStatusTypeRepository>();
+            services.AddScoped<IOrganizationNameRepository, OrganizationNameRepository>();
+            services.AddScoped<IOrganizationNameValueRepository, OrganizationNameValueRepository>();
 
-         return services;
-      }
-   }
+            services.AddScoped<IPartyRepository, PartyRepository>();
+            services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+            services.AddScoped<IInformalOrganizationRepository, InformalOrganizationRepository>();
+            services.AddScoped<IFamilyRepository, FamilyRepository>();
+
+            services.AddScoped<IPersonNameTypeRepository, PersonNameTypeRepository>();
+            services.AddScoped<IPersonNameValueRepository, PersonNameValueRepository>();
+
+            return services;
+        }
+    }
 }

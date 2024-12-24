@@ -3,6 +3,7 @@ using GalacticSenate.Data.Extensions;
 using GalacticSenate.Library.Events;
 using GalacticSenate.Library.Services.Gender;
 using GalacticSenate.Library.Services.MaritalStatusType;
+using GalacticSenate.Library.Services.Organization;
 using GalacticSenate.Library.Services.OrganizationNameValue;
 using GalacticSenate.Library.Services.Party;
 using GalacticSenate.Library.Services.PersonNameType;
@@ -38,6 +39,9 @@ namespace GalacticSenate.Library.Extensions {
             services.AddScoped<IPersonNameTypeService, PersonNameTypeService>();
             services.AddScoped<IPersonNameValueService, PersonNameValueService>();
             services.AddScoped<IPartyService, PartyService>();
+            services.AddScoped<IOrganizationService, OrganizationService>();
+            services.AddScoped<IInformalOrganizationService, InformalOrganizationService>();
+            services.AddScoped<IFamilyService, FamilyService>();
 
             services.AddEventBus(eventBusSettings);
 
