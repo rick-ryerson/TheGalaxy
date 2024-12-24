@@ -22,6 +22,7 @@ namespace GalacticSenate.Library.Extensions {
             if (efDataSettings is null)
                 throw new ArgumentNullException(nameof(efDataSettings));
 
+            services.AddLogging();
 
             services.AddEntityFramework(efDataSettings);
 
@@ -30,7 +31,7 @@ namespace GalacticSenate.Library.Extensions {
             services.AddScoped<IOrganizationNameValueService, OrganizationNameValueService>();
             services.AddScoped<IPersonNameTypeService, PersonNameTypeService>();
             services.AddScoped<IPersonNameValueService, PersonNameValueService>();
-            services.AddScoped<IPartyService, PartyService>();
+            // services.AddScoped<IPartyService, PartyService>();
 
             services.AddEventBus(eventBusSettings);
 
