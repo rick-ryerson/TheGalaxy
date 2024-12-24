@@ -8,12 +8,16 @@ using GalacticSenate.Library.Services.Party;
 using GalacticSenate.Library.Services.PersonNameType;
 using GalacticSenate.Library.Services.PersonNameValue;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 
 using Model = GalacticSenate.Domain.Model;
 
 namespace GalacticSenate.Library.Extensions {
     public static class StartupExtensions {
+        public class GenericLogger {
+
+        }
         public static IServiceCollection AddPeopleAndOrganizations(this IServiceCollection services, EventBusSettings eventBusSettings, EfDataSettings efDataSettings) {
             if (services is null)
                 throw new ArgumentNullException(nameof(services));
@@ -22,7 +26,9 @@ namespace GalacticSenate.Library.Extensions {
             if (efDataSettings is null)
                 throw new ArgumentNullException(nameof(efDataSettings));
 
-            services.AddLogging();
+            var provider = services.BuildServiceProvider();
+            var logger = provider.GetService<ILogger<GenericLogger>>();
+            services.AddSingleton(typeof(ILogger), logger);
 
             services.AddEntityFramework(efDataSettings);
 
@@ -31,7 +37,7 @@ namespace GalacticSenate.Library.Extensions {
             services.AddScoped<IOrganizationNameValueService, OrganizationNameValueService>();
             services.AddScoped<IPersonNameTypeService, PersonNameTypeService>();
             services.AddScoped<IPersonNameValueService, PersonNameValueService>();
-            // services.AddScoped<IPartyService, PartyService>();
+            services.AddScoped<IPartyService, PartyService>();
 
             services.AddEventBus(eventBusSettings);
 
