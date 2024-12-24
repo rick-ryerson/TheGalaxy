@@ -1,6 +1,6 @@
 ﻿using GalacticSenate.Library;
 using GalacticSenate.Library.Requests;
-using GalacticSenate.Library.Services.Party;
+using GalacticSenate.Library.Services;
 using GalacticSenate.Tests.Properties;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

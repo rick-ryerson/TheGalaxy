@@ -1,11 +1,10 @@
 ﻿using EventBus.RabbitMQ;
 using GalacticSenate.Data.Extensions;
 using GalacticSenate.Library.Events;
+using GalacticSenate.Library.Services;
 using GalacticSenate.Library.Services.Gender;
 using GalacticSenate.Library.Services.MaritalStatusType;
-using GalacticSenate.Library.Services.Organization;
 using GalacticSenate.Library.Services.OrganizationNameValue;
-using GalacticSenate.Library.Services.Party;
 using GalacticSenate.Library.Services.PersonNameType;
 using GalacticSenate.Library.Services.PersonNameValue;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +14,7 @@ using System;
 using Model = GalacticSenate.Domain.Model;
 
 namespace GalacticSenate.Library.Extensions {
-    public static class StartupExtensions {
+    public static class ServiceCollectionExtensions {
         public class GenericLogger {
 
         }

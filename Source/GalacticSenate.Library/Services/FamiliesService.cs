@@ -13,9 +13,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Model = GalacticSenate.Domain.Model;
 
-namespace GalacticSenate.Library.Services.Organization {
+namespace GalacticSenate.Library.Services {
     public interface IFamilyService {
-        Task<ModelResponse<Model.Family, AddFamilyRequest>> AddAsync(AddFamilyRequest request);
+        Task<ModelResponse<Family, AddFamilyRequest>> AddAsync(AddFamilyRequest request);
     }
     public class FamilyService : InformalOrganizationService, IFamilyService {
         public FamilyService(IUnitOfWork<DataContext> unitOfWork,
@@ -34,15 +34,15 @@ namespace GalacticSenate.Library.Services.Organization {
         }
 
         public async Task<ModelResponse<Family, AddFamilyRequest>> AddAsync(AddFamilyRequest request) {
-            var response = new ModelResponse<Model.Family, AddFamilyRequest>(DateTime.Now, request);
+            var response = new ModelResponse<Family, AddFamilyRequest>(DateTime.Now, request);
 
             try {
                 if (request is not null) {
-                    var informalOrganizationResponse = this.AddAsync((AddInformalOrganizationRequest)request);
-                    var family = await ((IRepository<Model.Family, Guid>)organizationRepository).GetAsync(request.Id);
+                    var informalOrganizationResponse = AddAsync((AddInformalOrganizationRequest)request);
+                    var family = await ((IRepository<Family, Guid>)organizationRepository).GetAsync(request.Id);
 
                     if (family is null) {
-                        family = await ((IRepository<Model.Family, Guid>)organizationRepository).AddAsync(new Model.Family
+                        family = await ((IRepository<Family, Guid>)organizationRepository).AddAsync(new Family
                         {
                             Id = informalOrganizationResponse.Result.Results.FirstOrDefault().Id,
                         });

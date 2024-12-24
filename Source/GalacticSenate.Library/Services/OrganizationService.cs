@@ -4,7 +4,6 @@ using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
 using GalacticSenate.Library.Events;
 using GalacticSenate.Library.Requests;
-using GalacticSenate.Library.Services.Party;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -12,7 +11,7 @@ using System.Threading.Tasks;
 
 using Model = GalacticSenate.Domain.Model;
 
-namespace GalacticSenate.Library.Services.Organization {
+namespace GalacticSenate.Library.Services {
     public interface IOrganizationService {
         Task<ModelResponse<Model.Organization, AddOrganizationRequest>> AddAsync(AddOrganizationRequest request);
     }
@@ -56,7 +55,7 @@ namespace GalacticSenate.Library.Services.Organization {
 
             try {
                 if (request is not null) {
-                    var partyResponse = this.AddAsync((AddPartyRequest)request);
+                    var partyResponse = AddAsync((AddPartyRequest)request);
                     var organization = await ((IRepository<Model.Organization, Guid>)organizationRepository).GetAsync(request.Id);
 
                     if (organization is null) {

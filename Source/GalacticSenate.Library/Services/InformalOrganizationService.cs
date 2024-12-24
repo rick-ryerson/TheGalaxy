@@ -15,9 +15,9 @@ using System.Threading.Tasks;
 
 using Model = GalacticSenate.Domain.Model;
 
-namespace GalacticSenate.Library.Services.Organization {
+namespace GalacticSenate.Library.Services {
     public interface IInformalOrganizationService {
-        Task<ModelResponse<Model.InformalOrganization, AddInformalOrganizationRequest>> AddAsync(AddInformalOrganizationRequest request);
+        Task<ModelResponse<InformalOrganization, AddInformalOrganizationRequest>> AddAsync(AddInformalOrganizationRequest request);
     }
     public class InformalOrganizationService : OrganizationService, IInformalOrganizationService {
         public InformalOrganizationService(IUnitOfWork<DataContext> unitOfWork,
@@ -37,15 +37,15 @@ namespace GalacticSenate.Library.Services.Organization {
         }
 
         public async Task<ModelResponse<InformalOrganization, AddInformalOrganizationRequest>> AddAsync(AddInformalOrganizationRequest request) {
-            var response = new ModelResponse<Model.InformalOrganization, AddInformalOrganizationRequest>(DateTime.Now, request);
+            var response = new ModelResponse<InformalOrganization, AddInformalOrganizationRequest>(DateTime.Now, request);
 
             try {
                 if (request is not null) {
-                    var organizationResponse = this.AddAsync((AddOrganizationRequest)request);
-                    var informalOrganization = await ((IRepository<Model.InformalOrganization, Guid>)organizationRepository).GetAsync(request.Id);
+                    var organizationResponse = AddAsync((AddOrganizationRequest)request);
+                    var informalOrganization = await ((IRepository<InformalOrganization, Guid>)organizationRepository).GetAsync(request.Id);
 
                     if (informalOrganization is null) {
-                        informalOrganization = await ((IRepository<Model.InformalOrganization, Guid>)organizationRepository).AddAsync(new Model.InformalOrganization
+                        informalOrganization = await ((IRepository<InformalOrganization, Guid>)organizationRepository).AddAsync(new InformalOrganization
                         {
                             Id = organizationResponse.Result.Results.FirstOrDefault().Id,
                         });

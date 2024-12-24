@@ -6,18 +6,17 @@ using GalacticSenate.Domain.Model;
 using GalacticSenate.Library.Events;
 using GalacticSenate.Library.Requests;
 using GalacticSenate.Library.Services.OrganizationNameValue;
-using GalacticSenate.Library.Services.Party.Requests;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using Model = GalacticSenate.Domain.Model;
 
-namespace GalacticSenate.Library.Services.Party {
+namespace GalacticSenate.Library.Services {
     public interface IPartyService {
-        Task<ModelResponse<Model.Party, AddPartyRequest>> AddAsync(AddPartyRequest request);
+        Task<ModelResponse<Party, AddPartyRequest>> AddAsync(AddPartyRequest request);
         Task<BasicResponse<DeletePartyRequest>> DeleteAsync(DeletePartyRequest request);
-        Task<ModelResponse<Model.Party, ReadPartyMultiRequest>> ReadAsync(ReadPartyMultiRequest request);
-        Task<ModelResponse<Model.Party, ReadPartyRequest>> ReadAsync(ReadPartyRequest request);
+        Task<ModelResponse<Party, ReadPartyMultiRequest>> ReadAsync(ReadPartyMultiRequest request);
+        Task<ModelResponse<Party, ReadPartyRequest>> ReadAsync(ReadPartyRequest request);
     }
 
     public class PartyService : BasicServiceBase, IPartyService {
@@ -33,8 +32,8 @@ namespace GalacticSenate.Library.Services.Party {
             this.eventsFactory = eventsFactory ?? throw new ArgumentNullException(nameof(eventsFactory));
         }
 
-        public async Task<ModelResponse<Model.Party, AddPartyRequest>> AddAsync(AddPartyRequest request) {
-            var response = new ModelResponse<Model.Party, AddPartyRequest>(DateTime.Now, request);
+        public async Task<ModelResponse<Party, AddPartyRequest>> AddAsync(AddPartyRequest request) {
+            var response = new ModelResponse<Party, AddPartyRequest>(DateTime.Now, request);
 
             try {
                 if (request is null)
@@ -43,7 +42,7 @@ namespace GalacticSenate.Library.Services.Party {
                 var party = await partyRepository.GetAsync(request.Id);
 
                 if (party is null) {
-                    party = await partyRepository.AddAsync(new Model.Party { Id = request.Id });
+                    party = await partyRepository.AddAsync(new Party { Id = request.Id });
 
                     unitOfWork.Save();
 
@@ -65,8 +64,8 @@ namespace GalacticSenate.Library.Services.Party {
 
             return response.Finalize();
         }
-        public async Task<ModelResponse<Model.Party, ReadPartyMultiRequest>> ReadAsync(ReadPartyMultiRequest request) {
-            var response = new ModelResponse<Model.Party, ReadPartyMultiRequest>(DateTime.Now, request);
+        public async Task<ModelResponse<Party, ReadPartyMultiRequest>> ReadAsync(ReadPartyMultiRequest request) {
+            var response = new ModelResponse<Party, ReadPartyMultiRequest>(DateTime.Now, request);
 
             try {
                 response.Results.AddRange(partyRepository.Get(request.PageIndex, request.PageSize));
@@ -80,8 +79,8 @@ namespace GalacticSenate.Library.Services.Party {
 
             return await Task.Run(() => { return response.Finalize(); });
         }
-        public async Task<ModelResponse<Model.Party, ReadPartyRequest>> ReadAsync(ReadPartyRequest request) {
-            var response = new ModelResponse<Model.Party, ReadPartyRequest>(DateTime.Now, request);
+        public async Task<ModelResponse<Party, ReadPartyRequest>> ReadAsync(ReadPartyRequest request) {
+            var response = new ModelResponse<Party, ReadPartyRequest>(DateTime.Now, request);
 
             try {
                 var party = await partyRepository.GetAsync(request.Id);
