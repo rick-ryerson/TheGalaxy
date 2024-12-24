@@ -81,7 +81,7 @@ namespace GalacticSenate.Library.Services.Organization {
                 response.Messages.Add(ex.Message);
             }
 
-            return response;
+            return response.Finalize();
         }
     }
 }
