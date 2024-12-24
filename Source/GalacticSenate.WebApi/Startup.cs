@@ -25,6 +25,8 @@ namespace GalacticSenate.WebApi {
             var optionsBuilder = new DbContextOptionsBuilder<DataContext>();
             var connectionString = Configuration.GetConnectionString("DataContext");
 
+            services.AddLogging();
+
             services.AddDbContext<DataContext>(options =>
             {
                 options.UseSqlServer(connectionString);
