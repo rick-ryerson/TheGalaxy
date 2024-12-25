@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace GalacticSenate.Library.Services.OrganizationName.Requests {
-   public class AddOrganizationNameRequest
-    {
+namespace GalacticSenate.Library.Requests {
+    public class AddOrganizationNameRequest {
         public Guid OrganizationId { get; set; }
         public string OrganizationName { get; set; }
         public DateTime FromDate { get; set; }

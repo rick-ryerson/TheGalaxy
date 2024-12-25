@@ -3,15 +3,14 @@ using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
 using GalacticSenate.Library.Events;
-using GalacticSenate.Library.Services.MaritalStatusType.Requests;
+using GalacticSenate.Library.Requests;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using Model = GalacticSenate.Domain.Model;
 
-namespace GalacticSenate.Library.Services.MaritalStatusType {
-   public interface IMaritalStatusTypeService
-    {
+namespace GalacticSenate.Library.Services {
+    public interface IMaritalStatusTypeService {
         Task<ModelResponse<Model.MaritalStatusType, AddMaritalStatusTypeRequest>> AddAsync(AddMaritalStatusTypeRequest request);
         Task<BasicResponse<DeleteMaritalStatusTypeRequest>> DeleteAsync(DeleteMaritalStatusTypeRequest request);
         Task<ModelResponse<Model.MaritalStatusType, ReadMaritalStatusTypeMultiRequest>> ReadAsync(ReadMaritalStatusTypeMultiRequest request);
@@ -20,8 +19,7 @@ namespace GalacticSenate.Library.Services.MaritalStatusType {
         Task<ModelResponse<Model.MaritalStatusType, UpdateMaritalStatusTypeRequest>> UpdateAsync(UpdateMaritalStatusTypeRequest request);
     }
 
-    public class MaritalStatusTypeService : IMaritalStatusTypeService
-    {
+    public class MaritalStatusTypeService : IMaritalStatusTypeService {
         private readonly IUnitOfWork<DataContext> unitOfWork;
         private readonly IEventBus eventBus;
         private readonly IEventsFactory eventsFactory;
@@ -32,8 +30,7 @@ namespace GalacticSenate.Library.Services.MaritalStatusType {
            IMaritalStatusTypeRepository maritalStatusTypeRepository,
            IEventBus eventBus,
            IEventsFactory eventsFactory,
-           ILogger<MaritalStatusTypeService> logger)
-        {
+           ILogger<MaritalStatusTypeService> logger) {
             this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
 
             this.eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
@@ -42,28 +39,23 @@ namespace GalacticSenate.Library.Services.MaritalStatusType {
             this.maritalStatusTypeRepository = maritalStatusTypeRepository ?? throw new ArgumentNullException(nameof(maritalStatusTypeRepository));
         }
 
-        public async Task<ModelResponse<Model.MaritalStatusType, AddMaritalStatusTypeRequest>> AddAsync(AddMaritalStatusTypeRequest request)
-        {
+        public async Task<ModelResponse<Model.MaritalStatusType, AddMaritalStatusTypeRequest>> AddAsync(AddMaritalStatusTypeRequest request) {
             var response = new ModelResponse<Model.MaritalStatusType, AddMaritalStatusTypeRequest>(DateTime.Now, request);
 
             var existing = await maritalStatusTypeRepository.GetExactAsync(request.Value);
 
-            try
-            {
+            try {
                 if (request is null)
                     throw new ArgumentNullException(nameof(request));
                 if (string.IsNullOrEmpty(request.Value))
                     throw new ArgumentNullException(nameof(request.Value));
 
-                if (existing is null)
-                {
+                if (existing is null) {
                     existing = await maritalStatusTypeRepository.AddAsync(new Model.MaritalStatusType { Value = request.Value });
                     unitOfWork.Save();
 
                     response.Messages.Add($"MaritalStatusType with value {request.Value} added.");
-                }
-                else
-                {
+                } else {
                     response.Messages.Add($"MaritalStatusType with value {request.Value} already exists.");
                 }
 
@@ -71,27 +63,22 @@ namespace GalacticSenate.Library.Services.MaritalStatusType {
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Status = StatusEnum.Failed;
                 response.Messages.Add(ex.Message);
             }
 
-            if (response.Status == StatusEnum.Successful)
-            {
-                try
-                {
+            if (response.Status == StatusEnum.Successful) {
+                try {
                     eventBus.Publish(eventsFactory.Created(existing));
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     logger.LogError(ex, "An exception occurred while attempting to add new MaritalStatusType");
                 }
             }
             return response.Finalize();
         }
-        public async Task<ModelResponse<Model.MaritalStatusType, UpdateMaritalStatusTypeRequest>> UpdateAsync(UpdateMaritalStatusTypeRequest request)
-        {
+        public async Task<ModelResponse<Model.MaritalStatusType, UpdateMaritalStatusTypeRequest>> UpdateAsync(UpdateMaritalStatusTypeRequest request) {
             if (request is null)
                 throw new ArgumentNullException(nameof(request));
             if (string.IsNullOrEmpty(request.NewValue))
@@ -101,34 +88,25 @@ namespace GalacticSenate.Library.Services.MaritalStatusType {
 
             Model.MaritalStatusType existingItem = null;
             Model.MaritalStatusType newItem = null;
-            try
-            {
+            try {
                 existingItem = await maritalStatusTypeRepository.GetAsync(request.Id);
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Messages.Add(ex.Message);
                 response.Status = StatusEnum.Failed;
             }
 
-            if (existingItem is null)
-            {
+            if (existingItem is null) {
                 response.Messages.Add($"MaritalStatusType with id {request.Id} does not exist.");
                 response.Status = StatusEnum.Failed;
-            }
-            else
-            {
-                try
-                {
+            } else {
+                try {
                     var oldValue = existingItem.Value;
                     newItem = existingItem;
 
-                    if (oldValue == request.NewValue)
-                    {
+                    if (oldValue == request.NewValue) {
                         response.Messages.Add($"MaritalStatusType with id {existingItem.Id} already has a value of {oldValue}.");
-                    }
-                    else
-                    {
+                    } else {
                         newItem.Value = request.NewValue;
 
                         maritalStatusTypeRepository.Update(newItem);
@@ -141,21 +119,17 @@ namespace GalacticSenate.Library.Services.MaritalStatusType {
 
                     response.Status = StatusEnum.Successful;
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     response.Messages.Add(ex.Message);
                     response.Status = StatusEnum.Failed;
                 }
             }
 
-            if (response.Status == StatusEnum.Successful)
-            {
-                try
-                {
+            if (response.Status == StatusEnum.Successful) {
+                try {
                     eventBus.Publish(eventsFactory.Updated(newItem, existingItem));
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     logger.LogError(ex, "An exception occurred while attempting to update existing MaritalStatusType");
                 }
             }
@@ -163,30 +137,25 @@ namespace GalacticSenate.Library.Services.MaritalStatusType {
             return response.Finalize();
         }
 
-        public async Task<ModelResponse<Model.MaritalStatusType, ReadMaritalStatusTypeMultiRequest>> ReadAsync(ReadMaritalStatusTypeMultiRequest request)
-        {
+        public async Task<ModelResponse<Model.MaritalStatusType, ReadMaritalStatusTypeMultiRequest>> ReadAsync(ReadMaritalStatusTypeMultiRequest request) {
             var response = new ModelResponse<Model.MaritalStatusType, ReadMaritalStatusTypeMultiRequest>(DateTime.Now, request);
 
-            try
-            {
+            try {
                 response.Results.AddRange(maritalStatusTypeRepository.Get(request.PageIndex, request.PageSize));
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Messages.Add(ex.Message);
                 response.Status = StatusEnum.Failed;
             }
 
             return await Task.Run(() => { return response.Finalize(); });
         }
-        public async Task<ModelResponse<Model.MaritalStatusType, ReadMaritalStatusTypeValueRequest>> ReadAsync(ReadMaritalStatusTypeValueRequest request)
-        {
+        public async Task<ModelResponse<Model.MaritalStatusType, ReadMaritalStatusTypeValueRequest>> ReadAsync(ReadMaritalStatusTypeValueRequest request) {
             var response = new ModelResponse<Model.MaritalStatusType, ReadMaritalStatusTypeValueRequest>(DateTime.Now, request);
 
-            try
-            {
+            try {
                 if (request.Exact)
                     response.Results.Add(await maritalStatusTypeRepository.GetExactAsync(request.Value));
                 else
@@ -194,19 +163,16 @@ namespace GalacticSenate.Library.Services.MaritalStatusType {
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Messages.Add(ex.Message);
                 response.Status = StatusEnum.Failed;
             }
             return response.Finalize();
         }
-        public async Task<ModelResponse<Model.MaritalStatusType, ReadMaritalStatusTypeRequest>> ReadAsync(ReadMaritalStatusTypeRequest request)
-        {
+        public async Task<ModelResponse<Model.MaritalStatusType, ReadMaritalStatusTypeRequest>> ReadAsync(ReadMaritalStatusTypeRequest request) {
             var response = new ModelResponse<Model.MaritalStatusType, ReadMaritalStatusTypeRequest>(DateTime.Now, request);
 
-            try
-            {
+            try {
                 var maritalStatus = await maritalStatusTypeRepository.GetAsync(request.Id);
 
                 if (maritalStatus != null)
@@ -214,39 +180,32 @@ namespace GalacticSenate.Library.Services.MaritalStatusType {
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Messages.Add(ex.Message);
                 response.Status = StatusEnum.Failed;
             }
             return response.Finalize();
         }
 
-        public async Task<BasicResponse<DeleteMaritalStatusTypeRequest>> DeleteAsync(DeleteMaritalStatusTypeRequest request)
-        {
+        public async Task<BasicResponse<DeleteMaritalStatusTypeRequest>> DeleteAsync(DeleteMaritalStatusTypeRequest request) {
             var response = new BasicResponse<DeleteMaritalStatusTypeRequest>(DateTime.Now, request);
 
-            try
-            {
+            try {
                 await maritalStatusTypeRepository.DeleteAsync(request.Id);
                 unitOfWork.Save();
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Status = StatusEnum.Failed;
                 response.Messages.Add(ex.Message);
             }
 
-            if (response.Status == StatusEnum.Successful)
-            {
-                try
-                {
+            if (response.Status == StatusEnum.Successful) {
+                try {
                     eventBus.Publish(eventsFactory.Deleted(request.Id));
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     logger.LogError(ex, "An exception occurred while attempting to publish delete event for {id}", request.Id);
                 }
             }

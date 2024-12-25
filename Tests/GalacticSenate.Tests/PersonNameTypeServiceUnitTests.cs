@@ -1,6 +1,6 @@
 using GalacticSenate.Library;
-using GalacticSenate.Library.Services.PersonNameType;
-using GalacticSenate.Library.Services.PersonNameType.Requests;
+using GalacticSenate.Library.Requests;
+using GalacticSenate.Library.Services;
 using GalacticSenate.Tests.Fixtures;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 
 namespace GalacticSenate.Tests {
-   [TestClass]
+    [TestClass]
    public class PersonNameTypeServiceUnitTests : PersonNameTypeServicesFixture {
       private readonly IPersonNameTypeService personNameTypeService;
 

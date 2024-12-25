@@ -9,9 +9,8 @@ using System;
 using System.Threading.Tasks;
 using Model = GalacticSenate.Domain.Model;
 
-namespace GalacticSenate.Library.Services.Gender {
-   public interface IGenderService
-    {
+namespace GalacticSenate.Library.Services {
+    public interface IGenderService {
         Task<ModelResponse<Model.Gender, AddGenderRequest>> AddAsync(AddGenderRequest request);
         Task<BasicResponse<DeleteGenderRequest>> DeleteAsync(DeleteGenderRequest request);
         Task<ModelResponse<Model.Gender, ReadGenderMultiRequest>> ReadAsync(ReadGenderMultiRequest request);
@@ -20,8 +19,7 @@ namespace GalacticSenate.Library.Services.Gender {
         Task<ModelResponse<Model.Gender, UpdateGenderRequest>> UpdateAsync(UpdateGenderRequest request);
     }
 
-    public class GenderService : BasicServiceBase, IGenderService
-    {
+    public class GenderService : BasicServiceBase, IGenderService {
         private readonly IGenderRepository genderRepository;
         private readonly IEventsFactory eventsFactory;
 
@@ -29,14 +27,12 @@ namespace GalacticSenate.Library.Services.Gender {
            IGenderRepository genderRepository,
            IEventBus eventBus,
            IEventsFactory eventsFactory,
-           ILogger<GenderService> logger) : base(unitOfWork, eventBus, logger)
-        {
+           ILogger<GenderService> logger) : base(unitOfWork, eventBus, logger) {
             this.genderRepository = genderRepository ?? throw new ArgumentNullException(nameof(genderRepository));
             this.eventsFactory = eventsFactory ?? throw new ArgumentNullException(nameof(eventsFactory));
         }
 
-        public async Task<ModelResponse<Model.Gender, AddGenderRequest>> AddAsync(AddGenderRequest request)
-        {
+        public async Task<ModelResponse<Model.Gender, AddGenderRequest>> AddAsync(AddGenderRequest request) {
             var response = new ModelResponse<Model.Gender, AddGenderRequest>(DateTime.Now, request);
 
             if (request is null)
@@ -44,21 +40,17 @@ namespace GalacticSenate.Library.Services.Gender {
             if (string.IsNullOrEmpty(request.Value))
                 throw new ArgumentNullException(nameof(request.Value));
 
-            try
-            {
+            try {
                 var item = await genderRepository.GetExactAsync(request.Value);
 
-                if (item is null)
-                {
+                if (item is null) {
                     item = await genderRepository.AddAsync(new Model.Gender { Value = request.Value });
                     unitOfWork.Save();
 
                     eventBus.Publish(eventsFactory.Created(item));
 
                     response.Messages.Add($"Gender with value {request.Value} added.");
-                }
-                else
-                {
+                } else {
                     response.Messages.Add($"Gender with value {request.Value} already exists.");
                 }
 
@@ -66,16 +58,14 @@ namespace GalacticSenate.Library.Services.Gender {
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Status = StatusEnum.Failed;
                 response.Messages.Add(ex.Message);
             }
 
             return response.Finalize();
         }
-        public async Task<ModelResponse<Model.Gender, UpdateGenderRequest>> UpdateAsync(UpdateGenderRequest request)
-        {
+        public async Task<ModelResponse<Model.Gender, UpdateGenderRequest>> UpdateAsync(UpdateGenderRequest request) {
             if (request is null)
                 throw new ArgumentNullException(nameof(request));
             if (string.IsNullOrEmpty(request.NewValue))
@@ -85,34 +75,25 @@ namespace GalacticSenate.Library.Services.Gender {
 
             Model.Gender existing = null;
 
-            try
-            {
+            try {
                 existing = await genderRepository.GetAsync(request.Id);
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Messages.Add(ex.Message);
                 response.Status = StatusEnum.Failed;
             }
 
-            if (existing is null)
-            {
+            if (existing is null) {
                 response.Messages.Add($"Gender with id {request.Id} does not exist.");
                 response.Status = StatusEnum.Failed;
-            }
-            else
-            {
-                try
-                {
+            } else {
+                try {
                     var oldObject = existing;
                     var newObject = oldObject;
 
-                    if (oldObject.Value == request.NewValue)
-                    {
+                    if (oldObject.Value == request.NewValue) {
                         response.Messages.Add($"Gender with id {newObject.Id} already has a value of {oldObject.Value}.");
-                    }
-                    else
-                    {
+                    } else {
                         newObject.Value = request.NewValue;
 
                         genderRepository.Update(newObject);
@@ -126,8 +107,7 @@ namespace GalacticSenate.Library.Services.Gender {
 
                     response.Status = StatusEnum.Successful;
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     response.Messages.Add(ex.Message);
                     response.Status = StatusEnum.Failed;
                 }
@@ -136,57 +116,46 @@ namespace GalacticSenate.Library.Services.Gender {
             return response.Finalize();
         }
 
-        public async Task<ModelResponse<Model.Gender, ReadGenderMultiRequest>> ReadAsync(ReadGenderMultiRequest request)
-        {
+        public async Task<ModelResponse<Model.Gender, ReadGenderMultiRequest>> ReadAsync(ReadGenderMultiRequest request) {
             var response = new ModelResponse<Model.Gender, ReadGenderMultiRequest>(DateTime.Now, request);
 
-            try
-            {
+            try {
                 response.Results.AddRange(genderRepository.Get(request.PageIndex, request.PageSize));
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Messages.Add(ex.Message);
                 response.Status = StatusEnum.Failed;
             }
 
             return await Task.Run(() => { return response.Finalize(); });
         }
-        public async Task<ModelResponse<Model.Gender, ReadGenderValueRequest>> ReadAsync(ReadGenderValueRequest request)
-        {
+        public async Task<ModelResponse<Model.Gender, ReadGenderValueRequest>> ReadAsync(ReadGenderValueRequest request) {
             var response = new ModelResponse<Model.Gender, ReadGenderValueRequest>(DateTime.Now, request);
 
-            try
-            {
-                if (request.Exact)
-                {
+            try {
+                if (request.Exact) {
                     var r = await genderRepository.GetExactAsync(request.Value);
 
-                    if (r != null)
-                    {
+                    if (r != null) {
                         response.Results.Add(r);
                     }
-                }
-                else
+                } else
                     response.Results.AddRange(genderRepository.GetContains(request.Value));
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Messages.Add(ex.Message);
                 response.Status = StatusEnum.Failed;
             }
             return response.Finalize();
         }
-        public async Task<ModelResponse<Model.Gender, ReadGenderRequest>> ReadAsync(ReadGenderRequest request)
-        {
+        public async Task<ModelResponse<Model.Gender, ReadGenderRequest>> ReadAsync(ReadGenderRequest request) {
             var response = new ModelResponse<Model.Gender, ReadGenderRequest>(DateTime.Now, request);
 
-            try
-            {
+            try {
                 var gender = await genderRepository.GetAsync(request.Id);
 
                 if (gender != null)
@@ -194,20 +163,17 @@ namespace GalacticSenate.Library.Services.Gender {
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Messages.Add(ex.Message);
                 response.Status = StatusEnum.Failed;
             }
             return response.Finalize();
         }
 
-        public async Task<BasicResponse<DeleteGenderRequest>> DeleteAsync(DeleteGenderRequest request)
-        {
+        public async Task<BasicResponse<DeleteGenderRequest>> DeleteAsync(DeleteGenderRequest request) {
             var response = new BasicResponse<DeleteGenderRequest>(DateTime.Now, request);
 
-            try
-            {
+            try {
                 await genderRepository.DeleteAsync(request.Id);
                 unitOfWork.Save();
 
@@ -216,8 +182,7 @@ namespace GalacticSenate.Library.Services.Gender {
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Status = StatusEnum.Failed;
                 response.Messages.Add(ex.Message);
             }

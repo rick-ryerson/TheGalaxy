@@ -3,15 +3,14 @@ using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
 using GalacticSenate.Library.Events;
-using GalacticSenate.Library.Services.OrganizationNameValue.Requests;
+using GalacticSenate.Library.Requests;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using Model = GalacticSenate.Domain.Model;
 
-namespace GalacticSenate.Library.Services.OrganizationNameValue {
-   public interface IOrganizationNameValueService
-    {
+namespace GalacticSenate.Library.Services {
+    public interface IOrganizationNameValueService {
         Task<ModelResponse<Model.OrganizationNameValue, AddOrganizationNameValueRequest>> AddAsync(AddOrganizationNameValueRequest request);
         Task<BasicResponse<DeleteOrganizationNameValueRequest>> DeleteAsync(DeleteOrganizationNameValueRequest request);
         Task<ModelResponse<Model.OrganizationNameValue, ReadOrganizationNameValueMultiRequest>> ReadAsync(ReadOrganizationNameValueMultiRequest request);
@@ -20,8 +19,7 @@ namespace GalacticSenate.Library.Services.OrganizationNameValue {
         Task<ModelResponse<Model.OrganizationNameValue, UpdateOrganizationNameValueRequest>> UpdateAsync(UpdateOrganizationNameValueRequest request);
     }
 
-    public class OrganizationNameValueService : BasicServiceBase, IOrganizationNameValueService
-    {
+    public class OrganizationNameValueService : BasicServiceBase, IOrganizationNameValueService {
         private readonly IOrganizationNameValueRepository organizationNameValueRepository;
         private readonly IEventsFactory eventFactory;
 
@@ -29,34 +27,28 @@ namespace GalacticSenate.Library.Services.OrganizationNameValue {
            IOrganizationNameValueRepository organizationNameValueRepository,
            IEventBus eventBus,
            IEventsFactory eventFactory,
-           ILogger<OrganizationNameValueService> logger) : base(unitOfWork, eventBus, logger)
-        {
+           ILogger<OrganizationNameValueService> logger) : base(unitOfWork, eventBus, logger) {
             this.organizationNameValueRepository = organizationNameValueRepository ?? throw new ArgumentNullException(nameof(organizationNameValueRepository));
             this.eventFactory = eventFactory ?? throw new ArgumentNullException(nameof(eventFactory));
         }
 
-        public async Task<ModelResponse<Model.OrganizationNameValue, AddOrganizationNameValueRequest>> AddAsync(AddOrganizationNameValueRequest request)
-        {
+        public async Task<ModelResponse<Model.OrganizationNameValue, AddOrganizationNameValueRequest>> AddAsync(AddOrganizationNameValueRequest request) {
             var response = new ModelResponse<Model.OrganizationNameValue, AddOrganizationNameValueRequest>(DateTime.Now, request);
 
             var existing = await organizationNameValueRepository.GetExactAsync(request.Value);
 
-            try
-            {
+            try {
                 if (request is null)
                     throw new ArgumentNullException(nameof(request));
                 if (string.IsNullOrEmpty(request.Value))
                     throw new ArgumentNullException(nameof(request.Value));
 
-                if (existing is null)
-                {
+                if (existing is null) {
                     existing = await organizationNameValueRepository.AddAsync(new Model.OrganizationNameValue { Value = request.Value });
                     unitOfWork.Save();
 
                     response.Messages.Add($"OrganizationNameValue with value {request.Value} added.");
-                }
-                else
-                {
+                } else {
                     response.Messages.Add($"OrganizationNameValue with value {request.Value} already exists.");
                 }
 
@@ -64,16 +56,14 @@ namespace GalacticSenate.Library.Services.OrganizationNameValue {
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Status = StatusEnum.Failed;
                 response.Messages.Add(ex.Message);
             }
 
             return response.Finalize();
         }
-        public async Task<ModelResponse<Model.OrganizationNameValue, UpdateOrganizationNameValueRequest>> UpdateAsync(UpdateOrganizationNameValueRequest request)
-        {
+        public async Task<ModelResponse<Model.OrganizationNameValue, UpdateOrganizationNameValueRequest>> UpdateAsync(UpdateOrganizationNameValueRequest request) {
             if (request is null)
                 throw new ArgumentNullException(nameof(request));
             if (string.IsNullOrEmpty(request.NewValue))
@@ -83,33 +73,24 @@ namespace GalacticSenate.Library.Services.OrganizationNameValue {
 
             Model.OrganizationNameValue existing = null;
 
-            try
-            {
+            try {
                 existing = await organizationNameValueRepository.GetAsync(request.Id);
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Messages.Add(ex.Message);
                 response.Status = StatusEnum.Failed;
             }
 
-            if (existing is null)
-            {
+            if (existing is null) {
                 response.Messages.Add($"OrganizationNameValue with id {request.Id} does not exist.");
                 response.Status = StatusEnum.Failed;
-            }
-            else
-            {
-                try
-                {
+            } else {
+                try {
                     var oldValue = existing.Value;
 
-                    if (oldValue == request.NewValue)
-                    {
+                    if (oldValue == request.NewValue) {
                         response.Messages.Add($"OrganizationNameValue with id {existing.Id} already has a value of {oldValue}.");
-                    }
-                    else
-                    {
+                    } else {
                         existing.Value = request.NewValue;
 
                         organizationNameValueRepository.Update(existing);
@@ -122,8 +103,7 @@ namespace GalacticSenate.Library.Services.OrganizationNameValue {
 
                     response.Status = StatusEnum.Successful;
                 }
-                catch (Exception ex)
-                {
+                catch (Exception ex) {
                     response.Messages.Add(ex.Message);
                     response.Status = StatusEnum.Failed;
                 }
@@ -132,30 +112,25 @@ namespace GalacticSenate.Library.Services.OrganizationNameValue {
             return response.Finalize();
         }
 
-        public async Task<ModelResponse<Model.OrganizationNameValue, ReadOrganizationNameValueMultiRequest>> ReadAsync(ReadOrganizationNameValueMultiRequest request)
-        {
+        public async Task<ModelResponse<Model.OrganizationNameValue, ReadOrganizationNameValueMultiRequest>> ReadAsync(ReadOrganizationNameValueMultiRequest request) {
             var response = new ModelResponse<Model.OrganizationNameValue, ReadOrganizationNameValueMultiRequest>(DateTime.Now, request);
 
-            try
-            {
+            try {
                 response.Results.AddRange(organizationNameValueRepository.Get(request.PageIndex, request.PageSize));
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Messages.Add(ex.Message);
                 response.Status = StatusEnum.Failed;
             }
 
             return await Task.Run(() => { return response.Finalize(); });
         }
-        public async Task<ModelResponse<Model.OrganizationNameValue, ReadOrganizationNameValueValueRequest>> ReadAsync(ReadOrganizationNameValueValueRequest request)
-        {
+        public async Task<ModelResponse<Model.OrganizationNameValue, ReadOrganizationNameValueValueRequest>> ReadAsync(ReadOrganizationNameValueValueRequest request) {
             var response = new ModelResponse<Model.OrganizationNameValue, ReadOrganizationNameValueValueRequest>(DateTime.Now, request);
 
-            try
-            {
+            try {
                 if (request.Exact)
                     response.Results.Add(await organizationNameValueRepository.GetExactAsync(request.Value));
                 else
@@ -163,19 +138,16 @@ namespace GalacticSenate.Library.Services.OrganizationNameValue {
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Messages.Add(ex.Message);
                 response.Status = StatusEnum.Failed;
             }
             return response.Finalize();
         }
-        public async Task<ModelResponse<Model.OrganizationNameValue, ReadOrganizationNameValueRequest>> ReadAsync(ReadOrganizationNameValueRequest request)
-        {
+        public async Task<ModelResponse<Model.OrganizationNameValue, ReadOrganizationNameValueRequest>> ReadAsync(ReadOrganizationNameValueRequest request) {
             var response = new ModelResponse<Model.OrganizationNameValue, ReadOrganizationNameValueRequest>(DateTime.Now, request);
 
-            try
-            {
+            try {
                 var OrganizationNameValue = await organizationNameValueRepository.GetAsync(request.Id);
 
                 if (OrganizationNameValue != null)
@@ -183,27 +155,23 @@ namespace GalacticSenate.Library.Services.OrganizationNameValue {
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Messages.Add(ex.Message);
                 response.Status = StatusEnum.Failed;
             }
             return response.Finalize();
         }
 
-        public async Task<BasicResponse<DeleteOrganizationNameValueRequest>> DeleteAsync(DeleteOrganizationNameValueRequest request)
-        {
+        public async Task<BasicResponse<DeleteOrganizationNameValueRequest>> DeleteAsync(DeleteOrganizationNameValueRequest request) {
             var response = new BasicResponse<DeleteOrganizationNameValueRequest>(DateTime.Now, request);
 
-            try
-            {
+            try {
                 await organizationNameValueRepository.DeleteAsync(request.Id);
                 unitOfWork.Save();
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Status = StatusEnum.Failed;
                 response.Messages.Add(ex.Message);
             }

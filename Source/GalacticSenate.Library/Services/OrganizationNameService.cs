@@ -3,22 +3,18 @@ using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
 using GalacticSenate.Library.Events;
-using GalacticSenate.Library.Services.OrganizationName.Requests;
-using GalacticSenate.Library.Services.OrganizationNameValue;
-using GalacticSenate.Library.Services.OrganizationNameValue.Requests;
+using GalacticSenate.Library.Requests;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Model = GalacticSenate.Domain.Model;
 
-namespace GalacticSenate.Library.Services.OrganizationName {
-   public interface IOrganizationNameService
-    {
+namespace GalacticSenate.Library.Services {
+    public interface IOrganizationNameService {
         Task<ModelResponse<Model.OrganizationName, AddOrganizationNameRequest>> AddAsync(AddOrganizationNameRequest request);
     }
-    public class OrganizationNameService : BasicServiceBase, IOrganizationNameService
-    {
+    public class OrganizationNameService : BasicServiceBase, IOrganizationNameService {
 
         private readonly IOrganizationNameRepository organizationNameRepository;
         private readonly IEventsFactory eventsFactory;
@@ -29,15 +25,13 @@ namespace GalacticSenate.Library.Services.OrganizationName {
            IEventBus eventBus,
            IEventsFactory eventsFactory,
            IOrganizationNameValueService organizationNameValueService,
-           ILogger<OrganizationNameValueService> logger) : base(unitOfWork, eventBus, logger)
-        {
+           ILogger<OrganizationNameValueService> logger) : base(unitOfWork, eventBus, logger) {
             this.organizationNameRepository = organizationNameRepository ?? throw new ArgumentNullException(nameof(organizationNameRepository));
             this.eventsFactory = eventsFactory ?? throw new ArgumentNullException(nameof(eventsFactory));
             this.organizationNameValueService = organizationNameValueService ?? throw new ArgumentNullException(nameof(organizationNameValueService));
         }
 
-        public async Task<ModelResponse<Model.OrganizationName, AddOrganizationNameRequest>> AddAsync(AddOrganizationNameRequest request)
-        {
+        public async Task<ModelResponse<Model.OrganizationName, AddOrganizationNameRequest>> AddAsync(AddOrganizationNameRequest request) {
             var response = new ModelResponse<Model.OrganizationName, AddOrganizationNameRequest>(DateTime.Now, request);
 
             if (request is null)
@@ -45,8 +39,7 @@ namespace GalacticSenate.Library.Services.OrganizationName {
             if (string.IsNullOrEmpty(request.OrganizationName))
                 throw new ArgumentNullException(nameof(request.OrganizationName));
 
-            try
-            {
+            try {
                 // adding will return existing if present
                 var existingNameValueResponse = await organizationNameValueService.AddAsync(new AddOrganizationNameValueRequest
                 {
@@ -65,8 +58,7 @@ namespace GalacticSenate.Library.Services.OrganizationName {
 
                 organizationName = await organizationNameRepository.AddAsync(organizationName);
 
-                if (organizationName == null)
-                {
+                if (organizationName == null) {
                     throw new ApplicationException($"Could not create organizationName");
                 }
 
@@ -76,8 +68,7 @@ namespace GalacticSenate.Library.Services.OrganizationName {
 
                 response.Status = StatusEnum.Successful;
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex) {
                 response.Status = StatusEnum.Failed;
                 response.Messages.Add(ex.Message);
             }

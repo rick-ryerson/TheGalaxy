@@ -1,7 +1,7 @@
 using GalacticSenate.Data.Implementations.EntityFramework.Repositories;
 using GalacticSenate.Library;
-using GalacticSenate.Library.Services.OrganizationNameValue;
-using GalacticSenate.Library.Services.OrganizationNameValue.Requests;
+using GalacticSenate.Library.Requests;
+using GalacticSenate.Library.Services;
 using GalacticSenate.Tests.Fixtures;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

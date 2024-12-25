@@ -2,10 +2,6 @@
 using GalacticSenate.Data.Extensions;
 using GalacticSenate.Library.Events;
 using GalacticSenate.Library.Services;
-using GalacticSenate.Library.Services.Gender;
-using GalacticSenate.Library.Services.MaritalStatusType;
-using GalacticSenate.Library.Services.OrganizationNameValue;
-using GalacticSenate.Library.Services.PersonNameType;
 using GalacticSenate.Library.Services.PersonNameValue;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;

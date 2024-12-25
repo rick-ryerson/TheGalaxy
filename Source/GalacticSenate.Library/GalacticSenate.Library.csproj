@@ -9,8 +9,5 @@
     <ProjectReference Include="..\GalacticSenate.Data\GalacticSenate.Data.csproj" />
     <ProjectReference Include="..\GalacticSenate.Domain\GalacticSenate.Domain.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\OrganizationName\Events\" />
-  </ItemGroup>
 
 </Project>
