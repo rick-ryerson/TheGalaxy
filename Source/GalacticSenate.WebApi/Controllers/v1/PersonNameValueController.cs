@@ -1,12 +1,12 @@
-﻿using GalacticSenate.Library.Services.PersonNameValue;
-using GalacticSenate.Library.Services.PersonNameValue.Requests;
+﻿using GalacticSenate.Library;
+using GalacticSenate.Library.Requests;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace GalacticSenate.WebApi.Controllers.v1 {
-   [Route("api/v1/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class PersonNameValueController : ControllerBase
     {
