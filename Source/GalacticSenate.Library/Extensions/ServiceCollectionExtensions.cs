@@ -22,9 +22,7 @@ namespace GalacticSenate.Library.Extensions {
             if (efDataSettings is null)
                 throw new ArgumentNullException(nameof(efDataSettings));
 
-            var provider = services.BuildServiceProvider();
-            var logger = provider.GetService<ILogger<GenericLogger>>();
-            services.AddSingleton(typeof(ILogger), logger);
+            services.AddTransient<ILogger>(s=>s.GetRequiredService<ILogger<GenericLogger>>());
 
             services.AddEntityFramework(efDataSettings);
 
