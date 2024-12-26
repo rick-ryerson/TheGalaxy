@@ -2,11 +2,13 @@
 using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
+using GalacticSenate.Domain.Model;
 using GalacticSenate.Library.Events;
 using GalacticSenate.Library.Requests;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 using Model = GalacticSenate.Domain.Model;
@@ -14,9 +16,11 @@ using Model = GalacticSenate.Domain.Model;
 namespace GalacticSenate.Library.Services {
     public interface IOrganizationService {
         Task<ModelResponse<Model.Organization, AddOrganizationRequest>> AddAsync(AddOrganizationRequest request);
+        Task<ModelResponse<Model.Organization, ReadOrganizationMultiRequest>> ReadAsync(ReadOrganizationMultiRequest request);
+        Task<ModelResponse<Model.Organization, ReadOrganizationRequest>> ReadAsync(ReadOrganizationRequest request);
     }
     public class OrganizationService : PartyService, IOrganizationService {
-        protected readonly IOrganizationRepository organizationRepository;
+        private readonly IOrganizationRepository organizationRepository;
         protected readonly IOrganizationNameRepository organizationNameRepository;
         protected readonly IOrganizationNameValueRepository organizationNameValueRepository;
 
@@ -74,6 +78,54 @@ namespace GalacticSenate.Library.Services {
                     response.Status = StatusEnum.Successful;
                 } else
                     throw new ArgumentNullException(nameof(request));
+            }
+            catch (Exception ex) {
+                response.Status = StatusEnum.Failed;
+                response.Messages.Add(ex.Message);
+            }
+
+            return response.Finalize();
+        }
+
+        public async Task<ModelResponse<Organization, ReadOrganizationMultiRequest>> ReadAsync(ReadOrganizationMultiRequest request) {
+            var response = new ModelResponse<Organization, ReadOrganizationMultiRequest>(DateTime.Now, request);
+
+            try {
+                var organizations = ((IRepository<Organization, Guid>)organizationRepository).Get(request.PageIndex, request.PageSize);
+                foreach (var organization in organizations) {
+                    var partyResponse = await ((IPartyService)this).ReadAsync(new ReadPartyRequest { Id = organization.Id });
+                    organization.Party = partyResponse.Results.First();
+
+                    response.Results.Add(organization);
+
+                    response.Status = StatusEnum.Successful;
+                }
+            }
+            catch (Exception ex) {
+                response.Status = StatusEnum.Failed;
+                response.Messages.Add(ex.Message);
+            }
+
+            return response.Finalize();
+        }
+
+        public async Task<ModelResponse<Organization, ReadOrganizationRequest>> ReadAsync(ReadOrganizationRequest request) {
+            var response = new ModelResponse<Organization, ReadOrganizationRequest>(DateTime.Now, request);
+
+            try {
+                var organization = await ((IRepository<Organization, Guid>)organizationRepository).GetAsync(request.Id);
+
+                if (organization != null) {
+                    var partyResponse = await ((IPartyService)this).ReadAsync(request);
+                    organization.Party = partyResponse.Results.First();
+
+                    response.Results.Add(organization);
+
+                    response.Status = StatusEnum.Successful;
+                } else {
+                    response.Status = StatusEnum.Failed;
+                    response.Messages.Add($"There is no related Party. Organization {request.Id} is orphaned.");
+                }
             }
             catch (Exception ex) {
                 response.Status = StatusEnum.Failed;

@@ -150,6 +150,7 @@ namespace GalacticSenate.Library.Services {
                 response.Messages.Add(ex.Message);
                 response.Status = StatusEnum.Failed;
             }
+
             return response.Finalize();
         }
         public async Task<ModelResponse<Model.Gender, ReadGenderRequest>> ReadAsync(ReadGenderRequest request) {
@@ -167,9 +168,9 @@ namespace GalacticSenate.Library.Services {
                 response.Messages.Add(ex.Message);
                 response.Status = StatusEnum.Failed;
             }
+
             return response.Finalize();
         }
-
         public async Task<BasicResponse<DeleteGenderRequest>> DeleteAsync(DeleteGenderRequest request) {
             var response = new BasicResponse<DeleteGenderRequest>(DateTime.Now, request);
 

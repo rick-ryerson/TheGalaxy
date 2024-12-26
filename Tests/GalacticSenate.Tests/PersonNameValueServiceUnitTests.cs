@@ -1,6 +1,6 @@
 using GalacticSenate.Data.Implementations.EntityFramework.Repositories;
 using GalacticSenate.Library;
-using GalacticSenate.Library.Services.PersonNameValue.Requests;
+using GalacticSenate.Library.Requests;
 using GalacticSenate.Tests.Fixtures;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

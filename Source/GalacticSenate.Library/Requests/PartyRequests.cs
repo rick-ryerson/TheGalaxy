@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace GalacticSenate.Library.Requests {
+    public class AddPartyRequest {
+        public Guid Id { get; set; }
+    }
     public class DeletePartyRequest {
         public Guid Id { get; set; }
     }
@@ -12,7 +15,6 @@ namespace GalacticSenate.Library.Requests {
         public int PageIndex { get; set; }
         public int PageSize { get; set; }
     }
-
     public class ReadPartyRequest {
         public Guid Id { get; set; }
     }

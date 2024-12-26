@@ -16,21 +16,25 @@ using Model = GalacticSenate.Domain.Model;
 namespace GalacticSenate.Library.Services {
     public interface IFamilyService {
         Task<ModelResponse<Family, AddFamilyRequest>> AddAsync(AddFamilyRequest request);
+        Task<ModelResponse<Family, ReadFamilyMultiRequest>> ReadAsync(ReadFamilyMultiRequest request);
     }
     public class FamilyService : InformalOrganizationService, IFamilyService {
+        private readonly IFamilyRepository familyRepository;
+
         public FamilyService(IUnitOfWork<DataContext> unitOfWork,
-            IInformalOrganizationRepository informalOrganizationRepository,
+            IFamilyRepository familyRepository,
             IOrganizationNameRepository organizationNameRepository,
             IOrganizationNameValueRepository organizationNameValueRepository,
             IEventBus eventBus,
             IEventsFactory eventsFactory,
             ILogger logger) :
             base(unitOfWork,
-                informalOrganizationRepository,
+                familyRepository,
                 organizationNameRepository,
                 organizationNameValueRepository,
                 eventBus,
                 eventsFactory, logger) {
+            this.familyRepository = familyRepository;
         }
 
         public async Task<ModelResponse<Family, AddFamilyRequest>> AddAsync(AddFamilyRequest request) {
@@ -39,12 +43,12 @@ namespace GalacticSenate.Library.Services {
             try {
                 if (request is not null) {
                     var informalOrganizationResponse = AddAsync((AddInformalOrganizationRequest)request);
-                    var family = await ((IRepository<Family, Guid>)organizationRepository).GetAsync(request.Id);
+                    var family = await ((IRepository<Family, Guid>)familyRepository).GetAsync(request.Id);
 
                     if (family is null) {
-                        family = await ((IRepository<Family, Guid>)organizationRepository).AddAsync(new Family
+                        family = await ((IRepository<Family, Guid>)familyRepository).AddAsync(new Family
                         {
-                            Id = informalOrganizationResponse.Result.Results.FirstOrDefault().Id,
+                            Id = informalOrganizationResponse.Result.Results.First().Id,
                         });
 
                         unitOfWork.Save();
@@ -57,6 +61,36 @@ namespace GalacticSenate.Library.Services {
                     response.Status = StatusEnum.Successful;
                 } else
                     throw new ArgumentNullException(nameof(request));
+            }
+            catch (Exception ex) {
+                response.Status = StatusEnum.Failed;
+                response.Messages.Add(ex.Message);
+            }
+
+            return response.Finalize();
+        }
+
+        public async Task<ModelResponse<Family, ReadFamilyMultiRequest>> ReadAsync(ReadFamilyMultiRequest request) {
+            var response = new ModelResponse<Family, ReadFamilyMultiRequest>(DateTime.Now, request);
+
+            try {
+                var families = ((IRepository<Family, Guid>)familyRepository).Get(request.PageIndex, request.PageSize);
+                response.Results.AddRange(families);
+
+                foreach (var family in families) {
+                    var informalOrganizationResponse = await ((IInformalOrganizationService)this).GetAsync(new ReadInformalOrganizationRequest { Id = family.Id });
+
+                    if (informalOrganizationResponse.Status == StatusEnum.Successful) {
+                        family.InformalOrganization = informalOrganizationResponse.Results.First();
+
+                    } else {
+                        response.Messages.AddRange(informalOrganizationResponse.Messages);
+                    }
+
+                    response.Results.Add(family);
+                }
+
+                response.Status = StatusEnum.Successful;
             }
             catch (Exception ex) {
                 response.Status = StatusEnum.Failed;

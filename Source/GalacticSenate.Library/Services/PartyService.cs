@@ -86,7 +86,7 @@ namespace GalacticSenate.Library.Services {
                 var party = await partyRepository.GetAsync(request.Id);
 
                 if (party != null)
-                    response.Results.Add(await partyRepository.GetAsync(request.Id));
+                    response.Results.Add(party);
 
                 response.Status = StatusEnum.Successful;
             }
