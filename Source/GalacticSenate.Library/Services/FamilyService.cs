@@ -6,6 +6,7 @@ using GalacticSenate.Domain.Model;
 using GalacticSenate.Library.Events;
 using GalacticSenate.Library.Requests;
 using Microsoft.Extensions.Logging;
+using Polly.Caching;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,15 +24,13 @@ namespace GalacticSenate.Library.Services {
 
         public FamilyService(IUnitOfWork<DataContext> unitOfWork,
             IFamilyRepository familyRepository,
-            IOrganizationNameRepository organizationNameRepository,
-            IOrganizationNameValueRepository organizationNameValueRepository,
+            IOrganizationNameService organizationNameService,
             IEventBus eventBus,
             IEventsFactory eventsFactory,
             ILogger logger) :
             base(unitOfWork,
                 familyRepository,
-                organizationNameRepository,
-                organizationNameValueRepository,
+                organizationNameService,
                 eventBus,
                 eventsFactory, logger) {
             this.familyRepository = familyRepository;
@@ -42,13 +41,14 @@ namespace GalacticSenate.Library.Services {
 
             try {
                 if (request is not null) {
-                    var informalOrganizationResponse = AddAsync((AddInformalOrganizationRequest)request);
+                    var informalOrganizationResponse = await AddAsync((AddInformalOrganizationRequest)request);
                     var family = await ((IRepository<Family, Guid>)familyRepository).GetAsync(request.Id);
 
                     if (family is null) {
                         family = await ((IRepository<Family, Guid>)familyRepository).AddAsync(new Family
                         {
-                            Id = informalOrganizationResponse.Result.Results.First().Id,
+                            Id = informalOrganizationResponse.Results.First().Id,
+                            InformalOrganizationId = informalOrganizationResponse.Results.First().Id
                         });
 
                         unitOfWork.Save();
@@ -69,27 +69,55 @@ namespace GalacticSenate.Library.Services {
 
             return response.Finalize();
         }
+        private async Task<(Party, List<string>)> GetPartySync(Guid id) {
+            var partyResponse = await ((IPartyService)this).ReadAsync(new ReadPartyRequest { Id = id });
+            var result = partyResponse.Results.FirstOrDefault();
 
+            return (result, partyResponse.Messages);
+        }
+        private async Task<(Organization, List<string>)> GetOrganizationSync(Guid id) {
+            var organizationResponse = await ((IOrganizationService)this).ReadAsync(new ReadOrganizationRequest { Id = id });
+            var result = organizationResponse.Results.FirstOrDefault();
+            var messages = new List<string>();
+
+            if (result != null) {
+                var x = await GetPartySync(id);
+                result.Party = x.Item1;
+                messages.AddRange(x.Item2);
+            }
+
+            return (result, organizationResponse.Messages);
+        }
+        private async Task<(InformalOrganization, List<string>)> GetInformalOrganizationAsync(Guid id) {
+            var informalOrganizationResponse = await ((IInformalOrganizationService)this).GetAsync(new ReadInformalOrganizationRequest { Id = id });
+            var result = informalOrganizationResponse.Results.FirstOrDefault();
+            var messages = new List<string>();
+
+            if (result != null) {
+
+                var x = await GetOrganizationSync(id);
+                result.Organization = x.Item1;
+                messages.AddRange(x.Item2);
+            }
+            return (result, messages);
+
+        }
         public async Task<ModelResponse<Family, ReadFamilyMultiRequest>> ReadAsync(ReadFamilyMultiRequest request) {
             var response = new ModelResponse<Family, ReadFamilyMultiRequest>(DateTime.Now, request);
 
             try {
                 var families = ((IRepository<Family, Guid>)familyRepository).Get(request.PageIndex, request.PageSize);
-                response.Results.AddRange(families);
 
                 foreach (var family in families) {
-                    var informalOrganizationResponse = await ((IInformalOrganizationService)this).GetAsync(new ReadInformalOrganizationRequest { Id = family.Id });
+                    var x = await GetInformalOrganizationAsync(family.Id);
 
-                    if (informalOrganizationResponse.Status == StatusEnum.Successful) {
-                        family.InformalOrganization = informalOrganizationResponse.Results.First();
-
-                    } else {
-                        response.Messages.AddRange(informalOrganizationResponse.Messages);
-                    }
+                    family.InformalOrganization = x.Item1;
+                    response.Messages.AddRange(x.Item2);
 
                     response.Results.Add(family);
                 }
 
+                response.Results.AddRange(families);
                 response.Status = StatusEnum.Successful;
             }
             catch (Exception ex) {

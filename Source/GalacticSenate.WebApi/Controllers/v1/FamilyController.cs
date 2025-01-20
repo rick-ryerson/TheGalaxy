@@ -12,12 +12,12 @@ using System.Threading.Tasks;
 
 namespace GalacticSenate.WebApi.Controllers.v1 {
     [BaseResponseController]
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
-    public class FamiliesController : ControllerBase {
+    public class FamilyController : ControllerBase {
         private readonly IFamilyService familyService;
 
-        public FamiliesController(IFamilyService familyService) {
+        public FamilyController(IFamilyService familyService) {
             this.familyService = familyService ?? throw new ArgumentNullException(nameof(familyService));
         }
 
@@ -39,9 +39,15 @@ namespace GalacticSenate.WebApi.Controllers.v1 {
 
         // POST api/<FamiliesController>
         [HttpPost]
-        public async Task<IActionResult> CreateFamily([FromBody] CreateFamilyRequest request) {
+        public async Task<IActionResult> CreateFamily([FromBody] Requests.Families.CreateFamilyRequest request) {
 
             // return CreatedAtAction(nameof(GetFamily), new { id = familyId }, response);
+            try {
+                return Ok(await familyService.AddAsync(new Library.Requests.AddFamilyRequest { Id = request.Id, Name = request.Name}));
+            }
+            catch (Exception ex) {
+                return Problem(detail: ex.Message);
+            }
             throw new NotImplementedException();
         }
 

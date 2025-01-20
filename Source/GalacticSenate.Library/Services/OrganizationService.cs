@@ -21,13 +21,14 @@ namespace GalacticSenate.Library.Services {
     }
     public class OrganizationService : PartyService, IOrganizationService {
         private readonly IOrganizationRepository organizationRepository;
-        protected readonly IOrganizationNameRepository organizationNameRepository;
-        protected readonly IOrganizationNameValueRepository organizationNameValueRepository;
+        private readonly IOrganizationNameService organizationNameService;
+
+        // protected readonly IOrganizationNameRepository organizationNameRepository;
+        // protected readonly IOrganizationNameValueRepository organizationNameValueRepository;
 
         public OrganizationService(IUnitOfWork<DataContext> unitOfWork,
            IOrganizationRepository organizationRepository,
-           IOrganizationNameRepository organizationNameRepository,
-           IOrganizationNameValueRepository organizationNameValueRepository,
+            IOrganizationNameService organizationNameService,
            IEventBus eventBus,
            IEventsFactory eventsFactory,
            ILogger logger) :
@@ -38,34 +39,21 @@ namespace GalacticSenate.Library.Services {
                logger) {
 
             this.organizationRepository = organizationRepository ?? throw new ArgumentNullException(nameof(organizationRepository));
-            this.organizationNameRepository = organizationNameRepository ?? throw new ArgumentNullException(nameof(organizationNameRepository));
-            this.organizationNameValueRepository = organizationNameValueRepository ?? throw new ArgumentNullException(nameof(organizationNameValueRepository));
+            this.organizationNameService = organizationNameService ?? throw new ArgumentNullException(nameof(organizationNameService));
         }
-        private async Task<Model.OrganizationNameValue> AddOrganizationNameValueAsync(string value) {
-            var nameValue = await organizationNameValueRepository.GetExactAsync(value);
-
-            if (nameValue == null) {
-                nameValue = await organizationNameValueRepository.AddAsync(new Model.OrganizationNameValue { Value = value });
-            }
-
-            return nameValue;
-        }
-        private Task<Model.OrganizationName> AddOrganizationNameAsync(Guid organizationId, string organizationNameValue) {
-            throw new NotImplementedException();
-        }
-
         public async Task<ModelResponse<Model.Organization, AddOrganizationRequest>> AddAsync(AddOrganizationRequest request) {
             var response = new ModelResponse<Model.Organization, AddOrganizationRequest>(DateTime.Now, request);
 
             try {
                 if (request is not null) {
-                    var partyResponse = AddAsync((AddPartyRequest)request);
+                    var partyResponse = await AddAsync((AddPartyRequest)request);
                     var organization = await ((IRepository<Model.Organization, Guid>)organizationRepository).GetAsync(request.Id);
 
                     if (organization is null) {
                         organization = await organizationRepository.AddAsync(new Model.Organization
                         {
-                            Id = partyResponse.Result.Results.FirstOrDefault().Id,
+                            Id = partyResponse.Results.FirstOrDefault().Id,
+                            PartyId = partyResponse.Results.FirstOrDefault().Id
                         });
 
                         unitOfWork.Save();

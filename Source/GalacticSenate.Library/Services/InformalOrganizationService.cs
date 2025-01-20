@@ -23,14 +23,12 @@ namespace GalacticSenate.Library.Services {
     }
     public class InformalOrganizationService(IUnitOfWork<DataContext> unitOfWork,
         IInformalOrganizationRepository informalOrganizationRepository,
-        IOrganizationNameRepository organizationNameRepository,
-        IOrganizationNameValueRepository organizationNameValueRepository,
+        IOrganizationNameService organizationNameService,
         IEventBus eventBus,
         IEventsFactory eventsFactory,
         ILogger logger) : OrganizationService(unitOfWork,
             informalOrganizationRepository,
-            organizationNameRepository,
-            organizationNameValueRepository,
+            organizationNameService,
             eventBus,
             eventsFactory,
             logger), IInformalOrganizationService {
@@ -70,13 +68,13 @@ namespace GalacticSenate.Library.Services {
 
             try {
                 if (request is not null) {
-                    var organizationResponse = AddAsync((AddOrganizationRequest)request);
+                    var organizationResponse = await AddAsync((AddOrganizationRequest)request);
                     var informalOrganization = await ((IRepository<InformalOrganization, Guid>)informalOrganizationRepository).GetAsync(request.Id);
 
                     if (informalOrganization is null) {
                         informalOrganization = await ((IRepository<InformalOrganization, Guid>)informalOrganizationRepository).AddAsync(new InformalOrganization
                         {
-                            Id = organizationResponse.Result.Results.FirstOrDefault().Id,
+                            Id = organizationResponse.Results.FirstOrDefault().Id,
                         });
 
                         unitOfWork.Save();

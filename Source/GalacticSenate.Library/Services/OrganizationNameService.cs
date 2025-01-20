@@ -25,7 +25,7 @@ namespace GalacticSenate.Library.Services {
            IEventBus eventBus,
            IEventsFactory eventsFactory,
            IOrganizationNameValueService organizationNameValueService,
-           ILogger<OrganizationNameValueService> logger) : base(unitOfWork, eventBus, logger) {
+           ILogger<OrganizationNameService> logger) : base(unitOfWork, eventBus, logger) {
             this.organizationNameRepository = organizationNameRepository ?? throw new ArgumentNullException(nameof(organizationNameRepository));
             this.eventsFactory = eventsFactory ?? throw new ArgumentNullException(nameof(eventsFactory));
             this.organizationNameValueService = organizationNameValueService ?? throw new ArgumentNullException(nameof(organizationNameValueService));

@@ -21,7 +21,7 @@ namespace GalacticSenate.Library.Extensions {
             if (efDataSettings is null)
                 throw new ArgumentNullException(nameof(efDataSettings));
 
-            services.AddTransient<ILogger>(s=>s.GetRequiredService<ILogger<GenericLogger>>());
+            services.AddTransient<ILogger>(s => s.GetRequiredService<ILogger<GenericLogger>>());
 
             services.AddEntityFramework(efDataSettings);
 
@@ -31,6 +31,8 @@ namespace GalacticSenate.Library.Extensions {
             services.AddScoped<IPersonNameTypeService, PersonNameTypeService>();
             services.AddScoped<IPersonNameValueService, PersonNameValueService>();
             services.AddScoped<IPartyService, PartyService>();
+            services.AddScoped<IOrganizationNameService, OrganizationNameService>();
+            services.AddScoped<IOrganizationNameValueService, OrganizationNameValueService>();
             services.AddScoped<IOrganizationService, OrganizationService>();
             services.AddScoped<IInformalOrganizationService, InformalOrganizationService>();
             services.AddScoped<IFamilyService, FamilyService>();

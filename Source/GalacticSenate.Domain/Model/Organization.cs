@@ -13,13 +13,13 @@ namespace GalacticSenate.Domain.Model {
 
     public class InformalOrganization {
         public Guid Id { get; set; }
-
+        public Guid OrganizationId { get; set; }
         public virtual Organization Organization { get; set; }
     }
 
     public class Family {
         public Guid Id { get; set; }
-
+        public Guid InformalOrganizationId { get; set; }
         public virtual InformalOrganization InformalOrganization { get; set; }
     }
 
