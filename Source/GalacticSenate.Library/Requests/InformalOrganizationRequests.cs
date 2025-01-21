@@ -5,9 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace GalacticSenate.Library.Requests {
-    public class ReadInformalOrganizationMultiRequest : ReadOrganizationMultiRequest {
-
-    }
-
+    public class AddInformalOrganizationRequest : AddOrganizationRequest { }
+    public class ReadInformalOrganizationMultiRequest : ReadOrganizationMultiRequest { }
     public class ReadInformalOrganizationRequest : ReadOrganizationRequest { }
 }

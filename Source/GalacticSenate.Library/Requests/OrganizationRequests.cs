@@ -9,7 +9,6 @@ namespace GalacticSenate.Library.Requests {
     public class AddOrganizationRequest : AddPartyRequest {
         public string Name { get; set; }
     }
-    public class AddInformalOrganizationRequest : AddOrganizationRequest { }
     public class ReadOrganizationMultiRequest : ReadPartyMultiRequest { }
     public class ReadOrganizationRequest : ReadPartyRequest { }
 

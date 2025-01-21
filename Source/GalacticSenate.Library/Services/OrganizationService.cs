@@ -46,7 +46,9 @@ namespace GalacticSenate.Library.Services {
 
             try {
                 if (request is not null) {
-                    var partyResponse = await AddAsync((AddPartyRequest)request);
+                    var partyResponse = await ((IPartyService)this).AddAsync((AddPartyRequest)request);
+                    response.Messages.AddRange(partyResponse.Messages);
+
                     var organization = await ((IRepository<Model.Organization, Guid>)organizationRepository).GetAsync(request.Id);
 
                     if (organization is null) {

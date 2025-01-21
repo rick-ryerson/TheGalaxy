@@ -41,7 +41,8 @@ namespace GalacticSenate.Library.Services {
 
             try {
                 if (request is not null) {
-                    var informalOrganizationResponse = await AddAsync((AddInformalOrganizationRequest)request);
+                    ModelResponse<InformalOrganization, AddInformalOrganizationRequest> informalOrganizationResponse = await ((IInformalOrganizationService)this).AddAsync((AddInformalOrganizationRequest)request);
+                    response.Messages.AddRange(informalOrganizationResponse.Messages);
                     var family = await ((IRepository<Family, Guid>)familyRepository).GetAsync(request.Id);
 
                     if (family is null) {

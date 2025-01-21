@@ -21,17 +21,34 @@ namespace GalacticSenate.Library.Services {
         Task<ModelResponse<InformalOrganization, ReadInformalOrganizationMultiRequest>> GetAsync(ReadInformalOrganizationMultiRequest request);
         Task<ModelResponse<InformalOrganization, ReadInformalOrganizationRequest>> GetAsync(ReadInformalOrganizationRequest request);
     }
-    public class InformalOrganizationService(IUnitOfWork<DataContext> unitOfWork,
-        IInformalOrganizationRepository informalOrganizationRepository,
-        IOrganizationNameService organizationNameService,
-        IEventBus eventBus,
-        IEventsFactory eventsFactory,
-        ILogger logger) : OrganizationService(unitOfWork,
-            informalOrganizationRepository,
-            organizationNameService,
-            eventBus,
-            eventsFactory,
-            logger), IInformalOrganizationService {
+    public class InformalOrganizationService : OrganizationService, IInformalOrganizationService {
+        private readonly IInformalOrganizationRepository informalOrganizationRepository;
+
+        // (IUnitOfWork<DataContext> unitOfWork,
+        //IInformalOrganizationRepository informalOrganizationRepository,
+        //IOrganizationNameService organizationNameService,
+        //IEventBus eventBus,
+        //IEventsFactory eventsFactory,
+        //ILogger logger) : base(unitOfWork,
+        //    informalOrganizationRepository,
+        //    organizationNameService,
+        //    eventBus,
+        //    eventsFactory,
+        //    logger), IInformalOrganizationService
+        public InformalOrganizationService(IUnitOfWork<DataContext> unitOfWork,
+            IInformalOrganizationRepository informalOrganizationRepository,
+            IOrganizationNameService organizationNameService,
+            IEventBus eventBus,
+            IEventsFactory eventsFactory,
+            ILogger logger) : base(unitOfWork,
+                informalOrganizationRepository,
+                organizationNameService,
+                eventBus,
+                eventsFactory,
+                logger) {
+            this.informalOrganizationRepository = informalOrganizationRepository ?? throw new ArgumentNullException(nameof(informalOrganizationRepository));
+        }
+
         public async Task<ModelResponse<InformalOrganization, ReadInformalOrganizationRequest>> GetAsync(ReadInformalOrganizationRequest request) {
             var response = new ModelResponse<InformalOrganization, ReadInformalOrganizationRequest>(DateTime.Now, request);
 
@@ -68,13 +85,16 @@ namespace GalacticSenate.Library.Services {
 
             try {
                 if (request is not null) {
-                    var organizationResponse = await AddAsync((AddOrganizationRequest)request);
+                    var organizationResponse = await ((IOrganizationService)this).AddAsync((AddOrganizationRequest)request);
+                    response.Messages.AddRange(organizationResponse.Messages);
+
                     var informalOrganization = await ((IRepository<InformalOrganization, Guid>)informalOrganizationRepository).GetAsync(request.Id);
 
                     if (informalOrganization is null) {
                         informalOrganization = await ((IRepository<InformalOrganization, Guid>)informalOrganizationRepository).AddAsync(new InformalOrganization
                         {
                             Id = organizationResponse.Results.FirstOrDefault().Id,
+                            OrganizationId = organizationResponse.Results.FirstOrDefault().Id
                         });
 
                         unitOfWork.Save();
