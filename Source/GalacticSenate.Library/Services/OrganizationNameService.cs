@@ -79,33 +79,42 @@ namespace GalacticSenate.Library.Services {
             return response.Finalize();
         }
 
-        public Task<ModelResponse<OrganizationName, GetOrganizationNamesForOrganizationRequest>> GetAsync(GetOrganizationNamesForOrganizationRequest request) {
-            return Task.Run(() =>
-            {
-                var response = new ModelResponse<OrganizationName, GetOrganizationNamesForOrganizationRequest>(DateTime.Now, request);
+        public async Task<ModelResponse<OrganizationName, GetOrganizationNamesForOrganizationRequest>> GetAsync(GetOrganizationNamesForOrganizationRequest request) {
+            var response = new ModelResponse<OrganizationName, GetOrganizationNamesForOrganizationRequest>(DateTime.Now, request);
 
-                try {
-                    IEnumerable<OrganizationName> names;
+            try {
+                IEnumerable<OrganizationName> names;
 
-                    if (request.ForDate.HasValue)
-                        names = organizationNameRepository.Get(request.OrganizationId, request.ForDate.Value, 0, int.MaxValue);
-                    else
-                        names = organizationNameRepository.Get(request.OrganizationId, 0, int.MaxValue);
+                if (request.ForDate.HasValue)
+                    names = organizationNameRepository.Get(request.OrganizationId, request.ForDate.Value, 0, int.MaxValue);
+                else
+                    names = organizationNameRepository.Get(request.OrganizationId, 0, int.MaxValue);
 
-                    if (names != null) {
-                        response.Results.AddRange(names);
-                        response.Status = StatusEnum.Successful;
-                    } else {
-                        response.Status = StatusEnum.Failed;
-                        response.Messages.Add($"No names found for organization {request.OrganizationId}");
+                if (names != null) {
+                    foreach (var name in names.ToList()) {
+                        var valuesResponse = await organizationNameValueService.ReadAsync(new ReadOrganizationNameValueMultiRequest
+                        {
+                            OrganizationId = name.OrganizationId,
+                            PageIndex = 0,
+                            PageSize = int.MaxValue,
+                        });
+
+                        response.Results.Add(name);
+                        response.Messages.AddRange(valuesResponse.Messages);
                     }
-                }
-                catch (Exception ex) {
+
+                    response.Status = StatusEnum.Successful;
+                } else {
                     response.Status = StatusEnum.Failed;
-                    response.Messages.Add(ex.Message);
+                    response.Messages.Add($"No names found for organization {request.OrganizationId}");
                 }
-                return response.Finalize();
-            });
+            }
+            catch (Exception ex) {
+                response.Status = StatusEnum.Failed;
+                response.Messages.Add(ex.Message);
+            }
+            return response.Finalize();
+
         }
     }
 }

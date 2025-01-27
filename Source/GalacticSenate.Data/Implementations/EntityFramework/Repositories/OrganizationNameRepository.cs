@@ -35,6 +35,8 @@ namespace GalacticSenate.Data.Implementations.EntityFramework.Repositories {
                .Context
                .OrganizationNames
                .Where(o => o.OrganizationId == organizationId && o.FromDate <= forDate && (o.ThruDate >= forDate || o.ThruDate.HasValue == false))
+               .OrderBy(o => o.FromDate)
+               .OrderBy(o => o.ThruDate)
                .Skip(pageSize * pageIndex)
                .Take(pageSize);
         }

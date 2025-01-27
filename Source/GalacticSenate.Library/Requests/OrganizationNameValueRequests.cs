@@ -14,6 +14,7 @@ namespace GalacticSenate.Library.Requests {
     }
 
     public class ReadOrganizationNameValueMultiRequest {
+        public Guid OrganizationId { get; set; }
         public int PageIndex { get; set; }
         public int PageSize { get; set; }
     }
