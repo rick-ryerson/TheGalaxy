@@ -18,6 +18,7 @@ namespace GalacticSenate.Library.Services {
     public interface IFamilyService {
         Task<ModelResponse<Family, AddFamilyRequest>> AddAsync(AddFamilyRequest request);
         Task<ModelResponse<Family, ReadFamilyMultiRequest>> ReadAsync(ReadFamilyMultiRequest request);
+        Task<ModelResponse<Family, ReadFamilyRequest>> ReadAsync(ReadFamilyRequest request);
     }
     public class FamilyService : InformalOrganizationService, IFamilyService {
         private readonly IFamilyRepository familyRepository;
@@ -107,7 +108,7 @@ namespace GalacticSenate.Library.Services {
             var response = new ModelResponse<Family, ReadFamilyMultiRequest>(DateTime.Now, request);
 
             try {
-                var families = ((IRepository<Family, Guid>)familyRepository).Get(request.PageIndex, request.PageSize);
+                var families = ((IRepository<Family, Guid>)familyRepository).Get(request.PageIndex, request.PageSize).ToList();
 
                 foreach (var family in families) {
                     var x = await GetInformalOrganizationAsync(family.Id);
@@ -120,6 +121,25 @@ namespace GalacticSenate.Library.Services {
 
                 response.Results.AddRange(families);
                 response.Status = StatusEnum.Successful;
+            }
+            catch (Exception ex) {
+                response.Status = StatusEnum.Failed;
+                response.Messages.Add(ex.Message);
+            }
+
+            return response.Finalize();
+        }
+
+        public async Task<ModelResponse<Family, ReadFamilyRequest>> ReadAsync(ReadFamilyRequest request) {
+            var response = new ModelResponse<Family, ReadFamilyRequest>(DateTime.Now, request);
+
+            try {
+                var family = await ((IRepository<Family, Guid>)familyRepository).GetAsync(request.Id);
+
+                var informalOrganizationResponse = await GetInformalOrganizationAsync(family.Id);
+
+                family.InformalOrganization = informalOrganizationResponse.Item1;
+                response.Messages.AddRange(informalOrganizationResponse.Item2);
             }
             catch (Exception ex) {
                 response.Status = StatusEnum.Failed;

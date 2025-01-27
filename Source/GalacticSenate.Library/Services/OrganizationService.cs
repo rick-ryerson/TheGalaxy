@@ -2,6 +2,7 @@
 using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
+using GalacticSenate.Domain.Exceptions;
 using GalacticSenate.Domain.Model;
 using GalacticSenate.Library.Events;
 using GalacticSenate.Library.Requests;
@@ -59,6 +60,18 @@ namespace GalacticSenate.Library.Services {
                         });
 
                         unitOfWork.Save();
+                        var nameResponse = await organizationNameService.AddAsync(new AddOrganizationNameRequest { OrganizationId = organization.Id, OrganizationName = request.Name, FromDate = DateTime.Now });
+
+                        if (nameResponse.Status == StatusEnum.Failed)
+                            throw new GalacticSenateException(nameResponse.Messages);
+
+                        var namesReponse = await organizationNameService.GetAsync(new GetOrganizationNamesForOrganizationRequest { ForDate = DateTime.Now, OrganizationId = organization.Id });
+
+                        if (namesReponse.Status == StatusEnum.Failed)
+                            throw new GalacticSenateException(namesReponse.Messages);
+
+                        organization.Names = namesReponse.Results;
+
                         eventBus.Publish(eventsFactory.Created(organization));
                         response.Messages.Add($"Organization with id {request.Id} added.");
                     } else {
@@ -81,7 +94,7 @@ namespace GalacticSenate.Library.Services {
             var response = new ModelResponse<Organization, ReadOrganizationMultiRequest>(DateTime.Now, request);
 
             try {
-                var organizations = ((IRepository<Organization, Guid>)organizationRepository).Get(request.PageIndex, request.PageSize);
+                var organizations = ((IRepository<Organization, Guid>)organizationRepository).Get(request.PageIndex, request.PageSize).ToList();
                 foreach (var organization in organizations) {
                     var partyResponse = await ((IPartyService)this).ReadAsync(new ReadPartyRequest { Id = organization.Id });
                     organization.Party = partyResponse.Results.First();
@@ -106,6 +119,9 @@ namespace GalacticSenate.Library.Services {
                 var organization = await ((IRepository<Organization, Guid>)organizationRepository).GetAsync(request.Id);
 
                 if (organization != null) {
+                    var namesResponse = await this.organizationNameService.GetAsync(new GetOrganizationNamesForOrganizationRequest { ForDate = DateTime.Now, OrganizationId = organization.Id });
+                    organization.Names = namesResponse.Results;
+
                     var partyResponse = await ((IPartyService)this).ReadAsync(request);
                     organization.Party = partyResponse.Results.First();
 

@@ -11,4 +11,9 @@ namespace GalacticSenate.Library.Requests {
         public DateTime FromDate { get; set; }
         public DateTime? ThruDate { get; set; }
     }
+
+    public class GetOrganizationNamesForOrganizationRequest {
+        public Guid OrganizationId { get; set; }
+        public DateTime? ForDate { get; set; }
+    }
 }

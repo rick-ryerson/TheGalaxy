@@ -120,7 +120,7 @@ namespace GalacticSenate.Library.Services {
             var response = new ModelResponse<InformalOrganization, ReadInformalOrganizationMultiRequest>(DateTime.Now, request);
 
             try {
-                var informalOrganizations = ((IRepository<InformalOrganization, Guid>)informalOrganizationRepository).Get(request.PageIndex, request.PageSize);
+                var informalOrganizations = ((IRepository<InformalOrganization, Guid>)informalOrganizationRepository).Get(request.PageIndex, request.PageSize).ToList();
                 response.Results.AddRange(informalOrganizations);
 
                 foreach (var informalOrganization in informalOrganizations) {

@@ -2,10 +2,12 @@
 using GalacticSenate.Data.Implementations.EntityFramework;
 using GalacticSenate.Data.Interfaces;
 using GalacticSenate.Data.Interfaces.Repositories;
+using GalacticSenate.Domain.Model;
 using GalacticSenate.Library.Events;
 using GalacticSenate.Library.Requests;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Model = GalacticSenate.Domain.Model;
@@ -13,6 +15,7 @@ using Model = GalacticSenate.Domain.Model;
 namespace GalacticSenate.Library.Services {
     public interface IOrganizationNameService {
         Task<ModelResponse<Model.OrganizationName, AddOrganizationNameRequest>> AddAsync(AddOrganizationNameRequest request);
+        Task<ModelResponse<Model.OrganizationName, GetOrganizationNamesForOrganizationRequest>> GetAsync(GetOrganizationNamesForOrganizationRequest request);
     }
     public class OrganizationNameService : BasicServiceBase, IOrganizationNameService {
 
@@ -74,6 +77,35 @@ namespace GalacticSenate.Library.Services {
             }
 
             return response.Finalize();
+        }
+
+        public Task<ModelResponse<OrganizationName, GetOrganizationNamesForOrganizationRequest>> GetAsync(GetOrganizationNamesForOrganizationRequest request) {
+            return Task.Run(() =>
+            {
+                var response = new ModelResponse<OrganizationName, GetOrganizationNamesForOrganizationRequest>(DateTime.Now, request);
+
+                try {
+                    IEnumerable<OrganizationName> names;
+
+                    if (request.ForDate.HasValue)
+                        names = organizationNameRepository.Get(request.OrganizationId, request.ForDate.Value, 0, int.MaxValue);
+                    else
+                        names = organizationNameRepository.Get(request.OrganizationId, 0, int.MaxValue);
+
+                    if (names != null) {
+                        response.Results.AddRange(names);
+                        response.Status = StatusEnum.Successful;
+                    } else {
+                        response.Status = StatusEnum.Failed;
+                        response.Messages.Add($"No names found for organization {request.OrganizationId}");
+                    }
+                }
+                catch (Exception ex) {
+                    response.Status = StatusEnum.Failed;
+                    response.Messages.Add(ex.Message);
+                }
+                return response.Finalize();
+            });
         }
     }
 }

@@ -7,7 +7,7 @@ namespace GalacticSenate.Domain.Model {
         public DateTime FromDate { get; set; }
         public DateTime? ThruDate { get; set; }
 
-        public virtual Organization Organization { get; set; }
+        // public virtual Organization Organization { get; set; }
         public virtual OrganizationNameValue OrganizationNameValue { get; set; }
     }
 }

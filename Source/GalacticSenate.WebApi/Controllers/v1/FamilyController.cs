@@ -33,8 +33,14 @@ namespace GalacticSenate.WebApi.Controllers.v1 {
         }
         // GET api/<FamiliesController>/5
         [HttpGet("{id}")]
-        public string GetFamily(Guid id) {
-            return "value";
+        public async Task<IActionResult> GetFamilyAsync(Guid id) {
+            try {
+                return Ok(await familyService.ReadAsync(new ReadFamilyRequest { Id = id }));
+
+            }
+            catch (Exception ex) {
+                return Problem(detail: ex.Message);
+            };
         }
 
         // POST api/<FamiliesController>
@@ -43,7 +49,7 @@ namespace GalacticSenate.WebApi.Controllers.v1 {
 
             // return CreatedAtAction(nameof(GetFamily), new { id = familyId }, response);
             try {
-                return Ok(await familyService.AddAsync(new Library.Requests.AddFamilyRequest { Id = request.Id, Name = request.Name}));
+                return Ok(await familyService.AddAsync(new Library.Requests.AddFamilyRequest { Id = request.Id, Name = request.Name }));
             }
             catch (Exception ex) {
                 return Problem(detail: ex.Message);

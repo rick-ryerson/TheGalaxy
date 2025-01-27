@@ -10,6 +10,8 @@ namespace GalacticSenate.Library.Requests {
         public string Name { get; set; }
     }
     public class ReadOrganizationMultiRequest : ReadPartyMultiRequest { }
-    public class ReadOrganizationRequest : ReadPartyRequest { }
+    public class ReadOrganizationRequest : ReadPartyRequest {
+        DateTime? ForDate { get; set; }
+    }
 
 }
